@@ -1,0 +1,6 @@
+14-07-2026 13:26:09 | INFO     | __main__ | TOS Logger Started Successfully
+14-07-2026 13:26:09 | WARNING  | __main__ | Sample Warning
+14-07-2026 13:26:09 | ERROR    | __main__ | Sample Error
+14-07-2026 13:28:24 | INFO     | __main__ | TOS Logger Started Successfully
+14-07-2026 13:28:24 | WARNING  | __main__ | Sample Warning
+14-07-2026 13:28:24 | ERROR    | __main__ | Sample Error
