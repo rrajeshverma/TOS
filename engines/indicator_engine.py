@@ -105,3 +105,87 @@ class IndicatorEngine:
                 "volume": [c.volume for c in candles],
             }
         )
+    @staticmethod
+    def _ema(series: pd.Series) -> float:
+        """
+        Calculate the latest EMA value.
+        """
+        return float(
+            series.ewm(
+                span=EMA_PERIOD,
+                adjust=False,
+            ).mean().iloc[-1]
+        )
+
+    @staticmethod
+    def _rsi(series: pd.Series) -> float:
+        """
+        Calculate RSI using Wilder's method.
+        """
+
+        delta = series.diff()
+
+        gain = delta.clip(lower=0)
+        loss = -delta.clip(upper=0)
+
+        avg_gain = gain.ewm(
+            alpha=1 / RSI_PERIOD,
+            adjust=False,
+        ).mean()
+
+        avg_loss = loss.ewm(
+            alpha=1 / RSI_PERIOD,
+            adjust=False,
+        ).mean()
+
+        rs = avg_gain / avg_loss.replace(0, float("nan"))
+
+        rsi = 100 - (100 / (1 + rs))
+
+        return float(
+            rsi.fillna(50).iloc[-1]
+        )
+
+    @staticmethod
+    def _vwap(df: pd.DataFrame) -> float:
+        """
+        Calculate VWAP.
+        """
+
+        typical_price = (
+            df["high"] +
+            df["low"] +
+            df["close"]
+        ) / 3
+
+        cumulative_tp_volume = (
+            typical_price * df["volume"]
+        ).cumsum()
+
+        cumulative_volume = (
+            df["volume"]
+        ).cumsum()
+
+        vwap = (
+            cumulative_tp_volume /
+            cumulative_volume
+        )
+
+        return float(vwap.iloc[-1])
+
+    @staticmethod
+    def _volume_average(
+        df: pd.DataFrame,
+    ) -> float:
+        """
+        Calculate rolling volume average.
+        """
+
+        return float(
+            df["volume"]
+            .rolling(
+                window=VOLUME_AVG_PERIOD
+            )
+            .mean()
+            .iloc[-1]
+        )        
