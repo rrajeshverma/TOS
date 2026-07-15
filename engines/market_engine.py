@@ -13,7 +13,7 @@ from typing import Any
 
 from domain.market import Market
 from shared.logger import get_logger
-from shared.exceptions import (
+from exceptions import (
     MissingFieldError,
     InvalidTimestampError,
     InvalidPriceError,
@@ -25,13 +25,16 @@ class MarketEngine:
     """Engine responsible for creating validated Market objects."""
 
     REQUIRED_FIELDS = (
-        "timestamp",
-        "open",
-        "high",
-        "low",
-        "close",
-        "volume",
-    )
+    "symbol",
+    "exchange",
+    "timeframe",
+    "timestamp",
+    "open",
+    "high",
+    "low",
+    "close",
+    "volume",
+    )   
 
     def __init__(self) -> None:
         self._logger = get_logger(__name__)
@@ -62,6 +65,9 @@ class MarketEngine:
         self._validate_volume(raw_data["volume"])
 
         market = Market(
+            symbol=str(raw_data["symbol"]),
+            exchange=str(raw_data["exchange"]),
+            timeframe=str(raw_data["timeframe"]),
             timestamp=raw_data["timestamp"],
             open=float(raw_data["open"]),
             high=float(raw_data["high"]),

@@ -4,7 +4,8 @@ import pytest
 
 from domain.market import Market
 from engines.market_engine import MarketEngine
-from shared.exceptions import (
+
+from exceptions import (
     InvalidPriceError,
     InvalidTimestampError,
     InvalidVolumeError,
