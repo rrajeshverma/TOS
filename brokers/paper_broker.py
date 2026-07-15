@@ -59,10 +59,10 @@ class PaperBroker(BaseBroker):
         return list(self._orders.values())
 
     def get_positions(self):
-        raise NotImplementedError
+        return list(self._positions)
 
     def get_holdings(self):
-        raise NotImplementedError
+        return list(self._holdings)
 
     def get_funds(self):
-        raise NotImplementedError
+        return self._funds

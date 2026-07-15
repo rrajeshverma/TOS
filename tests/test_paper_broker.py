@@ -1,3 +1,4 @@
+from decimal import Decimal
 from brokers.paper_broker import PaperBroker
 from brokers.models import (
     Order,
@@ -32,7 +33,7 @@ def test_place_order():
     order = Order(
         symbol="NIFTY",
         side=OrderSide.BUY,
-        quantity=75,
+        quantity=65,
         order_type=OrderType.MARKET,
         product=ProductType.INTRADAY,
     )
@@ -49,7 +50,7 @@ def test_get_order():
     order = Order(
         symbol="NIFTY",
         side=OrderSide.BUY,
-        quantity=75,
+        quantity=65,
         order_type=OrderType.MARKET,
         product=ProductType.INTRADAY,
     )
@@ -68,7 +69,7 @@ def test_get_orders():
         Order(
             symbol="NIFTY",
             side=OrderSide.BUY,
-            quantity=75,
+            quantity=65,
             order_type=OrderType.MARKET,
             product=ProductType.INTRADAY,
         )
@@ -84,7 +85,7 @@ def test_cancel_order():
         Order(
             symbol="NIFTY",
             side=OrderSide.BUY,
-            quantity=75,
+            quantity=65,
             order_type=OrderType.MARKET,
             product=ProductType.INTRADAY,
         )
@@ -93,3 +94,26 @@ def test_cancel_order():
     broker.cancel_order(order.broker_order_id)
 
     assert broker.get_order(order.broker_order_id).status == OrderStatus.CANCELLED
+
+def test_get_positions():
+    broker = PaperBroker()
+
+    assert broker.get_positions() == []
+
+
+def test_get_holdings():
+    broker = PaperBroker()
+
+    assert broker.get_holdings() == []
+
+def test_get_funds():
+    broker = PaperBroker()
+
+    funds = broker.get_funds()
+
+    assert funds.available_cash == Decimal("1000000")
+    assert funds.available_margin == Decimal("1000000")
+    assert funds.utilised_margin == Decimal("0")
+
+def modify_order(self, order_id: str, **kwargs):
+    raise NotImplementedError
