@@ -16,7 +16,7 @@ def test_create_order():
     order = Order(
         symbol="NIFTY",
         side=OrderSide.BUY,
-        quantity=75,
+        quantity=65,
         order_type=OrderType.MARKET,
         product=ProductType.INTRADAY,
     )
@@ -29,13 +29,13 @@ def test_create_order():
 def test_create_position():
     position = Position(
         symbol="NIFTY",
-        quantity=75,
+        quantity=65,
         average_price=Decimal("250.50"),
         last_price=Decimal("252.00"),
         pnl=Decimal("112.50"),
     )
 
-    assert position.quantity == 75
+    assert position.quantity == 65
 
 
 def test_create_holding():

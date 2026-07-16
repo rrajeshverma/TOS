@@ -1,3 +1,4 @@
+from dataclasses import replace
 from decimal import Decimal
 
 from brokers.base_broker import BaseBroker
@@ -43,8 +44,20 @@ class DhanBroker(BaseBroker):
     def is_connected(self):
         raise NotImplementedError
 
+    from dataclasses import replace
+
+
     def place_order(self, order):
-        raise NotImplementedError
+
+        response = self.client.place_order()
+
+        order_id = response["data"]["orderId"]
+
+        return replace(
+            order,
+            broker_order_id=order_id,
+            status=OrderStatus.PENDING,
+        )
 
     def modify_order(self, order_id, **kwargs):
         raise NotImplementedError

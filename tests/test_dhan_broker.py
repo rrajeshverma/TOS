@@ -106,7 +106,7 @@ class DummyOrderClient:
                     "orderId": "ORD123",
                     "tradingSymbol": "NIFTY",
                     "transactionType": "BUY",
-                    "quantity": 75,
+                    "quantity": 65,
                     "orderType": "MARKET",
                     "productType": "INTRADAY",
                     "orderStatus": "PENDING",
@@ -127,9 +127,37 @@ def test_get_orders():
 
     assert isinstance(order, Order)
     assert order.symbol == "NIFTY"
-    assert order.quantity == 75
+    assert order.quantity == 65
     assert order.side == OrderSide.BUY
     assert order.order_type == OrderType.MARKET
     assert order.product == ProductType.INTRADAY
     assert order.status == OrderStatus.PENDING
     assert order.broker_order_id == "ORD123"
+
+class DummyPlaceOrderClient:
+
+    def place_order(self, **kwargs):
+        return {
+            "status": "success",
+            "data": {
+                "orderId": "ORD999",
+            },
+        }
+
+
+def test_place_order():
+
+    broker = DhanBroker(DummyPlaceOrderClient())
+
+    order = Order(
+        symbol="NIFTY",
+        side=OrderSide.BUY,
+        quantity=65,
+        order_type=OrderType.MARKET,
+        product=ProductType.INTRADAY,
+    )
+
+    placed = broker.place_order(order)
+
+    assert placed.broker_order_id == "ORD999"
+    assert placed.status == OrderStatus.PENDING
