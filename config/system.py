@@ -9,6 +9,11 @@ Description : Global system configuration for TOS.
 """
 
 from pathlib import Path
+import os
+
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # =========================================================
 # PROJECT
@@ -23,6 +28,16 @@ VERSION = "1.0.0"
 MODE = "PAPER"
 
 BROKER = "DHAN"
+
+# =========================================================
+# DHAN API
+# =========================================================
+
+DHAN_CLIENT_ID = os.getenv("DHAN_CLIENT_ID")
+
+DHAN_ACCESS_TOKEN = os.getenv("DHAN_ACCESS_TOKEN")
+
+
 
 # =========================================================
 # PATHS
