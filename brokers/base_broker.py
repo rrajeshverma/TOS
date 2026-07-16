@@ -31,8 +31,16 @@ class BaseBroker(ABC):
         """Place an order."""
         raise NotImplementedError
 
+    from typing import Any
+
     @abstractmethod
-    def modify_order(self, order_id: str, **kwargs):
+    def modify_order(
+        self,
+        order_id: str,
+        quantity: int,
+        price: float | None = None,
+        trigger_price: float | None = None,
+    ) -> Any:
         """Modify an existing order."""
         raise NotImplementedError
 
