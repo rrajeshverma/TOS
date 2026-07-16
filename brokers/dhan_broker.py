@@ -3,8 +3,13 @@ from decimal import Decimal
 from brokers.base_broker import BaseBroker
 from brokers.models import (
     Funds,
-    Position,
     Holding,
+    Position,
+    Order,
+    OrderSide,
+    OrderStatus,
+    OrderType,
+    ProductType,
 )
 
 class DhanBroker(BaseBroker):
@@ -51,7 +56,26 @@ class DhanBroker(BaseBroker):
         raise NotImplementedError
 
     def get_orders(self):
-        raise NotImplementedError
+
+        response = self.client.get_order_list()
+
+        orders = []
+
+        for item in response["data"]:
+
+            orders.append(
+                Order(
+                    symbol=item["tradingSymbol"],
+                    side=OrderSide(item["transactionType"]),
+                    quantity=item["quantity"],
+                    order_type=OrderType(item["orderType"]),
+                    product=ProductType(item["productType"]),
+                    broker_order_id=item["orderId"],
+                    status=OrderStatus(item["orderStatus"]),
+                )
+            )
+
+        return orders
 
     from brokers.models import Position
     def get_positions(self):

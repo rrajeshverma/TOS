@@ -1,8 +1,16 @@
 from decimal import Decimal
 
 from brokers.dhan_broker import DhanBroker
-from brokers.models import Funds, Position
-from brokers.models import Holding
+from brokers.models import (
+    Funds,
+    Position,
+    Holding,
+    Order,
+    OrderSide,
+    OrderStatus,
+    OrderType,
+    ProductType,
+)
 
 class DummyClient:
 
@@ -87,3 +95,41 @@ def test_get_holdings():
     assert holdings[0].symbol == "RELIANCE"
     assert holdings[0].quantity == 10
     assert holdings[0].average_price == Decimal("2500.50")
+
+class DummyOrderClient:
+
+    def get_order_list(self):
+        return {
+            "status": "success",
+            "data": [
+                {
+                    "orderId": "ORD123",
+                    "tradingSymbol": "NIFTY",
+                    "transactionType": "BUY",
+                    "quantity": 75,
+                    "orderType": "MARKET",
+                    "productType": "INTRADAY",
+                    "orderStatus": "PENDING",
+                }
+            ],
+        }
+
+
+def test_get_orders():
+
+    broker = DhanBroker(DummyOrderClient())
+
+    orders = broker.get_orders()
+
+    assert len(orders) == 1
+
+    order = orders[0]
+
+    assert isinstance(order, Order)
+    assert order.symbol == "NIFTY"
+    assert order.quantity == 75
+    assert order.side == OrderSide.BUY
+    assert order.order_type == OrderType.MARKET
+    assert order.product == ProductType.INTRADAY
+    assert order.status == OrderStatus.PENDING
+    assert order.broker_order_id == "ORD123"
