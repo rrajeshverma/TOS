@@ -5,7 +5,7 @@ from brokers.paper_broker import PaperBroker
 class BrokerFactory:
 
     @staticmethod
-    def create(name: str, client=None):
+    def create(name: str, client=None, instrument_mapper=None):
         name = name.lower()
 
         if name == "paper":
@@ -15,6 +15,9 @@ class BrokerFactory:
             if client is None:
                 raise ValueError("client is required for DhanBroker")
 
-            return DhanBroker(client)
+            if instrument_mapper is None:
+                raise ValueError("instrument_mapper is required for DhanBroker")
+
+            return DhanBroker(client, instrument_mapper)
 
         raise ValueError(f"Unsupported broker: {name}")

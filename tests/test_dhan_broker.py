@@ -1,3 +1,4 @@
+from unittest.mock import Mock
 from decimal import Decimal
 
 from brokers.dhan_broker import DhanBroker
@@ -42,7 +43,7 @@ class DummyPositionClient:
 
 
 def test_get_funds():
-    broker = DhanBroker(DummyClient())
+    broker = DhanBroker(DummyClient(), Mock())
 
     funds = broker.get_funds()
 
@@ -53,7 +54,7 @@ def test_get_funds():
 
 
 def test_get_positions():
-    broker = DhanBroker(DummyPositionClient())
+    broker = DhanBroker(DummyPositionClient(), Mock())
 
     positions = broker.get_positions()
 
@@ -84,7 +85,7 @@ class DummyHoldingClient:
 
 def test_get_holdings():
 
-    broker = DhanBroker(DummyHoldingClient())
+    broker = DhanBroker(DummyHoldingClient(), Mock())
 
     holdings = broker.get_holdings()
 
@@ -117,7 +118,7 @@ class DummyOrderClient:
 
 def test_get_orders():
 
-    broker = DhanBroker(DummyOrderClient())
+    broker = DhanBroker(DummyOrderClient(), Mock())
 
     orders = broker.get_orders()
 
@@ -144,10 +145,26 @@ class DummyPlaceOrderClient:
             },
         }
 
+from domain.instrument import Instrument
+
+
+class DummyInstrumentMapper:
+
+    def get(self, symbol):
+        return Instrument(
+            symbol="NIFTY",
+            security_id="13",
+            exchange_segment="NSE_FNO",
+            lot_size=65,
+            tick_size=Decimal("0.05"),
+        )
 
 def test_place_order():
 
-    broker = DhanBroker(DummyPlaceOrderClient())
+    broker = DhanBroker(
+    DummyPlaceOrderClient(),
+    DummyInstrumentMapper(),
+)
 
     order = Order(
         symbol="NIFTY",

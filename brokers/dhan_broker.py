@@ -1,3 +1,4 @@
+from brokers.dhan_mapper import DhanMapper
 from dataclasses import replace
 from decimal import Decimal
 
@@ -14,10 +15,10 @@ from brokers.models import (
 )
 
 class DhanBroker(BaseBroker):
-    """Broker implementation backed by Dhan."""
 
-    def __init__(self, client):
+    def __init__(self, client, instrument_mapper):
         self.client = client
+        self.instrument_mapper = instrument_mapper
 
     def get_funds(self) -> Funds:
 
@@ -44,12 +45,19 @@ class DhanBroker(BaseBroker):
     def is_connected(self):
         raise NotImplementedError
 
-    from dataclasses import replace
-
-
     def place_order(self, order):
+        instrument = self.instrument_mapper.get(order.symbol)
 
-        response = self.client.place_order()
+        response = self.client.place_order(
+            security_id=instrument.security_id,
+            exchange_segment=instrument.exchange_segment,
+            transaction_type=DhanMapper.transaction_type(order.side),
+            quantity=order.quantity,
+            order_type=DhanMapper.order_type(order.order_type),
+            product_type=DhanMapper.product_type(order.product),
+            price=float(order.price or 0),
+            trigger_price=float(order.trigger_price or 0),
+        )
 
         order_id = response["data"]["orderId"]
 
@@ -90,7 +98,6 @@ class DhanBroker(BaseBroker):
 
         return orders
 
-    from brokers.models import Position
     def get_positions(self):
 
         response = self.client.get_positions()

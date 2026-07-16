@@ -18,9 +18,18 @@ from brokers.dhan_broker import DhanBroker
 
 
 def test_create_dhan_broker():
-    client = Mock()
+    from unittest.mock import Mock
 
-    broker = BrokerFactory.create("dhan", client)
+    client = Mock()
+    instrument_mapper = Mock()
+
+    broker = BrokerFactory.create(
+        "dhan",
+        client,
+        instrument_mapper,
+    )
+
+    assert isinstance(broker, DhanBroker)
 
     assert isinstance(broker, DhanBroker)
 
