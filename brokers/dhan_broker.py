@@ -4,6 +4,7 @@ from brokers.base_broker import BaseBroker
 from brokers.models import (
     Funds,
     Position,
+    Holding,
 )
 
 class DhanBroker(BaseBroker):
@@ -74,4 +75,21 @@ class DhanBroker(BaseBroker):
         return positions
 
     def get_holdings(self):
-        raise NotImplementedError
+
+        response = self.client.get_holdings()
+
+        holdings = []
+
+        for item in response["data"]:
+
+            holdings.append(
+                Holding(
+                    symbol=item["tradingSymbol"],
+                    quantity=item["totalQty"],
+                    average_price=Decimal(
+                        str(item["avgCostPrice"])
+                    ),
+                )
+            )
+
+        return holdings

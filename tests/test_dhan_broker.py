@@ -2,7 +2,7 @@ from decimal import Decimal
 
 from brokers.dhan_broker import DhanBroker
 from brokers.models import Funds, Position
-
+from brokers.models import Holding
 
 class DummyClient:
 
@@ -58,3 +58,32 @@ def test_get_positions():
     assert positions[0].average_price == Decimal("245.50")
     assert positions[0].last_price == Decimal("250.25")
     assert positions[0].pnl == Decimal("0")
+
+class DummyHoldingClient:
+
+    def get_holdings(self):
+        return {
+            "status": "success",
+            "data": [
+                {
+                    "tradingSymbol": "RELIANCE",
+                    "totalQty": 10,
+                    "avgCostPrice": 2500.50,
+                }
+            ],
+        }
+
+
+def test_get_holdings():
+
+    broker = DhanBroker(DummyHoldingClient())
+
+    holdings = broker.get_holdings()
+
+    assert len(holdings) == 1
+
+    assert isinstance(holdings[0], Holding)
+
+    assert holdings[0].symbol == "RELIANCE"
+    assert holdings[0].quantity == 10
+    assert holdings[0].average_price == Decimal("2500.50")
