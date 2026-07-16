@@ -70,8 +70,9 @@ class DhanBroker(BaseBroker):
     def modify_order(self, order_id, **kwargs):
         raise NotImplementedError
 
-    def cancel_order(self, order_id):
-        raise NotImplementedError
+    def cancel_order(self, order_id: str):
+        """Cancel an existing order."""
+        return self.client.cancel_order(order_id)
 
     def get_order(self, order_id):
         raise NotImplementedError
