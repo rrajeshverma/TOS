@@ -1,0 +1,3 @@
+symbol,security_id,exchange_segment,lot_size,tick_size
+NIFTY,13,NSE_FNO,65,0.05
+BANKNIFTY,25,NSE_FNO,35,0.05
