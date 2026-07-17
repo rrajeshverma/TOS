@@ -28,3 +28,11 @@ def test_runner_returns_signals():
 
     assert len(results) == 1
     assert results[0]["action"] == "BUY"
+
+def test_runner_creates_trade_simulator():
+    runner = BacktestRunner(
+        HistoricalDataFeed([]),
+        DummyStrategy(),
+    )
+
+    assert runner.trade_simulator is not None
