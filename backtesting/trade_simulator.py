@@ -35,3 +35,5 @@ class TradeSimulator:
 
         self.trades.append(trade)
         self.position = None
+
+        return trade

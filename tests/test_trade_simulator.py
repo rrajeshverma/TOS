@@ -71,3 +71,17 @@ def test_sell_trade_loss():
     trade = simulator.trades[0]
 
     assert trade["pnl"] == -10
+
+def test_close_returns_trade():
+    simulator = TradeSimulator()
+
+    simulator.open({
+        "action": "BUY",
+        "price": 100,
+    })
+
+    trade = simulator.close(110)
+
+    assert trade["entry_price"] == 100
+    assert trade["exit_price"] == 110
+    assert trade["pnl"] == 10
