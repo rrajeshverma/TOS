@@ -28,6 +28,7 @@ from config.risk import (
     RISK_REWARD_RATIO,
 )
 
+
 class TradeFactory:
     """
     Creates immutable Trade objects.
@@ -45,16 +46,11 @@ class TradeFactory:
     ) -> Trade:
 
         if not risk.is_approved:
-            raise ValueError(
-                "Cannot create Trade from rejected Risk."
-            )
+            raise ValueError("Cannot create Trade from rejected Risk.")
 
         risk_points = abs(entry_price - stop_loss)
 
-        target = (
-            entry_price
-            + (risk_points * RISK_REWARD_RATIO)
-        )
+        target = entry_price + (risk_points * RISK_REWARD_RATIO)
 
         trade = Trade(
             trade_id=generate_trade_id(),
@@ -73,7 +69,7 @@ class TradeFactory:
         )
 
         return trade
-        
+
         class TradeFactory:
             """
             Creates immutable Trade objects from approved Risk.
@@ -90,17 +86,13 @@ class TradeFactory:
             ) -> Trade:
 
                 if not risk.is_approved:
-                    raise ValueError(
-                        "Cannot create Trade from rejected Risk."
-                    )
+                    raise ValueError("Cannot create Trade from rejected Risk.")
 
                 risk_points = abs(entry_price - stop_loss)
 
                 # Version 1.0:
                 # Assumes BUY trades.
-                target = entry_price + (
-                    risk_points * RISK_REWARD_RATIO
-                )
+                target = entry_price + (risk_points * RISK_REWARD_RATIO)
 
                 trade = Trade(
                     trade_id=generate_trade_id(),

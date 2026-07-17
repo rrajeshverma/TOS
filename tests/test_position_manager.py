@@ -1,9 +1,8 @@
 from decimal import Decimal
 
 from services.position_manager import PositionManager
-
 from shared.enums import TradeStatus
-
+from domain.position import Position
 
 def test_open_position():
 
@@ -75,3 +74,19 @@ def test_close_position():
     )
 
     assert closed.status == TradeStatus.CLOSED
+
+def test_is_position_open():
+    manager = PositionManager()
+
+    position = Position(
+        position_id="POS001",
+        order=None,
+        quantity=1,
+        average_price=Decimal("100"),
+        last_traded_price=Decimal("100"),
+        status=TradeStatus.OPEN,
+        opened_at=None,
+        closed_at=None,
+    )
+
+    assert manager.is_position_open(position) is True

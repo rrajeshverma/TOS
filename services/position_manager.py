@@ -96,3 +96,17 @@ class PositionManager:
             position.last_traded_price
             - position.average_price
         ) * position.quantity
+
+    @staticmethod
+    def realized_pnl(
+        entry_price: Decimal,
+        exit_price: Decimal,
+        quantity: int,
+    ) -> Decimal:
+        return (exit_price - entry_price) * quantity
+
+    @staticmethod
+    def is_position_open(
+        position: Position,
+    ) -> bool:
+        return position.status == TradeStatus.OPEN
