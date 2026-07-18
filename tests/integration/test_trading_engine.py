@@ -64,12 +64,31 @@ class FakeRiskEngine:
         }
 
 
+class FakeTradeFactory:
+    def __init__(self):
+        self.received = None
+
+    def create(self, trade_plan):
+        self.received = trade_plan
+
+        return {
+            "id": "TRADE-001",
+            "symbol": trade_plan["symbol"],
+            "action": trade_plan["action"],
+            "quantity": trade_plan["quantity"],
+            "entry_price": trade_plan["entry_price"],
+            "stop_loss": trade_plan["stop_loss"],
+            "target": trade_plan["target"],
+        }
+
+
 def test_trading_engine_pipeline():
     market = FakeMarketEngine()
     indicator = FakeIndicatorEngine()
     strategy = FakeStrategyEngine()
     decision = FakeDecisionEngine()
     risk = FakeRiskEngine()
+    trade_factory = FakeTradeFactory()
 
     context = EngineContext(
         market_engine=market,
@@ -77,7 +96,7 @@ def test_trading_engine_pipeline():
         strategy_engine=strategy,
         decision_engine=decision,
         risk_engine=risk,
-        trade_factory=object(),
+        trade_factory=trade_factory,
         paper_trading_service=object(),
         position_manager=object(),
         trade_journal=object(),
@@ -85,7 +104,7 @@ def test_trading_engine_pipeline():
 
     engine = TradingEngine(context)
 
-    result = engine.run()
+    trade = engine.run()
 
     assert market.called is True
 
@@ -110,7 +129,17 @@ def test_trading_engine_pipeline():
         "symbol": "BTCUSDT",
     }
 
-    assert result == {
+    assert trade_factory.received == {
+        "symbol": "BTCUSDT",
+        "action": "BUY",
+        "quantity": 1,
+        "entry_price": 62000,
+        "stop_loss": 61800,
+        "target": 62400,
+    }
+
+    assert trade == {
+        "id": "TRADE-001",
         "symbol": "BTCUSDT",
         "action": "BUY",
         "quantity": 1,

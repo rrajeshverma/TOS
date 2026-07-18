@@ -5,8 +5,6 @@ class TradingEngine:
     """
     Trading Engine
 
-    Pipeline
-
         MarketEngine
               │
               ▼
@@ -20,12 +18,12 @@ class TradingEngine:
               │
               ▼
         RiskEngine
+              │
+              ▼
+        TradeFactory
 
     Future
 
-        TradeFactory
-              │
-              ▼
         PaperTradingService
               │
               ▼
@@ -54,4 +52,7 @@ class TradingEngine:
         # Step 5
         trade_plan = self.context.risk_engine.run(decision)
 
-        return trade_plan
+        # Step 6
+        trade = self.context.trade_factory.create(trade_plan)
+
+        return trade
