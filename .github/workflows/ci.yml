@@ -1,0 +1,54 @@
+name: Trading Operating System CI
+
+on:
+  push:
+    branches:
+      - main
+      - master
+      - sprint-4-live-trading
+
+  pull_request:
+    branches:
+      - main
+      - master
+      - sprint-4-live-trading
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        python-version: ["3.12"]
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install coverage pytest-cov black isort ruff
+
+      - name: Check Formatting
+        run: black --check .
+
+      - name: Check Import Order
+        run: isort --check-only .
+
+      - name: Lint
+        run: ruff check .
+
+      - name: Run Tests
+        run: pytest -v
+
+      - name: Coverage
+        run: |
+          coverage run -m pytest
+          coverage report -m
