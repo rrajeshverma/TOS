@@ -1,93 +1,87 @@
 from reporting.models.performance_model import PerformanceModel
-
+from reporting.reports.trade_statistics import TradeStatistics
+from reporting.reports.equity_curve import EquityCurve
+from reporting.reports.drawdown import Drawdown
 
 class PerformanceService:
     """Service for calculating trading performance metrics."""
 
     def calculate(self, trades: list) -> PerformanceModel:
+        stats = TradeStatistics()
+        equity_curve = EquityCurve()
+        drawdown = Drawdown()
         model = PerformanceModel()
 
         # Trade counts
-        self._calculate_trade_counts(model, trades)
+        model.total_trades = stats.total_trades(trades)
+        model.winning_trades = stats.winning_trades(trades)
+        model.losing_trades = stats.losing_trades(trades)
 
         # Profit metrics
-        model.gross_profit = sum(trade.pnl for trade in trades if trade.pnl > 0)
+        model.gross_profit = stats.gross_profit(trades)
 
-        model.gross_loss = abs(sum(trade.pnl for trade in trades if trade.pnl < 0))
+        model.gross_loss = stats.gross_loss(trades)
 
-        model.net_profit = sum(trade.pnl for trade in trades)
+        model.net_profit = sum(
+            trade.pnl
+            for trade in trades
+        )
 
-        # Win rate
-        if model.total_trades > 0:
-            model.win_rate = (model.winning_trades / model.total_trades) * 100
+        # Win Statistics
+        model.win_rate = stats.win_rate(trades)
 
-        # Profit factor
-        if model.gross_loss > 0:
-            model.profit_factor = model.gross_profit / model.gross_loss
+        model.profit_factor = stats.profit_factor(trades)
 
-        # Average & largest trade statistics
-        winning_trades = [trade.pnl for trade in trades if trade.pnl > 0]
+        # Trade Statistics
+        model.average_win = stats.average_win(trades)
 
-        losing_trades = [trade.pnl for trade in trades if trade.pnl < 0]
+        model.average_loss = stats.average_loss(trades)
 
-        if winning_trades:
-            model.average_win = sum(winning_trades) / len(winning_trades)
-            model.largest_win = max(winning_trades)
+        model.largest_win = stats.largest_win(trades)
 
-        if losing_trades:
-            model.average_loss = abs(sum(losing_trades) / len(losing_trades))
-            model.largest_loss = abs(min(losing_trades))
+        model.largest_loss = stats.largest_loss(trades)
 
         # Expectancy
-        if model.total_trades > 0:
-            win_probability = model.winning_trades / model.total_trades
+        model.expectancy = stats.expectancy(trades)
 
-            loss_probability = model.losing_trades / model.total_trades
-
-            model.expectancy = (win_probability * model.average_win) - (
-                loss_probability * model.average_loss
-            )
-
-        # Equity curve
-        running_equity = 0.0
-
-        for trade in trades:
-            running_equity += trade.pnl
-            model.equity_curve.append(running_equity)
+        # Equity Curve
+        model.equity_curve = equity_curve.build(
+            [trade.pnl for trade in trades]
+        )
 
         # Maximum Drawdown
-        peak = 0.0
-
-        for equity in model.equity_curve:
-            peak = max(peak, equity)
-            drawdown = peak - equity
-
-            model.max_drawdown = max(
-                model.max_drawdown,
-                drawdown,
-            )
+        model.max_drawdown = drawdown.calculate(
+            model.equity_curve
+        )
 
         # Peak Equity
         if model.equity_curve:
-            model.peak_equity = max(model.equity_curve)
+            model.peak_equity = max(
+                model.equity_curve
+            )
 
-        # Maximum Drawdown Percentage
-        if model.equity_curve:
-            peak_equity = max(model.equity_curve)
-
-            if peak_equity > 0:
-                model.max_drawdown_percent = (model.max_drawdown / peak_equity) * 100
+        # Maximum Drawdown %
+        if model.peak_equity > 0:
+            model.max_drawdown_percent = (
+                model.max_drawdown
+                / model.peak_equity
+            ) * 100
 
         # Recovery Factor
         if model.max_drawdown > 0:
-            model.recovery_factor = model.net_profit / model.max_drawdown
+            model.recovery_factor = (
+                model.net_profit
+                / model.max_drawdown
+            )
 
         # Maximum Consecutive Wins
         current_wins = 0
 
         for trade in trades:
+
             if trade.pnl > 0:
                 current_wins += 1
+
                 model.max_consecutive_wins = max(
                     model.max_consecutive_wins,
                     current_wins,
@@ -95,19 +89,20 @@ class PerformanceService:
             else:
                 current_wins = 0
 
-            # Maximum Consecutive Losses
-            current_losses = 0
+        # Maximum Consecutive Losses
+        current_losses = 0
 
-            for trade in trades:
-                if trade.pnl < 0:
-                    current_losses += 1
+        for trade in trades:
 
-                    model.max_consecutive_losses = max(
-                        model.max_consecutive_losses,
-                        current_losses,
-                    )
-                else:
-                    current_losses = 0
+            if trade.pnl < 0:
+                current_losses += 1
+
+                model.max_consecutive_losses = max(
+                    model.max_consecutive_losses,
+                    current_losses,
+                )
+            else:
+                current_losses = 0
 
         return model
 
@@ -120,6 +115,14 @@ class PerformanceService:
 
         model.total_trades = len(trades)
 
-        model.winning_trades = sum(1 for trade in trades if trade.pnl > 0)
+        model.winning_trades = sum(
+            1
+            for trade in trades
+            if trade.pnl > 0
+        )
 
-        model.losing_trades = sum(1 for trade in trades if trade.pnl < 0)
+        model.losing_trades = sum(
+            1
+            for trade in trades
+            if trade.pnl < 0
+        )
