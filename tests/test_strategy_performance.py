@@ -319,3 +319,109 @@ def test_max_consecutive_losses():
     performance.add_trade(-50)
 
     assert performance.max_consecutive_losses() == 3
+
+# ============================================================
+# Average Trade
+# ============================================================
+
+def test_average_trade():
+    performance = StrategyPerformance()
+
+    performance.add_trade(100)
+    performance.add_trade(-50)
+    performance.add_trade(150)
+
+    assert performance.average_trade() == 200 / 3
+
+
+# ============================================================
+# Payoff Ratio
+# ============================================================
+
+def test_payoff_ratio():
+    performance = StrategyPerformance()
+
+    performance.add_trade(200)
+    performance.add_trade(-100)
+
+    assert performance.payoff_ratio() == 2.0
+
+
+def test_payoff_ratio_zero_losses():
+    performance = StrategyPerformance()
+
+    performance.add_trade(100)
+
+    assert performance.payoff_ratio() == float("inf")
+
+
+# ============================================================
+# Running Equity
+# ============================================================
+
+def test_running_equity():
+    performance = StrategyPerformance()
+
+    performance.add_trade(100)
+    performance.add_trade(-50)
+
+    assert performance.running_equity(1000) == [1000, 1100, 1050]
+
+
+# ============================================================
+# Equity High
+# ============================================================
+
+def test_equity_high():
+    performance = StrategyPerformance()
+
+    performance.add_trade(100)
+    performance.add_trade(-50)
+    performance.add_trade(200)
+
+    assert performance.equity_high(1000) == 1250
+
+
+# ============================================================
+# Summary Extensions
+# ============================================================
+
+def test_summary_average_trade():
+    performance = StrategyPerformance()
+
+    performance.add_trade(100)
+
+    assert performance.summary()["average_trade"] == 100
+
+
+def test_summary_payoff_ratio():
+    performance = StrategyPerformance()
+
+    performance.add_trade(100)
+
+    assert performance.summary()["payoff_ratio"] == float("inf")
+
+
+def test_summary_gross_profit():
+    performance = StrategyPerformance()
+
+    performance.add_trade(100)
+
+    assert performance.summary()["gross_profit"] == 100
+
+
+def test_summary_gross_loss():
+    performance = StrategyPerformance()
+
+    performance.add_trade(-100)
+
+    assert performance.summary()["gross_loss"] == 100
+
+
+def test_summary_expectancy():
+    performance = StrategyPerformance()
+
+    performance.add_trade(100)
+    performance.add_trade(-50)
+
+    assert performance.summary()["expectancy"] == 25
