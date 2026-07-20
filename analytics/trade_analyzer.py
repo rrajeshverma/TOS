@@ -30,3 +30,14 @@ class TradeAnalyzer:
                 current = 0
 
         return maximum
+    
+    def analyze(self, trades):
+        return {
+            "trade_count": len(trades),
+            "winning_trades": sum(1 for trade in trades if trade > 0),
+            "losing_trades": sum(1 for trade in trades if trade < 0),
+            "largest_win": self.largest_win(trades),
+            "largest_loss": self.largest_loss(trades),
+            "max_consecutive_wins": self.max_consecutive_wins(trades),
+            "max_consecutive_losses": self.max_consecutive_losses(trades),
+        }
