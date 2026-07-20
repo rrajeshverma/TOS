@@ -31,9 +31,7 @@ def test_execute_many():
         DummyStrategy("SELL"),
     ]
 
-    assert executor.execute_many(
-        strategies
-    ) == [
+    assert executor.execute_many(strategies) == [
         "BUY",
         "SELL",
     ]
@@ -47,9 +45,7 @@ def test_execute_first():
         DummyStrategy("SELL"),
     ]
 
-    assert executor.execute_first(
-        strategies
-    ) == "BUY"
+    assert executor.execute_first(strategies) == "BUY"
 
 
 def test_execute_last():
@@ -60,9 +56,7 @@ def test_execute_last():
         DummyStrategy("SELL"),
     ]
 
-    assert executor.execute_last(
-        strategies
-    ) == "SELL"
+    assert executor.execute_last(strategies) == "SELL"
 
 
 def test_execute_empty():
@@ -79,6 +73,4 @@ def test_count():
         DummyStrategy("SELL"),
     ]
 
-    assert executor.count(
-        strategies
-    ) == 2
+    assert executor.count(strategies) == 2

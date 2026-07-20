@@ -28,6 +28,7 @@ def test_consecutive_losses():
 
     assert analyzer.max_consecutive_losses(trades) == 3
 
+
 def test_analyze_empty():
     analyzer = TradeAnalyzer()
 
@@ -53,6 +54,7 @@ def test_analyze_summary():
     assert result["largest_loss"] == -50
     assert result["max_consecutive_wins"] == 2
     assert result["max_consecutive_losses"] == 2
+
 
 def test_analyze_trade_count():
     analyzer = TradeAnalyzer()

@@ -4,6 +4,7 @@ from services.position_manager import PositionManager
 from shared.enums import TradeStatus
 from domain.position import Position
 
+
 def test_open_position():
 
     manager = PositionManager()
@@ -74,6 +75,7 @@ def test_close_position():
     )
 
     assert closed.status == TradeStatus.CLOSED
+
 
 def test_is_position_open():
     manager = PositionManager()

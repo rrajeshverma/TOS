@@ -1,9 +1,9 @@
 from portfolio.capital_allocator import CapitalAllocator
 
-
 # ============================================================
 # Allocation
 # ============================================================
+
 
 def test_allocate_fixed_amount():
     allocator = CapitalAllocator(100000)
@@ -27,6 +27,7 @@ def test_allocate_cannot_exceed_capital():
 # Percentage Allocation
 # ============================================================
 
+
 def test_allocate_percent():
     allocator = CapitalAllocator(100000)
 
@@ -48,6 +49,7 @@ def test_allocate_percent_full():
 # ============================================================
 # Reserve Capital
 # ============================================================
+
 
 def test_reserve_capital():
     allocator = CapitalAllocator(100000)
@@ -77,6 +79,7 @@ def test_reserve_never_exceeds_capital():
 # Release
 # ============================================================
 
+
 def test_release_reserved():
     allocator = CapitalAllocator(100000)
 
@@ -99,6 +102,7 @@ def test_release_all():
 # Utilization
 # ============================================================
 
+
 def test_utilization_percent():
     allocator = CapitalAllocator(100000)
 
@@ -116,6 +120,7 @@ def test_utilization_zero():
 # ============================================================
 # Summary
 # ============================================================
+
 
 def test_summary_total():
     allocator = CapitalAllocator(100000)

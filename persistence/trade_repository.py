@@ -1,5 +1,6 @@
 import sqlite3
 
+
 class TradeRepository:
     def __init__(self, database: str):
         self.connection = sqlite3.connect(database)
@@ -40,9 +41,7 @@ class TradeRepository:
         self.connection.commit()
 
     def get_all(self):
-        rows = self.connection.execute(
-            "SELECT * FROM trades"
-        ).fetchall()
+        rows = self.connection.execute("SELECT * FROM trades").fetchall()
 
         return [dict(row) for row in rows]
 

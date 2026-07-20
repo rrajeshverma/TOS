@@ -18,6 +18,7 @@ def test_default_performance_metrics():
     assert model.win_rate == 0.0
     assert model.profit_factor == 0.0
 
+
 def test_default_trade_statistics():
     model = PerformanceModel()
 
@@ -25,6 +26,7 @@ def test_default_trade_statistics():
     assert model.average_loss == 0.0
     assert model.largest_win == 0.0
     assert model.largest_loss == 0.0
+
 
 from reporting.models.performance_model import PerformanceModel
 from reporting.services.performance_service import PerformanceService

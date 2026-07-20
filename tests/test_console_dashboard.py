@@ -10,6 +10,7 @@ def test_console_dashboard_render_returns_string():
 
     assert isinstance(output, str)
 
+
 def test_console_dashboard_contains_portfolio_value():
     dashboard = DashboardModel()
     dashboard.portfolio_summary.total_value = 100000.0

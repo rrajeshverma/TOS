@@ -5,6 +5,7 @@ from reporting.models.performance_model import PerformanceModel
 
 from reporting.models.performance_model import PerformanceModel
 
+
 def test_generate_report():
     generator = ReportGenerator()
 
@@ -13,6 +14,7 @@ def test_generate_report():
     report = generator.generate(performance)
 
     assert isinstance(report, PerformanceReport)
+
 
 def test_generate_report_from_performance():
     generator = ReportGenerator()
@@ -26,6 +28,7 @@ def test_generate_report_from_performance():
     assert report.performance.total_trades == 25
     assert report.performance.net_profit == 5000.0
 
+
 def test_report_contains_summary():
     generator = ReportGenerator()
 
@@ -37,6 +40,7 @@ def test_report_contains_summary():
 
     assert "Total Trades: 10" in report.summary
     assert "Net Profit: 2500.0" in report.summary
+
 
 def test_report_contains_trade_section():
     generator = ReportGenerator()
@@ -53,6 +57,7 @@ def test_report_contains_trade_section():
     assert "Winning Trades: 9" in report.summary
     assert "Losing Trades: 6" in report.summary
 
+
 def test_report_contains_profit_section():
     generator = ReportGenerator()
 
@@ -67,6 +72,7 @@ def test_report_contains_profit_section():
     assert "Gross Profit: 6500.0" in report.summary
     assert "Gross Loss: 2400.0" in report.summary
     assert "Net Profit: 4100.0" in report.summary
+
 
 def test_report_contains_performance_section():
     generator = ReportGenerator()
@@ -85,6 +91,7 @@ def test_report_contains_performance_section():
     assert "Expectancy: 165.5" in report.summary
     assert "Recovery Factor: 1.85" in report.summary
 
+
 def test_report_contains_risk_section():
     generator = ReportGenerator()
 
@@ -99,6 +106,7 @@ def test_report_contains_risk_section():
     assert "Peak Equity: 5200.0" in report.summary
     assert "Maximum Drawdown: 950.0" in report.summary
     assert "Maximum Drawdown %: 18.27" in report.summary
+
 
 def test_report_contains_streaks_section():
     generator = ReportGenerator()

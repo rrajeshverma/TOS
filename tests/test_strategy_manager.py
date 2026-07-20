@@ -7,6 +7,7 @@ def test_create_strategy_manager():
 
     assert manager is not None
 
+
 def test_manager_has_registry():
     manager = StrategyManager()
 
@@ -14,6 +15,7 @@ def test_manager_has_registry():
         manager.registry,
         StrategyRegistry,
     )
+
 
 def test_manager_register_strategy():
     manager = StrategyManager()
@@ -40,6 +42,7 @@ def test_manager_get_strategy():
 
     assert manager.get("ORB") is strategy
 
+
 def test_enable_strategy():
     manager = StrategyManager()
 
@@ -53,6 +56,7 @@ def test_enable_strategy():
     manager.enable("ORB")
 
     assert "ORB" in manager.enabled_strategies
+
 
 def test_disable_strategy():
     manager = StrategyManager()
@@ -69,6 +73,7 @@ def test_disable_strategy():
 
     assert "ORB" not in manager.enabled_strategies
 
+
 def test_is_enabled():
     manager = StrategyManager()
 
@@ -81,6 +86,7 @@ def test_is_enabled():
 
     assert manager.is_enabled("ORB") is True
     assert manager.is_enabled("VWAP") is False
+
 
 def test_list_enabled_strategies():
     manager = StrategyManager()
@@ -103,6 +109,7 @@ def test_list_enabled_strategies():
         "ORB",
         "VWAP",
     ]
+
 
 class DummyStrategy:
     def __init__(self):
@@ -128,6 +135,7 @@ def test_execute_enabled_strategy():
 
     assert strategy.executed is True
 
+
 class DummyStrategy:
     def __init__(self):
         self.executed = False
@@ -149,6 +157,7 @@ def test_execute_disabled_strategy():
     manager.execute("ORB")
 
     assert strategy.executed is False
+
 
 class DummyStrategy:
     def __init__(self):
@@ -181,6 +190,7 @@ def test_execute_all_enabled_strategies():
     assert orb.executed is True
     assert vwap.executed is True
 
+
 class DummyResultStrategy:
     def execute(self):
         return "BUY"
@@ -200,37 +210,6 @@ def test_execute_returns_result():
 
     assert result == "BUY"
 
-class BuyStrategy:
-    def execute(self):
-        return "BUY"
-
-
-class SellStrategy:
-    def execute(self):
-        return "SELL"
-
-
-def test_execute_all_returns_results():
-    manager = StrategyManager()
-
-    manager.register(
-        "ORB",
-        BuyStrategy(),
-    )
-    manager.register(
-        "VWAP",
-        SellStrategy(),
-    )
-
-    manager.enable("ORB")
-    manager.enable("VWAP")
-
-    results = manager.execute_all()
-
-    assert results == {
-        "ORB": "BUY",
-        "VWAP": "SELL",
-    }
 
 class BuyStrategy:
     def execute(self):
@@ -263,6 +242,40 @@ def test_execute_all_returns_results():
         "ORB": "BUY",
         "VWAP": "SELL",
     }
+
+
+class BuyStrategy:
+    def execute(self):
+        return "BUY"
+
+
+class SellStrategy:
+    def execute(self):
+        return "SELL"
+
+
+def test_execute_all_returns_results():
+    manager = StrategyManager()
+
+    manager.register(
+        "ORB",
+        BuyStrategy(),
+    )
+    manager.register(
+        "VWAP",
+        SellStrategy(),
+    )
+
+    manager.enable("ORB")
+    manager.enable("VWAP")
+
+    results = manager.execute_all()
+
+    assert results == {
+        "ORB": "BUY",
+        "VWAP": "SELL",
+    }
+
 
 class FailingStrategy:
     def execute(self):
@@ -294,6 +307,7 @@ def test_execute_all_continues_after_exception():
     assert results["FAIL"] is None
     assert results["BUY"] == "BUY"
 
+
 def test_disable_all_strategies():
     manager = StrategyManager()
 
@@ -312,6 +326,7 @@ def test_disable_all_strategies():
     manager.disable_all()
 
     assert manager.list_enabled_strategies() == []
+
 
 def test_enable_all_strategies():
     manager = StrategyManager()
@@ -334,6 +349,7 @@ def test_enable_all_strategies():
         "VWAP",
     ]
 
+
 def test_has_enabled_strategies():
     manager = StrategyManager()
 
@@ -347,6 +363,7 @@ def test_has_enabled_strategies():
     manager.enable("ORB")
 
     assert manager.has_enabled_strategies() is True
+
 
 def test_remove_strategy():
     manager = StrategyManager()

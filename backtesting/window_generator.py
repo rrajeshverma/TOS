@@ -14,14 +14,9 @@ class WindowGenerator:
         start = 0
 
         while start + total <= len(candles):
-            train = candles[
-                start:start + self.training_size
-            ]
+            train = candles[start : start + self.training_size]
 
-            test = candles[
-                start + self.training_size:
-                start + total
-            ]
+            test = candles[start + self.training_size : start + total]
 
             windows.append((train, test))
 

@@ -30,7 +30,7 @@ class TradeAnalyzer:
                 current = 0
 
         return maximum
-    
+
     def analyze(self, trades):
         return {
             "trade_count": len(trades),

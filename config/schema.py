@@ -22,8 +22,7 @@ def validate_schema(schema, data):
 
         if not isinstance(data[field], expected_type):
             raise TypeError(
-                f"Field '{field}' must be of type "
-                f"{expected_type.__name__}"
+                f"Field '{field}' must be of type " f"{expected_type.__name__}"
             )
 
     return True

@@ -12,9 +12,7 @@ def test_empty_result():
 def test_add_trade():
     result = BacktestResult()
 
-    result.add_trade({
-        "pnl": 100
-    })
+    result.add_trade({"pnl": 100})
 
     assert result.total_trades == 1
     assert result.net_pnl == 100

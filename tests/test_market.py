@@ -2,7 +2,6 @@ from datetime import datetime
 
 from domain.market import Market
 
-
 market = Market(
     symbol="NIFTY",
     exchange="NSE",
@@ -12,7 +11,7 @@ market = Market(
     high=24125,
     low=24095,
     close=24120,
-    volume=152340
+    volume=152340,
 )
 
 print(market)

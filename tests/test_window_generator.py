@@ -48,9 +48,7 @@ def test_multiple_windows():
 def test_window_sizes():
     generator = WindowGenerator(100, 20)
 
-    train, test = generator.generate(
-        list(range(120))
-    )[0]
+    train, test = generator.generate(list(range(120)))[0]
 
     assert len(train) == 100
     assert len(test) == 20

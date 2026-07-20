@@ -25,16 +25,16 @@ class MarketEngine:
     """Engine responsible for creating validated Market objects."""
 
     REQUIRED_FIELDS = (
-    "symbol",
-    "exchange",
-    "timeframe",
-    "timestamp",
-    "open",
-    "high",
-    "low",
-    "close",
-    "volume",
-    )   
+        "symbol",
+        "exchange",
+        "timeframe",
+        "timestamp",
+        "open",
+        "high",
+        "low",
+        "close",
+        "volume",
+    )
 
     def __init__(self) -> None:
         self._logger = get_logger(__name__)
@@ -98,9 +98,7 @@ class MarketEngine:
     ) -> None:
 
         if not isinstance(timestamp, datetime):
-            raise InvalidTimestampError(
-                "timestamp must be datetime"
-            )
+            raise InvalidTimestampError("timestamp must be datetime")
 
     @staticmethod
     def _validate_prices(
@@ -113,19 +111,13 @@ class MarketEngine:
         close_price = float(raw_data["close"])
 
         if high < low:
-            raise InvalidPriceError(
-                "High cannot be less than Low"
-            )
+            raise InvalidPriceError("High cannot be less than Low")
 
         if not (low <= open_price <= high):
-            raise InvalidPriceError(
-                "Open outside candle range"
-            )
+            raise InvalidPriceError("Open outside candle range")
 
         if not (low <= close_price <= high):
-            raise InvalidPriceError(
-                "Close outside candle range"
-            )
+            raise InvalidPriceError("Close outside candle range")
 
     @staticmethod
     def _validate_volume(
@@ -133,6 +125,4 @@ class MarketEngine:
     ) -> None:
 
         if int(volume) < 0:
-            raise InvalidVolumeError(
-                "Volume cannot be negative"
-            )
+            raise InvalidVolumeError("Volume cannot be negative")

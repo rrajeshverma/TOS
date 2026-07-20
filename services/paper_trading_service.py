@@ -20,6 +20,7 @@ from shared.logger import get_logger
 
 from utils.id_generator import generate_position_id
 
+
 class PaperTradingService:
     """
     Executes trades in paper mode.

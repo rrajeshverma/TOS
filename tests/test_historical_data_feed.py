@@ -31,6 +31,7 @@ def test_next_candle():
 
     assert not feed.has_next()
 
+
 def test_reset_feed():
     candles = [
         {
@@ -58,6 +59,7 @@ def test_reset_feed():
 
     assert second["close"] == 104
 
+
 def test_peek_does_not_advance():
     candles = [
         {
@@ -83,6 +85,7 @@ def test_peek_does_not_advance():
     assert candle2["close"] == 104
 
     assert not feed.has_next()
+
 
 def test_current_index():
     candles = [
@@ -113,6 +116,7 @@ def test_current_index():
 
     feed.next()
     assert feed.current_index() == 2
+
 
 def test_iterates_over_all_candles():
     candles = [

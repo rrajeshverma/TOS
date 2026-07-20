@@ -30,9 +30,7 @@ class StrategySelector:
         names,
     ):
         self.selected_strategies = [
-            name
-            for name in names
-            if self.manager.registry.contains(name)
+            name for name in names if self.manager.registry.contains(name)
         ]
 
     def get_selected_many(
@@ -43,10 +41,7 @@ class StrategySelector:
     def get_selected_objects(
         self,
     ):
-        return [
-            self.manager.get(name)
-            for name in self.selected_strategies
-        ]
+        return [self.manager.get(name) for name in self.selected_strategies]
 
     def has_selected(
         self,
@@ -89,6 +84,4 @@ class StrategySelector:
     def select_all(
         self,
     ):
-        self.selected_strategies = (
-            self.manager.registry.list_strategies()
-        )
+        self.selected_strategies = self.manager.registry.list_strategies()

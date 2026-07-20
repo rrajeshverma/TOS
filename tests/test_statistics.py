@@ -31,6 +31,7 @@ def test_win_rate_mixed():
 
     assert stats.win_rate(trades) == 50.0
 
+
 def test_average_win():
     stats = Statistics()
 
@@ -57,6 +58,7 @@ def test_average_loss_no_losses():
     stats = Statistics()
 
     assert stats.average_loss([10, 20]) == 0.0
+
 
 def test_profit_factor():
     stats = Statistics()
@@ -86,6 +88,7 @@ def test_profit_factor_no_trades():
     stats = Statistics()
 
     assert stats.profit_factor([]) == 0.0
+
 
 def test_payoff_ratio():
     stats = Statistics()
@@ -146,6 +149,7 @@ def test_expectancy_no_trades():
 
     assert stats.expectancy([]) == 0.0
 
+
 def test_recovery_factor():
     stats = Statistics()
 
@@ -170,19 +174,26 @@ def test_recovery_factor_zero_drawdown():
 def test_recovery_factor_zero_profit():
     stats = Statistics()
 
-    assert stats.recovery_factor(
-        net_profit=0,
-        max_drawdown=5000,
-    ) == 0.0
+    assert (
+        stats.recovery_factor(
+            net_profit=0,
+            max_drawdown=5000,
+        )
+        == 0.0
+    )
 
 
 def test_recovery_factor_zero_profit_zero_drawdown():
     stats = Statistics()
 
-    assert stats.recovery_factor(
-        net_profit=0,
-        max_drawdown=0,
-    ) == 0.0
+    assert (
+        stats.recovery_factor(
+            net_profit=0,
+            max_drawdown=0,
+        )
+        == 0.0
+    )
+
 
 def test_sharpe_ratio():
     stats = Statistics()
@@ -210,6 +221,7 @@ def test_sharpe_ratio_zero_volatility():
     stats = Statistics()
 
     assert stats.sharpe_ratio([0.01, 0.01, 0.01]) == 0.0
+
 
 def test_sortino_ratio():
     stats = Statistics()
@@ -242,6 +254,7 @@ def test_sortino_ratio_single_negative_return():
 
     assert stats.sortino_ratio(returns) == 0.0
 
+
 from math import isclose
 
 
@@ -269,11 +282,14 @@ def test_calmar_ratio_zero_drawdown():
 def test_calmar_ratio_zero_cagr():
     stats = Statistics()
 
-    assert stats.calmar_ratio(
-        cagr=0.0,
-        max_drawdown_percent=10.0,
-    ) == 0.0
-    
+    assert (
+        stats.calmar_ratio(
+            cagr=0.0,
+            max_drawdown_percent=10.0,
+        )
+        == 0.0
+    )
+
 
 def test_calmar_ratio_negative_cagr():
     stats = Statistics()

@@ -27,6 +27,7 @@ def test_event_bus_subscribes_and_publishes():
     assert len(subscriber.events) == 1
     assert subscriber.events[0] == event
 
+
 def test_multiple_subscribers_receive_same_event():
     bus = EventBus()
 
@@ -48,6 +49,7 @@ def test_multiple_subscribers_receive_same_event():
     assert s1.events[0] == event
     assert s2.events[0] == event
 
+
 def test_unsubscribe_removes_subscriber():
     bus = EventBus()
 
@@ -65,6 +67,7 @@ def test_unsubscribe_removes_subscriber():
 
     assert subscriber.events == []
 
+
 def test_publish_with_no_subscribers_does_not_raise():
     bus = EventBus()
 
@@ -75,6 +78,7 @@ def test_publish_with_no_subscribers_does_not_raise():
 
     # Should not raise any exception
     bus.publish(event)
+
 
 def test_duplicate_subscriber_is_registered_only_once():
     bus = EventBus()

@@ -14,7 +14,7 @@ class Robustness:
             return 0.0
 
         variance = sum((p - mean) ** 2 for p in profits) / len(profits)
-        std = variance ** 0.5
+        std = variance**0.5
 
         cv = abs(std / mean)
 

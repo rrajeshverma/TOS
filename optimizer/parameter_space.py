@@ -46,10 +46,7 @@ class ParameterSpace:
         names = list(self._parameters.keys())
         values = list(self._parameters.values())
 
-        return (
-            dict(zip(names, combo))
-            for combo in product(*values)
-        )
+        return (dict(zip(names, combo)) for combo in product(*values))
 
     def __len__(self):
         return len(self._parameters)

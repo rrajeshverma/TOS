@@ -38,11 +38,7 @@ def merge_configs(left, right):
     result = copy.deepcopy(left)
 
     for key, value in right.items():
-        if (
-            key in result
-            and isinstance(result[key], dict)
-            and isinstance(value, dict)
-        ):
+        if key in result and isinstance(result[key], dict) and isinstance(value, dict):
             result[key] = merge_configs(result[key], value)
         else:
             result[key] = copy.deepcopy(value)

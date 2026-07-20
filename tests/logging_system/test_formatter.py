@@ -156,10 +156,7 @@ def test_formatter_reusable():
 
 
 def test_returns_same_format_every_time():
-    assert (
-        get_formatter()._style._fmt
-        == get_formatter()._style._fmt
-    )
+    assert get_formatter()._style._fmt == get_formatter()._style._fmt
 
 
 def test_formatter_handles_empty_message():

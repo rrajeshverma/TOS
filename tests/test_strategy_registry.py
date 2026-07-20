@@ -6,6 +6,7 @@ def test_create_registry():
 
     assert registry is not None
 
+
 def test_register_strategy():
     registry = StrategyRegistry()
 
@@ -15,6 +16,7 @@ def test_register_strategy():
     )
 
     assert "ORB" in registry.strategies
+
 
 def test_get_registered_strategy():
     registry = StrategyRegistry()
@@ -27,6 +29,7 @@ def test_get_registered_strategy():
     )
 
     assert registry.get("ORB") is strategy
+
 
 def test_contains_registered_strategy():
     registry = StrategyRegistry()
@@ -44,6 +47,7 @@ def test_contains_unknown_strategy():
 
     assert not registry.contains("UNKNOWN")
 
+
 def test_unregister_strategy():
     registry = StrategyRegistry()
 
@@ -55,6 +59,7 @@ def test_unregister_strategy():
     registry.unregister("ORB")
 
     assert not registry.contains("ORB")
+
 
 def test_list_strategies():
     registry = StrategyRegistry()

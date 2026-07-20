@@ -37,17 +37,13 @@ def test_invalid_none_name():
 def test_valid_strategy():
     validator = StrategyValidator()
 
-    assert validator.is_valid_strategy(
-        DummyStrategy()
-    )
+    assert validator.is_valid_strategy(DummyStrategy())
 
 
 def test_invalid_strategy():
     validator = StrategyValidator()
 
-    assert validator.is_valid_strategy(
-        InvalidStrategy()
-    ) is False
+    assert validator.is_valid_strategy(InvalidStrategy()) is False
 
 
 def test_validate():
@@ -62,19 +58,25 @@ def test_validate():
 def test_validate_invalid_name():
     validator = StrategyValidator()
 
-    assert validator.validate(
-        "",
-        DummyStrategy(),
-    ) is False
+    assert (
+        validator.validate(
+            "",
+            DummyStrategy(),
+        )
+        is False
+    )
 
 
 def test_validate_invalid_strategy():
     validator = StrategyValidator()
 
-    assert validator.validate(
-        "ORB",
-        InvalidStrategy(),
-    ) is False
+    assert (
+        validator.validate(
+            "ORB",
+            InvalidStrategy(),
+        )
+        is False
+    )
 
 
 def test_validate_many():
@@ -85,9 +87,7 @@ def test_validate_many():
         "VWAP": DummyStrategy(),
     }
 
-    assert validator.validate_many(
-        strategies
-    )
+    assert validator.validate_many(strategies)
 
 
 def test_validate_many_invalid():
@@ -98,6 +98,4 @@ def test_validate_many_invalid():
         "VWAP": InvalidStrategy(),
     }
 
-    assert validator.validate_many(
-        strategies
-    ) is False
+    assert validator.validate_many(strategies) is False

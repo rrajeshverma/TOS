@@ -31,10 +31,7 @@ def get_logger(name: str) -> logging.Logger:
             level=getattr(logging, LOG_LEVEL),
             format="%(asctime)s | %(levelname)-8s | %(name)s | %(message)s",
             datefmt="%d-%m-%Y %H:%M:%S",
-            handlers=[
-                logging.FileHandler(log_file),
-                logging.StreamHandler()
-            ]
+            handlers=[logging.FileHandler(log_file), logging.StreamHandler()],
         )
 
         _LOGGER_INITIALIZED = True

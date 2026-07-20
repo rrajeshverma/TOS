@@ -114,16 +114,12 @@ class StrategyManager:
     def enable_all(
         self,
     ):
-        self.enabled_strategies = set(
-            self.registry.list_strategies()
-        )
+        self.enabled_strategies = set(self.registry.list_strategies())
 
     def has_enabled_strategies(
         self,
     ):
-        return bool(
-            self.enabled_strategies
-        )
+        return bool(self.enabled_strategies)
 
     def remove(
         self,

@@ -100,6 +100,7 @@ def test_close_position():
 
     assert closed.status == TradeStatus.CLOSED
 
+
 def test_close_sets_closed_at():
     service = PaperTradingService()
 
@@ -121,6 +122,7 @@ def test_close_sets_closed_at():
 
     assert closed.closed_at is not None
 
+
 def test_update_price_preserves_position_id():
     trade = create_trade()
 
@@ -137,6 +139,7 @@ def test_update_price_preserves_position_id():
     assert updated.average_price == position.average_price
     assert updated.quantity == position.quantity
     assert updated.opened_at == position.opened_at
+
 
 def test_close_preserves_position_data():
     trade = create_trade()
@@ -155,6 +158,7 @@ def test_close_preserves_position_data():
     assert closed.average_price == position.average_price
     assert closed.opened_at == position.opened_at
     assert closed.last_traded_price == Decimal("25100")
+
 
 def test_paper_trade_lifecycle():
     trade = create_trade()
@@ -177,6 +181,7 @@ def test_paper_trade_lifecycle():
     assert position.last_traded_price == Decimal("25100")
     assert position.closed_at is not None
 
+
 def test_position_lifecycle():
     service = PaperTradingService()
 
@@ -197,6 +202,7 @@ def test_position_lifecycle():
     assert position.last_traded_price == 25200
     assert position.closed_at is not None
 
+
 from tests.test_trade_factory import create_trade
 
 
@@ -213,6 +219,7 @@ def test_update_price_preserves_position_identity():
     assert updated.average_price == position.average_price
     assert updated.opened_at == position.opened_at
     assert updated.last_traded_price == 25150
+
 
 from tests.test_trade_factory import create_trade
 
@@ -232,6 +239,7 @@ def test_close_preserves_position_identity():
     assert closed.last_traded_price == 25200
     assert closed.closed_at is not None
 
+
 from tests.test_trade_factory import create_trade
 from shared.enums import TradeStatus
 
@@ -249,6 +257,7 @@ def test_execute_initializes_position_correctly():
     assert position.status == TradeStatus.OPEN
     assert position.opened_at is not None
 
+
 from tests.test_trade_factory import create_trade
 
 
@@ -263,6 +272,7 @@ def test_update_price_keeps_position_open():
     assert updated.closed_at is None
     assert updated.status == position.status
     assert updated.last_traded_price == 25125
+
 
 from tests.test_trade_factory import create_trade
 

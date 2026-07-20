@@ -5,6 +5,7 @@ import uuid
 from brokers.base_broker import BaseBroker
 from brokers.models import Funds, OrderStatus
 
+
 class PaperBroker(BaseBroker):
     """In-memory paper broker implementation."""
 

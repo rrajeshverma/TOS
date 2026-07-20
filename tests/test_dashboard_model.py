@@ -24,6 +24,7 @@ def test_dashboard_model_contains_portfolio_summary():
 
     assert isinstance(dashboard.portfolio_summary, PortfolioSummary)
 
+
 def test_dashboard_model_contains_analytics_widgets():
     dashboard = DashboardModel()
 

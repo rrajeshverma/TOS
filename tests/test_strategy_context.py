@@ -15,18 +15,19 @@ def test_set_get():
         100,
     )
 
-    assert context.get(
-        "price"
-    ) == 100
+    assert context.get("price") == 100
 
 
 def test_get_default():
     context = StrategyContext()
 
-    assert context.get(
-        "missing",
-        10,
-    ) == 10
+    assert (
+        context.get(
+            "missing",
+            10,
+        )
+        == 10
+    )
 
 
 def test_contains():
@@ -37,9 +38,7 @@ def test_contains():
         100,
     )
 
-    assert context.contains(
-        "price"
-    )
+    assert context.contains("price")
 
 
 def test_remove():
@@ -50,13 +49,9 @@ def test_remove():
         100,
     )
 
-    context.remove(
-        "price"
-    )
+    context.remove("price")
 
-    assert context.contains(
-        "price"
-    ) is False
+    assert context.contains("price") is False
 
 
 def test_clear():

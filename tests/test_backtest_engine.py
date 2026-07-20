@@ -11,6 +11,7 @@ def test_create_backtest_engine():
 
     assert engine.feed is feed
 
+
 def test_run_empty_feed():
     feed = HistoricalDataFeed([])
 
@@ -19,6 +20,7 @@ def test_run_empty_feed():
     result = engine.run()
 
     assert result == []
+
 
 def test_run_consumes_all_candles():
     candles = [
@@ -39,6 +41,7 @@ def test_run_consumes_all_candles():
     engine.run()
 
     assert feed.current_index() == 2
+
 
 class DummyStrategy:
     def __init__(self):
@@ -63,6 +66,7 @@ def test_strategy_receives_every_candle():
     engine.run()
 
     assert strategy.count == 3
+
 
 class SignalStrategy:
     def on_candle(self, candle):

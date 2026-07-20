@@ -34,7 +34,9 @@ def test_snapshot_to_dict():
         "open_positions": 2,
     }
 
+
 # ---------- Total PnL ----------
+
 
 def test_total_pnl_with_realized_and_unrealized():
     snapshot = PortfolioSnapshot(100000, 101500, 1000, 500, 2)
@@ -56,6 +58,7 @@ def test_total_pnl_zero():
 
 # ---------- Status ----------
 
+
 def test_is_profitable_true():
     snapshot = PortfolioSnapshot(100000, 101000, 1000, 0, 1)
 
@@ -75,6 +78,7 @@ def test_has_open_positions():
 
 
 # ---------- Position Management ----------
+
 
 def test_increment_positions():
     snapshot = PortfolioSnapshot(100000, 100000, 0, 0, 1)
@@ -110,6 +114,7 @@ def test_positions_never_negative():
 
 # ---------- Cash Management ----------
 
+
 def test_deposit():
     snapshot = PortfolioSnapshot(100000, 100000, 0, 0, 0)
 
@@ -135,6 +140,7 @@ def test_withdraw_never_negative():
 
 
 # ---------- Copy ----------
+
 
 def test_copy_returns_new_object():
     snapshot = PortfolioSnapshot(100000, 101000, 1000, 0, 2)

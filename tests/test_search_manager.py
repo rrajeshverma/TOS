@@ -1,9 +1,11 @@
 from optimizer.search_manager import SearchManager
 
+
 def test_create_search_manager():
     manager = SearchManager()
 
     assert manager is not None
+
 
 def test_execute_search():
     class DummySearch:
@@ -19,6 +21,7 @@ def test_execute_search():
 
     assert result == "completed"
 
+
 def test_best_result():
     class DummySearch:
         def best_result(self):
@@ -27,4 +30,3 @@ def test_best_result():
     manager = SearchManager()
 
     assert manager.best_result(DummySearch()) == "best"
-

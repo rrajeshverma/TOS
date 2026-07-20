@@ -12,6 +12,7 @@ def test_dashboard_renderer_returns_dict():
 
     assert isinstance(result, dict)
 
+
 def test_dashboard_renderer_contains_sections():
     renderer = DashboardRenderer()
     dashboard = DashboardModel()
@@ -27,6 +28,7 @@ def test_dashboard_renderer_contains_sections():
     assert "performance" in result
     assert "risk" in result
 
+
 def test_dashboard_renderer_renders_portfolio_summary_values():
     dashboard = DashboardModel()
 
@@ -39,6 +41,7 @@ def test_dashboard_renderer_renders_portfolio_summary_values():
 
     assert result["portfolio_summary"]["total_value"] == 100000.0
     assert result["portfolio_summary"]["cash"] == 25000.0
+
 
 def test_dashboard_renderer_renders_open_positions():
     dashboard = DashboardModel()
@@ -62,6 +65,7 @@ def test_dashboard_renderer_renders_open_positions():
     assert result["open_positions"]["positions"][0]["qty"] == 50
     assert result["open_positions"]["positions"][0]["pnl"] == 1250.0
 
+
 def test_dashboard_renderer_renders_todays_pnl():
     dashboard = DashboardModel()
 
@@ -74,6 +78,7 @@ def test_dashboard_renderer_renders_todays_pnl():
 
     assert result["todays_pnl"]["realized_pnl"] == 4525.75
     assert result["todays_pnl"]["trade_count"] == 4
+
 
 def test_dashboard_service_populates_portfolio_summary():
     service = DashboardService()

@@ -13,6 +13,7 @@ from brokers.models import (
     ProductType,
 )
 
+
 class DummyClient:
 
     def get_fund_limits(self):
@@ -68,6 +69,7 @@ def test_get_positions():
     assert positions[0].last_price == Decimal("250.25")
     assert positions[0].pnl == Decimal("0")
 
+
 class DummyHoldingClient:
 
     def get_holdings(self):
@@ -96,6 +98,7 @@ def test_get_holdings():
     assert holdings[0].symbol == "RELIANCE"
     assert holdings[0].quantity == 10
     assert holdings[0].average_price == Decimal("2500.50")
+
 
 class DummyOrderClient:
 
@@ -135,6 +138,7 @@ def test_get_orders():
     assert order.status == OrderStatus.PENDING
     assert order.broker_order_id == "ORD123"
 
+
 class DummyPlaceOrderClient:
 
     def place_order(self, **kwargs):
@@ -144,6 +148,7 @@ class DummyPlaceOrderClient:
                 "orderId": "ORD999",
             },
         }
+
 
 from domain.instrument import Instrument
 
@@ -159,12 +164,13 @@ class DummyInstrumentMapper:
             tick_size=Decimal("0.05"),
         )
 
+
 def test_place_order():
 
     broker = DhanBroker(
-    DummyPlaceOrderClient(),
-    DummyInstrumentMapper(),
-)
+        DummyPlaceOrderClient(),
+        DummyInstrumentMapper(),
+    )
 
     order = Order(
         symbol="NIFTY",

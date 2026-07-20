@@ -43,6 +43,7 @@ def test_cash_ratio():
 
     assert metrics.cash_ratio(snapshot) == 80.0
 
+
 def test_summary():
     snapshot = PortfolioSnapshot(
         cash=80000,
@@ -60,9 +61,11 @@ def test_summary():
     assert summary["return_percent"] == 1.875
     assert summary["cash_ratio"] == 80.0
 
+
 # ============================================================
 # Equity Metrics
 # ============================================================
+
 
 def test_equity_change_positive():
     snapshot = PortfolioSnapshot(100000, 101500, 1000, 500, 2)
@@ -100,6 +103,7 @@ def test_equity_change_zero():
 # Portfolio Health
 # ============================================================
 
+
 def test_is_growing():
     snapshot = PortfolioSnapshot(100000, 101000, 1000, 0, 1)
 
@@ -136,6 +140,7 @@ def test_not_in_drawdown():
 # Exposure
 # ============================================================
 
+
 def test_position_exposure_zero():
     snapshot = PortfolioSnapshot(100000, 100000, 0, 0, 0)
 
@@ -171,6 +176,7 @@ def test_cash_utilization():
 # ============================================================
 # Summary
 # ============================================================
+
 
 def test_summary_contains_total_pnl():
     snapshot = PortfolioSnapshot(100000, 101500, 1000, 500, 2)

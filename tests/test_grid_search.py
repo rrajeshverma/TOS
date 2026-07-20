@@ -2,16 +2,16 @@ from optimizer.grid_search import GridSearch
 from optimizer.parameter_space import ParameterSpace
 from optimizer.optimization_result import OptimizationResult
 
+
 def test_empty_parameter_space():
     space = ParameterSpace()
 
     search = GridSearch(space)
 
-    results = search.run(
-        lambda params: OptimizationResult(parameters=params)
-    )
+    results = search.run(lambda params: OptimizationResult(parameters=params))
 
     assert results == []
+
 
 def test_single_parameter():
     space = ParameterSpace()
@@ -20,11 +20,10 @@ def test_single_parameter():
 
     search = GridSearch(space)
 
-    results = search.run(
-        lambda params: OptimizationResult(parameters=params)
-    )
+    results = search.run(lambda params: OptimizationResult(parameters=params))
 
     assert len(results) == 2
+
 
 def test_multiple_parameters():
     space = ParameterSpace()
@@ -34,11 +33,10 @@ def test_multiple_parameters():
 
     search = GridSearch(space)
 
-    results = search.run(
-        lambda p: OptimizationResult(parameters=p)
-    )
+    results = search.run(lambda p: OptimizationResult(parameters=p))
 
     assert len(results) == 4
+
 
 def test_results_property():
     space = ParameterSpace()
@@ -47,11 +45,10 @@ def test_results_property():
 
     search = GridSearch(space)
 
-    search.run(
-        lambda p: OptimizationResult(parameters=p)
-    )
+    search.run(lambda p: OptimizationResult(parameters=p))
 
     assert len(search.results) == 1
+
 
 def test_best_result():
     space = ParameterSpace()
@@ -61,14 +58,12 @@ def test_best_result():
     search = GridSearch(space)
 
     def evaluator(params):
-        return OptimizationResult(
-            parameters=params,
-            net_profit=params["ema"]
-        )
+        return OptimizationResult(parameters=params, net_profit=params["ema"])
 
     search.run(evaluator)
 
     assert search.best_result().net_profit == 30
+
 
 def test_best_result_empty():
     space = ParameterSpace()
@@ -76,6 +71,7 @@ def test_best_result_empty():
     search = GridSearch(space)
 
     assert search.best_result() is None
+
 
 def test_evaluator_called_every_time():
     counter = 0
@@ -94,6 +90,7 @@ def test_evaluator_called_every_time():
 
     assert counter == 4
 
+
 def test_generation_order():
     space = ParameterSpace()
 
@@ -101,14 +98,14 @@ def test_generation_order():
 
     search = GridSearch(space)
 
-    results = search.run(
-        lambda p: OptimizationResult(parameters=p)
-    )
+    results = search.run(lambda p: OptimizationResult(parameters=p))
 
     assert results[0].parameters["ema"] == 20
     assert results[1].parameters["ema"] == 30
 
+
 import pytest
+
 
 def test_evaluator_exception():
     space = ParameterSpace()
@@ -121,6 +118,7 @@ def test_evaluator_exception():
     with pytest.raises(RuntimeError):
         GridSearch(space).run(evaluator)
 
+
 def test_result_count():
     space = ParameterSpace()
 
@@ -129,8 +127,6 @@ def test_result_count():
 
     search = GridSearch(space)
 
-    results = search.run(
-        lambda p: OptimizationResult(parameters=p)
-    )
+    results = search.run(lambda p: OptimizationResult(parameters=p))
 
     assert len(results) == space.count()

@@ -12,10 +12,7 @@ class StrategyFactory:
         return self.loader.get(name)
 
     def create_all(self):
-        return [
-            self.loader.get(name)
-            for name in self.loader.list_strategies()
-        ]
+        return [self.loader.get(name) for name in self.loader.list_strategies()]
 
     def contains(self, name):
         return self.loader.contains(name)

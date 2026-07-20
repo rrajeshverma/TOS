@@ -22,16 +22,22 @@ def test_not_outperformed():
 def test_excess_return():
     benchmark = Benchmark()
 
-    assert benchmark.excess_return(
-        strategy_return=18.0,
-        benchmark_return=12.0,
-    ) == 6.0
+    assert (
+        benchmark.excess_return(
+            strategy_return=18.0,
+            benchmark_return=12.0,
+        )
+        == 6.0
+    )
 
 
 def test_equal_return():
     benchmark = Benchmark()
 
-    assert benchmark.excess_return(
-        strategy_return=15.0,
-        benchmark_return=15.0,
-    ) == 0.0
+    assert (
+        benchmark.excess_return(
+            strategy_return=15.0,
+            benchmark_return=15.0,
+        )
+        == 0.0
+    )

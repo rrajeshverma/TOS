@@ -7,7 +7,6 @@ from domain.decision import Decision
 from shared.enums import Signal
 from shared.enums import DecisionStatus
 
-
 market = Market(
     symbol="NIFTY",
     exchange="NSE",
@@ -17,7 +16,7 @@ market = Market(
     high=24125,
     low=24095,
     close=24120,
-    volume=152340.0
+    volume=152340.0,
 )
 
 indicator = IndicatorSet(
@@ -25,7 +24,7 @@ indicator = IndicatorSet(
     ema_low=24134.70,
     vwap=24120.10,
     rsi=58.75,
-    volume_average=125000.0
+    volume_average=125000.0,
 )
 
 decision = Decision(

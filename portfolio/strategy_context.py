@@ -42,30 +42,22 @@ class StrategyContext:
     def keys(
         self,
     ):
-        return list(
-            self._data.keys()
-        )
+        return list(self._data.keys())
 
     def values(
         self,
     ):
-        return list(
-            self._data.values()
-        )
+        return list(self._data.values())
 
     def items(
         self,
     ):
-        return list(
-            self._data.items()
-        )
+        return list(self._data.items())
 
     def size(
         self,
     ):
-        return len(
-            self._data
-        )
+        return len(self._data)
 
     def is_empty(
         self,

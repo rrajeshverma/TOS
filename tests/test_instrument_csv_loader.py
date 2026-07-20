@@ -31,9 +31,7 @@ def test_load_instruments():
 def test_empty_csv_returns_empty_list(tmp_path):
     csv_file = tmp_path / "empty.csv"
 
-    csv_file.write_text(
-        "symbol,security_id,exchange_segment,lot_size,tick_size\n"
-    )
+    csv_file.write_text("symbol,security_id,exchange_segment,lot_size,tick_size\n")
 
     loader = InstrumentCSVLoader()
 

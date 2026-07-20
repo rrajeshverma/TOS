@@ -2,11 +2,11 @@ from portfolio.strategy_selector import StrategySelector
 from portfolio.strategy_manager import StrategyManager
 
 
-
 def test_create_strategy_selector():
     selector = StrategySelector()
 
     assert selector is not None
+
 
 def test_selector_has_strategy_manager():
     selector = StrategySelector()
@@ -16,6 +16,7 @@ def test_selector_has_strategy_manager():
         StrategyManager,
     )
 
+
 def test_select_strategy():
     selector = StrategySelector()
 
@@ -23,12 +24,14 @@ def test_select_strategy():
 
     assert selector.selected_strategy == "ORB"
 
+
 def test_get_selected_strategy():
     selector = StrategySelector()
 
     selector.select("VWAP")
 
     assert selector.get_selected() == "VWAP"
+
 
 def test_clear_selected_strategy():
     selector = StrategySelector()
@@ -38,6 +41,7 @@ def test_clear_selected_strategy():
     selector.clear_selection()
 
     assert selector.get_selected() is None
+
 
 def test_select_multiple_strategies():
     selector = StrategySelector()
@@ -63,6 +67,7 @@ def test_select_multiple_strategies():
         "VWAP",
     ]
 
+
 def test_select_many_filters_unregistered():
     selector = StrategySelector()
 
@@ -81,6 +86,7 @@ def test_select_many_filters_unregistered():
     assert selector.get_selected_many() == [
         "ORB",
     ]
+
 
 def test_get_selected_objects():
     selector = StrategySelector()
@@ -109,6 +115,7 @@ def test_get_selected_objects():
         vwap,
     ]
 
+
 def test_has_selected_strategies():
     selector = StrategySelector()
 
@@ -126,6 +133,7 @@ def test_has_selected_strategies():
     )
 
     assert selector.has_selected() is True
+
 
 def test_clear_selected_many():
     selector = StrategySelector()
@@ -147,6 +155,7 @@ def test_clear_selected_many():
 
     assert selector.has_selected() is False
     assert selector.get_selected_many() == []
+
 
 class DummyExecStrategy:
     def execute(self):
@@ -176,6 +185,7 @@ def test_execute_selected():
         "ORB": "BUY",
     }
 
+
 def test_selected_count():
     selector = StrategySelector()
 
@@ -199,6 +209,7 @@ def test_selected_count():
 
     assert selector.selected_count() == 2
 
+
 def test_is_selected():
     selector = StrategySelector()
 
@@ -219,6 +230,7 @@ def test_is_selected():
 
     assert selector.is_selected("ORB") is True
     assert selector.is_selected("VWAP") is False
+
 
 def test_remove_selected_strategy():
     selector = StrategySelector()
@@ -244,6 +256,7 @@ def test_remove_selected_strategy():
     assert selector.get_selected_many() == [
         "VWAP",
     ]
+
 
 def test_select_all():
     selector = StrategySelector()

@@ -16,7 +16,6 @@ from shared.enums import (
     OrderSide,
 )
 
-
 market = Market(
     symbol="NIFTY",
     exchange="NSE",

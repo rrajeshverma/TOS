@@ -8,7 +8,6 @@ from domain.risk import Risk
 from shared.enums import Signal
 from shared.enums import DecisionStatus
 
-
 market = Market(
     symbol="NIFTY",
     exchange="NSE",

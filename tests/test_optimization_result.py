@@ -10,6 +10,7 @@ def test_default_result():
     assert result.losses == 0
     assert result.net_profit == 0.0
 
+
 def test_win_rate():
     result = OptimizationResult(
         parameters={},
@@ -20,10 +21,12 @@ def test_win_rate():
 
     assert result.win_rate == 63.0
 
+
 def test_zero_trade_win_rate():
     result = OptimizationResult(parameters={})
 
     assert result.win_rate == 0.0
+
 
 def test_profitable():
     result = OptimizationResult(
@@ -33,6 +36,7 @@ def test_profitable():
 
     assert result.is_profitable
 
+
 def test_not_profitable():
     result = OptimizationResult(
         parameters={},
@@ -40,6 +44,7 @@ def test_not_profitable():
     )
 
     assert not result.is_profitable
+
 
 def test_to_dict():
     result = OptimizationResult(
@@ -51,6 +56,7 @@ def test_to_dict():
 
     assert data["parameters"] == {"ema": 33}
     assert data["trades"] == 10
+
 
 def test_from_dict():
     data = {
@@ -65,11 +71,13 @@ def test_from_dict():
     assert result.parameters == {"ema": 33}
     assert result.trades == 20
 
+
 def test_equality():
     a = OptimizationResult(parameters={"ema": 20})
     b = OptimizationResult(parameters={"ema": 20})
 
     assert a == b
+
 
 def test_score():
     result = OptimizationResult(
@@ -80,6 +88,7 @@ def test_score():
     )
 
     assert result.score > 0
+
 
 def test_repr():
     result = OptimizationResult(parameters={"ema": 20})

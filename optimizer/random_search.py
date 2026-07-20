@@ -30,9 +30,7 @@ class RandomSearch:
             result = evaluator(params)
 
             if not isinstance(result, OptimizationResult):
-                raise TypeError(
-                    "Evaluator must return an OptimizationResult."
-                )
+                raise TypeError("Evaluator must return an OptimizationResult.")
 
             self._results.append(result)
 

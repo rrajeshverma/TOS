@@ -1,5 +1,6 @@
 import statistics
 
+
 class Statistics:
     def win_rate(self, trades):
         if not trades:
@@ -35,7 +36,7 @@ class Statistics:
             return float("inf") if gross_profit > 0 else 0.0
 
         return gross_profit / gross_loss
-    
+
     def payoff_ratio(self, trades):
         avg_win = self.average_win(trades)
         avg_loss = self.average_loss(trades)
@@ -54,10 +55,9 @@ class Statistics:
         win_probability = self.win_rate(trades) / 100
         loss_probability = 1 - win_probability
 
-        return (
-            win_probability * self.average_win(trades)
-            - loss_probability * self.average_loss(trades)
-        )
+        return win_probability * self.average_win(
+            trades
+        ) - loss_probability * self.average_loss(trades)
 
     def recovery_factor(self, net_profit, max_drawdown):
         if max_drawdown == 0:
@@ -97,5 +97,3 @@ class Statistics:
             return float("inf") if cagr > 0 else 0.0
 
         return cagr / max_drawdown_percent
-
-    

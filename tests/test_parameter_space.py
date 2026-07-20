@@ -8,6 +8,7 @@ def test_parameter_space_is_empty():
     assert space.count() == 0
     assert list(space.generate()) == []
 
+
 def test_add_parameter():
     space = ParameterSpace()
 
@@ -15,6 +16,7 @@ def test_add_parameter():
 
     assert "ema" in space
     assert len(space) == 1
+
 
 def test_remove_parameter():
     space = ParameterSpace()
@@ -26,6 +28,7 @@ def test_remove_parameter():
     assert "ema" not in space
     assert len(space) == 0
 
+
 def test_clear():
     space = ParameterSpace()
 
@@ -35,6 +38,7 @@ def test_clear():
     space.clear()
 
     assert len(space) == 0
+
 
 import pytest
 
@@ -47,6 +51,7 @@ def test_duplicate_parameter_raises():
     with pytest.raises(ValueError):
         space.add("ema", [30])
 
+
 @pytest.mark.parametrize("name", ["", None])
 def test_invalid_name(name):
     space = ParameterSpace()
@@ -54,12 +59,14 @@ def test_invalid_name(name):
     with pytest.raises(ValueError):
         space.add(name, [1])
 
+
 @pytest.mark.parametrize("values", [[], (), set()])
 def test_empty_values(values):
     space = ParameterSpace()
 
     with pytest.raises(ValueError):
         space.add("ema", values)
+
 
 def test_generate_single_parameter():
     space = ParameterSpace()
@@ -72,6 +79,7 @@ def test_generate_single_parameter():
         {"ema": 20},
         {"ema": 30},
     ]
+
 
 def test_generate_multiple_parameters():
     space = ParameterSpace()
@@ -88,6 +96,7 @@ def test_generate_multiple_parameters():
         {"ema": 30, "rsi": 60},
     ]
 
+
 def test_count():
     space = ParameterSpace()
 
@@ -95,6 +104,7 @@ def test_count():
     space.add("rsi", [50, 60])
 
     assert space.count() == 6
+
 
 def test_iterator():
     space = ParameterSpace()
@@ -107,14 +117,14 @@ def test_iterator():
         ("rsi", [50]),
     ]
 
+
 def test_parameters_property():
     space = ParameterSpace()
 
     space.add("ema", [20])
 
-    assert space.parameters == {
-        "ema": [20]
-    }
+    assert space.parameters == {"ema": [20]}
+
 
 def test_generation_order():
     space = ParameterSpace()

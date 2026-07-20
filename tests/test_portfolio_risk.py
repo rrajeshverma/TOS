@@ -1,9 +1,9 @@
 from portfolio.portfolio_risk import PortfolioRisk
 
-
 # ============================================================
 # Maximum Risk
 # ============================================================
+
 
 def test_maximum_risk():
     risk = PortfolioRisk(100000, 2)
@@ -20,6 +20,7 @@ def test_maximum_risk_zero():
 # ============================================================
 # Current Risk
 # ============================================================
+
 
 def test_current_risk():
     risk = PortfolioRisk(100000, 2)
@@ -48,6 +49,7 @@ def test_remaining_risk_never_negative():
 # ============================================================
 # Daily Loss
 # ============================================================
+
 
 def test_daily_loss():
     risk = PortfolioRisk(100000, 2)
@@ -85,6 +87,7 @@ def test_remaining_daily_loss_never_negative():
 # Exposure
 # ============================================================
 
+
 def test_exposure_percent():
     risk = PortfolioRisk(100000, 2)
 
@@ -118,6 +121,7 @@ def test_cannot_open_position():
 # ============================================================
 # Summary
 # ============================================================
+
 
 def test_summary_maximum_risk():
     risk = PortfolioRisk(100000, 2)

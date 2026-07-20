@@ -23,8 +23,4 @@ class StrategyRanker:
         return self.sort(lambda r: r.score)[:count]
 
     def profitable(self):
-        return [
-            result
-            for result in self._results
-            if result.is_profitable
-        ]
+        return [result for result in self._results if result.is_profitable]

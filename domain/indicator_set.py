@@ -33,15 +33,11 @@ class IndicatorSet:
         """
         Bullish indicator confirmation.
         """
-        return (
-            self.rsi > 55
-        )
+        return self.rsi > 55
 
     @property
     def is_bearish(self) -> bool:
         """
         Bearish indicator confirmation.
         """
-        return (
-            self.rsi < 45
-        )
+        return self.rsi < 45

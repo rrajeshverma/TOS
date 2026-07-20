@@ -3,10 +3,7 @@ class StrategyValidator:
         self,
         name,
     ):
-        return (
-            isinstance(name, str)
-            and bool(name.strip())
-        )
+        return isinstance(name, str) and bool(name.strip())
 
     def is_valid_strategy(
         self,
@@ -23,16 +20,12 @@ class StrategyValidator:
         name,
         strategy,
     ):
-        return (
-            self.is_valid_name(name)
-            and self.is_valid_strategy(strategy)
-        )
+        return self.is_valid_name(name) and self.is_valid_strategy(strategy)
 
     def validate_many(
         self,
         strategies,
     ):
         return all(
-            self.validate(name, strategy)
-            for name, strategy in strategies.items()
+            self.validate(name, strategy) for name, strategy in strategies.items()
         )

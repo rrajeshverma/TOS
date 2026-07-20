@@ -1,9 +1,9 @@
 from portfolio.strategy_performance import StrategyPerformance
 
-
 # ============================================================
 # Construction
 # ============================================================
+
 
 def test_initial_values():
     performance = StrategyPerformance()
@@ -14,6 +14,7 @@ def test_initial_values():
 # ============================================================
 # Add Trades
 # ============================================================
+
 
 def test_add_trade():
     performance = StrategyPerformance()
@@ -35,6 +36,7 @@ def test_add_multiple_trades():
 # ============================================================
 # Net PnL
 # ============================================================
+
 
 def test_net_profit():
     performance = StrategyPerformance()
@@ -66,6 +68,7 @@ def test_net_mixed():
 # ============================================================
 # Win / Loss Counts
 # ============================================================
+
 
 def test_winning_trades():
     performance = StrategyPerformance()
@@ -101,6 +104,7 @@ def test_total_trades():
 # Win Rate
 # ============================================================
 
+
 def test_win_rate():
     performance = StrategyPerformance()
 
@@ -121,6 +125,7 @@ def test_win_rate_zero():
 # ============================================================
 # Largest Trades
 # ============================================================
+
 
 def test_largest_win():
     performance = StrategyPerformance()
@@ -145,6 +150,7 @@ def test_largest_loss():
 # ============================================================
 # Summary
 # ============================================================
+
 
 def test_summary_net_profit():
     performance = StrategyPerformance()

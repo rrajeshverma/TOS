@@ -14,6 +14,7 @@ from brokers.models import (
     ProductType,
 )
 
+
 class DhanBroker(BaseBroker):
 
     def __init__(self, client, instrument_mapper):
@@ -131,9 +132,7 @@ class DhanBroker(BaseBroker):
                 Holding(
                     symbol=item["tradingSymbol"],
                     quantity=item["totalQty"],
-                    average_price=Decimal(
-                        str(item["avgCostPrice"])
-                    ),
+                    average_price=Decimal(str(item["avgCostPrice"])),
                 )
             )
 

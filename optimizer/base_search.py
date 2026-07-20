@@ -14,9 +14,7 @@ class BaseSearch:
 
     def _store(self, result):
         if not isinstance(result, OptimizationResult):
-            raise TypeError(
-                "Evaluator must return an OptimizationResult."
-            )
+            raise TypeError("Evaluator must return an OptimizationResult.")
 
         self._results.append(result)
 

@@ -25,7 +25,7 @@ class ExecutionTimer:
             return time.perf_counter() - self.start_time
 
         return self.end_time - self.start_time
-    
+
         if self.start_time is None:
             return 0.0
 
@@ -33,7 +33,7 @@ class ExecutionTimer:
             return time.perf_counter() - self.start_time
 
         return self.end_time - self.start_time
-    
+
     def start(self):
         self.is_running = True
         self.start_time = time.perf_counter()
@@ -48,13 +48,13 @@ class ExecutionTimer:
 
         if not self.is_running:
             return
-        
+
     def __str__(self):
         return f"ExecutionTimer(elapsed={self.elapsed:.6f}s)"
-    
+
     def __repr__(self):
         return str(self)
-    
+
     def __enter__(self):
         self.start()
         return self

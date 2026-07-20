@@ -18,6 +18,7 @@ def test_generate_report():
     assert result["total_trades"] == 4
     assert result["win_rate"] == 50.0
 
+
 def test_generate_performance_report_with_advanced_metrics():
     report = PerformanceReport()
 

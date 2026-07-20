@@ -1,6 +1,7 @@
 from optimizer.optimization_result import OptimizationResult
 from validation.robustness import Robustness
 
+
 def make_result(**kwargs):
     defaults = {
         "parameters": {},
@@ -20,10 +21,12 @@ def make_result(**kwargs):
 
     return OptimizationResult(**defaults)
 
+
 def test_empty_results():
     robustness = Robustness()
 
     assert robustness.evaluate([]) == 0.0
+
 
 def test_single_result():
     result = make_result(net_profit=100)
@@ -33,6 +36,7 @@ def test_single_result():
     score = robustness.evaluate([result])
 
     assert score == 1.0
+
 
 def test_identical_results():
     results = [
@@ -44,6 +48,7 @@ def test_identical_results():
     robustness = Robustness()
 
     assert robustness.evaluate(results) == 1.0
+
 
 def test_variable_results():
     results = [
@@ -57,6 +62,7 @@ def test_variable_results():
     score = robustness.evaluate(results)
 
     assert 0.0 <= score <= 1.0
+
 
 def test_more_consistent_scores_higher():
     stable = [

@@ -34,11 +34,7 @@ class OptimizationResult:
         Simple composite score.
         This can be refined later by StrategyRanker.
         """
-        return (
-            self.net_profit
-            + (self.profit_factor * 100)
-            + (self.sharpe_ratio * 100)
-        )
+        return self.net_profit + (self.profit_factor * 100) + (self.sharpe_ratio * 100)
 
     def to_dict(self) -> dict:
         return asdict(self)

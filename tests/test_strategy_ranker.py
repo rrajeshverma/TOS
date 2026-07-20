@@ -86,9 +86,7 @@ def test_sort_by_sharpe():
 
 
 def test_results_property():
-    results = [
-        make_result(net_profit=100)
-    ]
+    results = [make_result(net_profit=100)]
 
     ranker = StrategyRanker(results)
 

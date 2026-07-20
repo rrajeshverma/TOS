@@ -13,10 +13,12 @@ def test_cache_store_and_get():
 
     assert cache.get("BTCUSDT") == candle
 
+
 def test_get_unknown_symbol_returns_none():
     cache = CandleCache()
 
     assert cache.get("ETHUSDT") is None
+
 
 def test_set_overwrites_existing_candle():
     cache = CandleCache()
@@ -25,6 +27,7 @@ def test_set_overwrites_existing_candle():
     cache.set("BTCUSDT", {"close": 65100})
 
     assert cache.get("BTCUSDT") == {"close": 65100}
+
 
 def test_clear_removes_all_cached_candles():
     cache = CandleCache()

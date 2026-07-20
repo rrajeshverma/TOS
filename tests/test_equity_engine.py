@@ -32,6 +32,7 @@ def test_multiple_trades():
 
     assert engine.current_equity == 103000
 
+
 def test_equity_history_starts_with_initial_capital():
     engine = EquityEngine(initial_capital=100000)
 
@@ -51,6 +52,7 @@ def test_equity_history_after_trades():
         100500,
         103000,
     ]
+
 
 def test_peak_equity_initially_equals_capital():
     engine = EquityEngine(initial_capital=100000)

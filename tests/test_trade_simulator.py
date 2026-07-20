@@ -26,10 +26,12 @@ def test_open_position():
 def test_close_position():
     simulator = TradeSimulator()
 
-    simulator.open({
-        "action": "BUY",
-        "price": 100,
-    })
+    simulator.open(
+        {
+            "action": "BUY",
+            "price": 100,
+        }
+    )
 
     simulator.close(110)
 
@@ -46,10 +48,12 @@ def test_close_position():
 def test_sell_trade_profit():
     simulator = TradeSimulator()
 
-    simulator.open({
-        "action": "SELL",
-        "price": 100,
-    })
+    simulator.open(
+        {
+            "action": "SELL",
+            "price": 100,
+        }
+    )
 
     simulator.close(90)
 
@@ -61,10 +65,12 @@ def test_sell_trade_profit():
 def test_sell_trade_loss():
     simulator = TradeSimulator()
 
-    simulator.open({
-        "action": "SELL",
-        "price": 100,
-    })
+    simulator.open(
+        {
+            "action": "SELL",
+            "price": 100,
+        }
+    )
 
     simulator.close(110)
 
@@ -72,13 +78,16 @@ def test_sell_trade_loss():
 
     assert trade["pnl"] == -10
 
+
 def test_close_returns_trade():
     simulator = TradeSimulator()
 
-    simulator.open({
-        "action": "BUY",
-        "price": 100,
-    })
+    simulator.open(
+        {
+            "action": "BUY",
+            "price": 100,
+        }
+    )
 
     trade = simulator.close(110)
 

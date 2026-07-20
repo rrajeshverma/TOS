@@ -95,6 +95,7 @@ def test_cancel_order():
 
     assert broker.get_order(order.broker_order_id).status == OrderStatus.CANCELLED
 
+
 def test_get_positions():
     broker = PaperBroker()
 
@@ -106,6 +107,7 @@ def test_get_holdings():
 
     assert broker.get_holdings() == []
 
+
 def test_get_funds():
     broker = PaperBroker()
 
@@ -114,6 +116,7 @@ def test_get_funds():
     assert funds.available_cash == Decimal("1000000")
     assert funds.available_margin == Decimal("1000000")
     assert funds.utilised_margin == Decimal("0")
+
 
 def modify_order(self, order_id: str, **kwargs):
     raise NotImplementedError

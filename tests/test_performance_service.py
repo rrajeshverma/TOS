@@ -66,6 +66,7 @@ def test_calculate_net_profit():
 
     assert model.net_profit == 100.0
 
+
 def test_calculate_gross_profit():
     service = PerformanceService()
 
@@ -79,6 +80,7 @@ def test_calculate_gross_profit():
     model = service.calculate(trades)
 
     assert model.gross_profit == 160.0
+
 
 def test_calculate_gross_loss():
     service = PerformanceService()
@@ -94,6 +96,7 @@ def test_calculate_gross_loss():
 
     assert model.gross_loss == 60.0
 
+
 def test_calculate_win_rate():
     service = PerformanceService()
 
@@ -108,6 +111,7 @@ def test_calculate_win_rate():
 
     assert model.win_rate == 50.0
 
+
 def test_calculate_profit_factor():
     service = PerformanceService()
 
@@ -121,6 +125,7 @@ def test_calculate_profit_factor():
     model = service.calculate(trades)
 
     assert model.profit_factor == pytest.approx(160.0 / 60.0)
+
 
 def test_calculate_average_win_and_loss():
     service = PerformanceService()
@@ -153,6 +158,7 @@ def test_calculate_largest_win_and_loss():
     assert model.largest_win == 100.0
     assert model.largest_loss == 40.0
 
+
 def test_calculate_expectancy():
     service = PerformanceService()
 
@@ -167,6 +173,7 @@ def test_calculate_expectancy():
 
     assert model.expectancy == pytest.approx(25.0)
 
+
 def test_calculate_equity_curve():
     service = PerformanceService()
 
@@ -179,6 +186,7 @@ def test_calculate_equity_curve():
     model = service.calculate(trades)
 
     assert model.equity_curve == [100.0, 60.0, 120.0]
+
 
 def test_calculate_max_drawdown():
     service = PerformanceService()
@@ -196,6 +204,7 @@ def test_calculate_max_drawdown():
     assert model.equity_curve == [100.0, 150.0, 120.0, 180.0, 110.0]
     assert model.max_drawdown == 70.0
 
+
 def test_calculate_max_drawdown_percent():
     service = PerformanceService()
 
@@ -210,9 +219,8 @@ def test_calculate_max_drawdown_percent():
     model = service.calculate(trades)
 
     assert model.max_drawdown == 70.0
-    assert model.max_drawdown_percent == pytest.approx(
-        (70.0 / 180.0) * 100
-    )
+    assert model.max_drawdown_percent == pytest.approx((70.0 / 180.0) * 100)
+
 
 def test_calculate_peak_equity():
     service = PerformanceService()
@@ -229,6 +237,7 @@ def test_calculate_peak_equity():
 
     assert model.peak_equity == 180.0
 
+
 def test_calculate_recovery_factor():
     service = PerformanceService()
 
@@ -242,38 +251,38 @@ def test_calculate_recovery_factor():
 
     model = service.calculate(trades)
 
-    assert model.recovery_factor == pytest.approx(
-        110.0 / 70.0
-    )
+    assert model.recovery_factor == pytest.approx(110.0 / 70.0)
+
 
 def test_calculate_max_consecutive_wins():
     service = PerformanceService()
 
     trades = [
-        DummyTrade(100.0),   # W
-        DummyTrade(50.0),    # W
-        DummyTrade(-20.0),   # L
-        DummyTrade(80.0),    # W
-        DummyTrade(40.0),    # W
-        DummyTrade(60.0),    # W
-        DummyTrade(-10.0),   # L
+        DummyTrade(100.0),  # W
+        DummyTrade(50.0),  # W
+        DummyTrade(-20.0),  # L
+        DummyTrade(80.0),  # W
+        DummyTrade(40.0),  # W
+        DummyTrade(60.0),  # W
+        DummyTrade(-10.0),  # L
     ]
 
     model = service.calculate(trades)
 
     assert model.max_consecutive_wins == 3
 
+
 def test_calculate_max_consecutive_losses():
     service = PerformanceService()
 
     trades = [
-        DummyTrade(-20.0),   # L
-        DummyTrade(-10.0),   # L
-        DummyTrade(50.0),    # W
-        DummyTrade(-30.0),   # L
-        DummyTrade(-40.0),   # L
-        DummyTrade(-15.0),   # L
-        DummyTrade(60.0),    # W
+        DummyTrade(-20.0),  # L
+        DummyTrade(-10.0),  # L
+        DummyTrade(50.0),  # W
+        DummyTrade(-30.0),  # L
+        DummyTrade(-40.0),  # L
+        DummyTrade(-15.0),  # L
+        DummyTrade(60.0),  # W
     ]
 
     model = service.calculate(trades)

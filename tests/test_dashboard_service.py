@@ -9,6 +9,7 @@ def test_dashboard_service_returns_dashboard_model():
 
     assert isinstance(dashboard, DashboardModel)
 
+
 def test_dashboard_service_returns_dashboard_with_widgets():
     service = DashboardService()
 
@@ -23,6 +24,7 @@ def test_dashboard_service_returns_dashboard_with_widgets():
     assert dashboard.performance is not None
     assert dashboard.risk is not None
 
+
 class FakePortfolioService:
     def get_summary(self):
         return {
@@ -34,9 +36,7 @@ class FakePortfolioService:
 
 
 def test_dashboard_service_populates_portfolio_summary():
-    service = DashboardService(
-        portfolio_service=FakePortfolioService()
-    )
+    service = DashboardService(portfolio_service=FakePortfolioService())
 
     dashboard = service.get_dashboard()
 
@@ -44,6 +44,7 @@ def test_dashboard_service_populates_portfolio_summary():
     assert dashboard.portfolio_summary.cash == 25000.0
     assert dashboard.portfolio_summary.invested == 75000.0
     assert dashboard.portfolio_summary.pnl == 5000.0
+
 
 class FakeTradeJournalService:
     def get_today_summary(self):
@@ -54,14 +55,13 @@ class FakeTradeJournalService:
 
 
 def test_dashboard_service_populates_todays_pnl():
-    service = DashboardService(
-        trade_journal_service=FakeTradeJournalService()
-    )
+    service = DashboardService(trade_journal_service=FakeTradeJournalService())
 
     dashboard = service.get_dashboard()
 
     assert dashboard.todays_pnl.realized_pnl == 4525.75
     assert dashboard.todays_pnl.trade_count == 4
+
 
 class FakeFundsService:
     def get_account_balance(self):
@@ -72,14 +72,13 @@ class FakeFundsService:
 
 
 def test_dashboard_service_populates_account_balance():
-    service = DashboardService(
-        funds_service=FakeFundsService()
-    )
+    service = DashboardService(funds_service=FakeFundsService())
 
     dashboard = service.get_dashboard()
 
     assert dashboard.account_balance.balance == 500000.0
     assert dashboard.account_balance.available_margin == 425000.0
+
 
 class FakePositionService:
     def get_open_positions(self):
@@ -98,9 +97,7 @@ class FakePositionService:
 
 
 def test_dashboard_service_populates_open_positions():
-    service = DashboardService(
-        position_service=FakePositionService()
-    )
+    service = DashboardService(position_service=FakePositionService())
 
     dashboard = service.get_dashboard()
 
@@ -108,6 +105,7 @@ def test_dashboard_service_populates_open_positions():
     assert len(dashboard.open_positions.positions) == 2
     assert dashboard.open_positions.positions[0]["symbol"] == "NIFTY"
     assert dashboard.open_positions.positions[1]["symbol"] == "BANKNIFTY"
+
 
 class FakePerformanceService:
     def get_performance(self):
@@ -120,9 +118,7 @@ class FakePerformanceService:
 
 
 def test_dashboard_service_populates_performance():
-    service = DashboardService(
-        performance_service=FakePerformanceService()
-    )
+    service = DashboardService(performance_service=FakePerformanceService())
 
     dashboard = service.get_dashboard()
 
@@ -130,6 +126,7 @@ def test_dashboard_service_populates_performance():
     assert dashboard.performance.total_trades == 40
     assert dashboard.performance.average_profit == 1850.0
     assert dashboard.performance.average_loss == 950.0
+
 
 class FakeRiskService:
     def get_risk_metrics(self):
@@ -141,15 +138,14 @@ class FakeRiskService:
 
 
 def test_dashboard_service_populates_risk():
-    service = DashboardService(
-        risk_service=FakeRiskService()
-    )
+    service = DashboardService(risk_service=FakeRiskService())
 
     dashboard = service.get_dashboard()
 
     assert dashboard.risk.max_drawdown == 8.5
     assert dashboard.risk.current_risk == 2.0
     assert dashboard.risk.risk_reward_ratio == 2.5
+
 
 def test_dashboard_service_populates_complete_dashboard():
     service = DashboardService(

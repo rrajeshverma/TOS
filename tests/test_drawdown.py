@@ -24,6 +24,7 @@ def test_zero_drawdown_after_new_high():
 
     assert dd.calculate(105000, 105000) == 0
 
+
 from analytics.drawdown import Drawdown
 
 
@@ -61,6 +62,7 @@ def test_max_drawdown_not_reduced_after_recovery():
     dd.update(100000, 100000)
 
     assert dd.max_drawdown == 5000
+
 
 from analytics.drawdown import Drawdown
 

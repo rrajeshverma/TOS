@@ -18,11 +18,7 @@ class HealthCheck:
         return len(self._checks)
 
     def failed_checks(self):
-        return [
-            name
-            for name, status in self._checks.items()
-            if not status
-        ]
+        return [name for name, status in self._checks.items() if not status]
 
     def clear(self):
         self._checks.clear()
@@ -32,7 +28,5 @@ class HealthCheck:
 
     def __repr__(self):
         return (
-            f"HealthCheck("
-            f"checks={len(self)}, "
-            f"healthy={self.overall_status()})"
+            f"HealthCheck(" f"checks={len(self)}, " f"healthy={self.overall_status()})"
         )

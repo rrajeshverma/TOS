@@ -21,6 +21,7 @@ from shared.logger import get_logger
 
 from utils.id_generator import generate_position_id
 
+
 class PositionManager:
     """
     Manages the lifecycle of trading positions.
@@ -92,10 +93,7 @@ class PositionManager:
         position: Position,
     ) -> Decimal:
 
-        return (
-            position.last_traded_price
-            - position.average_price
-        ) * position.quantity
+        return (position.last_traded_price - position.average_price) * position.quantity
 
     @staticmethod
     def realized_pnl(

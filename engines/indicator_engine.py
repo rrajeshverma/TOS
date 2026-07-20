@@ -73,9 +73,7 @@ class IndicatorEngine:
             volume_average=volume_avg,
         )
 
-        self._logger.info(
-            "IndicatorSet calculated successfully."
-        )
+        self._logger.info("IndicatorSet calculated successfully.")
 
         return indicator
 
@@ -88,9 +86,7 @@ class IndicatorEngine:
             raise ValueError("Market history is None.")
 
         if len(candles) < self.MIN_CANDLES:
-            raise ValueError(
-                f"Minimum {self.MIN_CANDLES} candles required."
-            )
+            raise ValueError(f"Minimum {self.MIN_CANDLES} candles required.")
 
     @staticmethod
     def _to_dataframe(
@@ -105,6 +101,7 @@ class IndicatorEngine:
                 "volume": [c.volume for c in candles],
             }
         )
+
     @staticmethod
     def _ema(series: pd.Series) -> float:
         """
@@ -114,7 +111,9 @@ class IndicatorEngine:
             series.ewm(
                 span=EMA_PERIOD,
                 adjust=False,
-            ).mean().iloc[-1]
+            )
+            .mean()
+            .iloc[-1]
         )
 
     @staticmethod
@@ -142,9 +141,7 @@ class IndicatorEngine:
 
         rsi = 100 - (100 / (1 + rs))
 
-        return float(
-            rsi.fillna(50).iloc[-1]
-        )
+        return float(rsi.fillna(50).iloc[-1])
 
     @staticmethod
     def _vwap(df: pd.DataFrame) -> float:
@@ -152,24 +149,13 @@ class IndicatorEngine:
         Calculate VWAP.
         """
 
-        typical_price = (
-            df["high"] +
-            df["low"] +
-            df["close"]
-        ) / 3
+        typical_price = (df["high"] + df["low"] + df["close"]) / 3
 
-        cumulative_tp_volume = (
-            typical_price * df["volume"]
-        ).cumsum()
+        cumulative_tp_volume = (typical_price * df["volume"]).cumsum()
 
-        cumulative_volume = (
-            df["volume"]
-        ).cumsum()
+        cumulative_volume = (df["volume"]).cumsum()
 
-        vwap = (
-            cumulative_tp_volume /
-            cumulative_volume
-        )
+        vwap = cumulative_tp_volume / cumulative_volume
 
         return float(vwap.iloc[-1])
 
@@ -181,11 +167,4 @@ class IndicatorEngine:
         Calculate rolling volume average.
         """
 
-        return float(
-            df["volume"]
-            .rolling(
-                window=VOLUME_AVG_PERIOD
-            )
-            .mean()
-            .iloc[-1]
-        )        
+        return float(df["volume"].rolling(window=VOLUME_AVG_PERIOD).mean().iloc[-1])

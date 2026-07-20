@@ -4,7 +4,6 @@ from dotenv import load_dotenv
 
 from brokers.clients.dhan_client import DhanClient
 
-
 load_dotenv()
 
 
