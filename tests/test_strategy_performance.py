@@ -206,3 +206,116 @@ def test_summary_largest_loss():
     performance.add_trade(-300)
 
     assert performance.summary()["largest_loss"] == -300
+
+# ============================================================
+# Gross Profit / Loss
+# ============================================================
+
+def test_gross_profit():
+    performance = StrategyPerformance()
+
+    performance.add_trade(100)
+    performance.add_trade(-50)
+    performance.add_trade(200)
+
+    assert performance.gross_profit() == 300
+
+
+def test_gross_loss():
+    performance = StrategyPerformance()
+
+    performance.add_trade(100)
+    performance.add_trade(-50)
+    performance.add_trade(-150)
+
+    assert performance.gross_loss() == 200
+
+
+# ============================================================
+# Average Win / Loss
+# ============================================================
+
+def test_average_win():
+    performance = StrategyPerformance()
+
+    performance.add_trade(100)
+    performance.add_trade(300)
+
+    assert performance.average_win() == 200
+
+
+def test_average_loss():
+    performance = StrategyPerformance()
+
+    performance.add_trade(-100)
+    performance.add_trade(-300)
+
+    assert performance.average_loss() == 200
+
+
+# ============================================================
+# Profit Factor
+# ============================================================
+
+def test_profit_factor():
+    performance = StrategyPerformance()
+
+    performance.add_trade(200)
+    performance.add_trade(-100)
+
+    assert performance.profit_factor() == 2.0
+
+
+def test_profit_factor_zero_loss():
+    performance = StrategyPerformance()
+
+    performance.add_trade(200)
+
+    assert performance.profit_factor() == float("inf")
+
+
+# ============================================================
+# Expectancy
+# ============================================================
+
+def test_expectancy():
+    performance = StrategyPerformance()
+
+    performance.add_trade(100)
+    performance.add_trade(-50)
+
+    assert performance.expectancy() == 25
+
+
+# ============================================================
+# Consecutive Wins
+# ============================================================
+
+def test_max_consecutive_wins():
+    performance = StrategyPerformance()
+
+    performance.add_trade(10)
+    performance.add_trade(20)
+    performance.add_trade(-5)
+    performance.add_trade(30)
+    performance.add_trade(40)
+    performance.add_trade(50)
+
+    assert performance.max_consecutive_wins() == 3
+
+
+# ============================================================
+# Consecutive Losses
+# ============================================================
+
+def test_max_consecutive_losses():
+    performance = StrategyPerformance()
+
+    performance.add_trade(-10)
+    performance.add_trade(-20)
+    performance.add_trade(5)
+    performance.add_trade(-30)
+    performance.add_trade(-40)
+    performance.add_trade(-50)
+
+    assert performance.max_consecutive_losses() == 3
