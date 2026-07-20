@@ -74,35 +74,19 @@ class PerformanceService:
                 / model.max_drawdown
             )
 
-        # Maximum Consecutive Wins
-        current_wins = 0
+        from reporting.reports.streak_statistics import (
+            StreakStatistics,
+        )
 
-        for trade in trades:
+        streaks = StreakStatistics()
 
-            if trade.pnl > 0:
-                current_wins += 1
+        model.max_consecutive_wins = (
+            streaks.max_consecutive_wins(trades)
+        )
 
-                model.max_consecutive_wins = max(
-                    model.max_consecutive_wins,
-                    current_wins,
-                )
-            else:
-                current_wins = 0
-
-        # Maximum Consecutive Losses
-        current_losses = 0
-
-        for trade in trades:
-
-            if trade.pnl < 0:
-                current_losses += 1
-
-                model.max_consecutive_losses = max(
-                    model.max_consecutive_losses,
-                    current_losses,
-                )
-            else:
-                current_losses = 0
+        model.max_consecutive_losses = (
+            streaks.max_consecutive_losses(trades)
+        )
 
         return model
 
