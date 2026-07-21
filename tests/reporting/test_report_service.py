@@ -129,3 +129,113 @@ def test_service_generate_returns_new_instance():
     second = service.generate("A")
 
     assert first is not second
+
+from reporting.html_report import HTMLReport
+
+
+def test_render_report_returns_html():
+    service = ReportService()
+
+    report = service.generate("Daily")
+
+    renderer = HTMLReport()
+
+    html = renderer.render(report)
+
+    assert isinstance(html, str)
+
+
+def test_generated_html_contains_title():
+    service = ReportService()
+
+    report = service.generate("Daily Report")
+
+    html = HTMLReport().render(report)
+
+    assert "Daily Report" in html
+
+
+def test_generated_html_contains_html_tag():
+    service = ReportService()
+
+    report = service.generate("Daily")
+
+    html = HTMLReport().render(report)
+
+    assert "<html>" in html
+
+
+def test_generated_html_contains_body():
+    service = ReportService()
+
+    report = service.generate("Daily")
+
+    html = HTMLReport().render(report)
+
+    assert "<body>" in html
+
+
+def test_generate_summary_visible_in_html():
+    service = ReportService()
+
+    report = service.generate(
+        "Daily",
+        summary={"Trades": 12},
+    )
+
+    html = HTMLReport().render(report)
+
+    assert "Trades" in html
+
+
+def test_generate_sections_visible_in_html():
+    service = ReportService()
+
+    report = service.generate(
+        "Daily",
+        sections=["Performance"],
+    )
+
+    html = HTMLReport().render(report)
+
+    assert "Performance" in html
+
+
+def test_generate_metadata_visible_in_html():
+    service = ReportService()
+
+    report = service.generate(
+        "Daily",
+        metadata={"Version": "1.0"},
+    )
+
+    html = HTMLReport().render(report)
+
+    assert "Version" in html
+
+
+def test_render_multiple_reports():
+    service = ReportService()
+
+    html1 = HTMLReport().render(service.generate("One"))
+    html2 = HTMLReport().render(service.generate("Two"))
+
+    assert html1 != html2
+
+
+def test_render_empty_report():
+    service = ReportService()
+
+    html = HTMLReport().render(service.generate(""))
+
+    assert isinstance(html, str)
+
+
+def test_html_report_is_repeatable():
+    service = ReportService()
+
+    report = service.generate("Daily")
+
+    renderer = HTMLReport()
+
+    assert renderer.render(report) == renderer.render(report)

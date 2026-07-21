@@ -1,3 +1,5 @@
+from pathlib import Path
+
 from reporting.report_model import ReportModel
 
 
@@ -15,3 +17,11 @@ class HTMLReport:
 
 </body>
 </html>"""
+
+    def export(self, report: ReportModel, path: str | Path) -> Path:
+        output = Path(path)
+        output.write_text(
+            self.render(report),
+            encoding="utf-8",
+        )
+        return output
