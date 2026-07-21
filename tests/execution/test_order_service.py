@@ -1,6 +1,8 @@
+from unittest.mock import Mock
+
 import pytest
 
-from execution.order_service import OrderService
+from execution.order_service import OrderService, OrderStatus
 
 
 def test_order_service_starts_empty():
@@ -58,3 +60,29 @@ def test_multiple_orders(count):
         )
 
     assert service.order_count == count
+
+
+def test_duplicate_status_update_does_not_publish_event():
+    dispatcher = Mock()
+
+    service = OrderService(dispatcher=dispatcher)
+
+    order_id = service.submit(
+        {
+            "symbol": "NIFTY",
+            "side": "BUY",
+            "quantity": 1,
+        }
+    )
+
+    # Ignore NEW event from submit()
+    dispatcher.publish.reset_mock()
+
+    service.update_status(order_id, OrderStatus.SUBMITTED)
+
+    assert dispatcher.publish.call_count == 1
+
+    # Duplicate update should not publish another event
+    service.update_status(order_id, OrderStatus.SUBMITTED)
+
+    assert dispatcher.publish.call_count == 1

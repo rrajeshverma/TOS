@@ -81,6 +81,19 @@ class OrderService:
         if order_id not in self._orders:
             raise KeyError(f"Unknown order id: {order_id}")
 
+        current = self._statuses[order_id]
+
+        # Ignore duplicate status updates (idempotent)
+        if status == current:
+            return
+
+        allowed = self._ALLOWED_TRANSITIONS.get(current, set())
+
+        if status not in allowed:
+            raise ValueError(
+                f"Invalid status transition: {current.value} -> {status.value}"
+            )
+
         self._statuses[order_id] = status
 
         self._publish_event(
@@ -137,6 +150,11 @@ class OrderService:
         if order_id not in self._orders:
             raise KeyError(f"Unknown order id: {order_id}")
 
+        if order_id in self._broker_order_ids:
+            raise ValueError(
+                f"Broker order already registered for order {order_id}"
+            )
+
         self._broker_order_ids[order_id] = broker_order_id
 
     def broker_order_id(self, order_id: int) -> str | None:
@@ -163,3 +181,23 @@ class OrderService:
                 broker_order_id=broker_order_id,
             )
         )
+
+    _ALLOWED_TRANSITIONS = {
+        OrderStatus.NEW: {
+            OrderStatus.PENDING,
+            OrderStatus.SUBMITTED,
+            OrderStatus.CANCELLED,
+            OrderStatus.FILLED,
+        },
+        OrderStatus.PENDING: {
+            OrderStatus.SUBMITTED,
+            OrderStatus.CANCELLED,
+            OrderStatus.FILLED,
+        },
+        OrderStatus.SUBMITTED: {
+            OrderStatus.FILLED,
+            OrderStatus.CANCELLED,
+        },
+        OrderStatus.FILLED: set(),
+        OrderStatus.CANCELLED: set(),
+    }
