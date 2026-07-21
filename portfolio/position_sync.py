@@ -1,8 +1,10 @@
 from dataclasses import dataclass, field
+from typing import Any
 
 
 @dataclass
 class PositionSync:
+    broker: Any | None = None
     local_positions: dict = field(default_factory=dict)
     broker_positions: dict = field(default_factory=dict)
 
@@ -37,3 +39,29 @@ class PositionSync:
             "broker_positions": self.broker_positions.copy(),
             "in_sync": self.is_in_sync(),
         }
+
+    def sync(self):
+        """
+        Retrieve live positions from the configured broker.
+        """
+        if self.broker is None:
+            raise RuntimeError("Broker is not configured.")
+
+        positions = self.broker.get_positions()
+
+        # Optional: populate broker_positions if the broker returns
+        # dictionaries with securityId and quantity.
+        if isinstance(positions, list):
+            self.broker_positions.clear()
+
+            for position in positions:
+                if (
+                    isinstance(position, dict)
+                    and "securityId" in position
+                    and "quantity" in position
+                ):
+                    self.broker_positions[
+                        position["securityId"]
+                    ] = position["quantity"]
+
+        return positions
