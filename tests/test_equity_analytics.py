@@ -183,3 +183,8 @@ def test_return_percent_zero():
     analytics = EquityAnalytics(10000)
 
     assert analytics.return_percent() == 0.0
+
+def test_return_percent_zero_initial_equity():
+    analytics = EquityAnalytics(0)
+
+    assert analytics.return_percent() == 0.0

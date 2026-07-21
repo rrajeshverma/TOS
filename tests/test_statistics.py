@@ -301,3 +301,10 @@ def test_calmar_ratio_negative_cagr():
         ),
         -2.0,
     )
+
+def test_sortino_ratio_zero_downside_volatility():
+    stats = Statistics()
+
+    returns = [0.02, -0.01, -0.01, 0.03]
+
+    assert stats.sortino_ratio(returns) == 0.0

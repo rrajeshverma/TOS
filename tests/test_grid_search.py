@@ -130,3 +130,29 @@ def test_result_count():
     results = search.run(lambda p: OptimizationResult(parameters=p))
 
     assert len(results) == space.count()
+
+def test_store_invalid_result_raises_type_error():
+    space = ParameterSpace()
+
+    search = GridSearch(space)
+
+    with pytest.raises(
+        TypeError,
+        match="Evaluator must return an OptimizationResult.",
+    ):
+        search._store(object())
+
+def test_evaluator_returns_invalid_result():
+    space = ParameterSpace()
+    space.add("ema", [20])
+
+    search = GridSearch(space)
+
+    def evaluator(params):
+        return object()   # Not an OptimizationResult
+
+    with pytest.raises(
+        TypeError,
+        match="Evaluator must return an OptimizationResult.",
+    ):
+        search.run(evaluator)

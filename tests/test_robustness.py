@@ -80,3 +80,13 @@ def test_more_consistent_scores_higher():
     robustness = Robustness()
 
     assert robustness.evaluate(stable) > robustness.evaluate(unstable)
+
+def test_zero_mean_profit_returns_zero():
+    results = [
+        make_result(net_profit=100),
+        make_result(net_profit=-100),
+    ]
+
+    robustness = Robustness()
+
+    assert robustness.evaluate(results) == 0.0

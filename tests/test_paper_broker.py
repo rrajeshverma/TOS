@@ -120,3 +120,12 @@ def test_get_funds():
 
 def modify_order(self, order_id: str, **kwargs):
     raise NotImplementedError
+
+import pytest
+
+
+def test_modify_order_not_implemented():
+    broker = PaperBroker()
+
+    with pytest.raises(NotImplementedError):
+        broker.modify_order("dummy_order_id")

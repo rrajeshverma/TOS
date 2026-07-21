@@ -118,3 +118,40 @@ def test_execute_empty():
     pipeline = StrategyPipeline()
 
     assert pipeline.execute() == []
+
+def test_remove_non_existing_strategy():
+    pipeline = StrategyPipeline()
+
+    s1 = DummyStrategy("BUY")
+    s2 = DummyStrategy("SELL")
+
+    pipeline.add(s1)
+    pipeline.remove(s2)
+
+    assert pipeline.count() == 1
+    assert pipeline.contains(s1)
+
+
+def test_first_empty_pipeline():
+    pipeline = StrategyPipeline()
+
+    assert pipeline.first() is None
+
+
+def test_last_empty_pipeline():
+    pipeline = StrategyPipeline()
+
+    assert pipeline.last() is None
+
+def test_execute_with_context():
+    pipeline = StrategyPipeline()
+
+    pipeline.add(DummyStrategy("BUY"))
+    pipeline.add(DummyStrategy("SELL"))
+
+    context = {"symbol": "NIFTY"}
+
+    assert pipeline.execute(context) == [
+        "BUY",
+        "SELL",
+    ]

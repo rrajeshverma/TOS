@@ -18,3 +18,12 @@ def test_publisher_publishes_event():
     publisher.publish(event)
 
     assert publisher.last_event == event
+
+def test_base_publisher_publish():
+    class BasePublisher(Publisher):
+        def publish(self, event: Event) -> None:
+            super().publish(event)
+
+    publisher = BasePublisher()
+
+    publisher.publish(Event(name="TEST", payload={}))

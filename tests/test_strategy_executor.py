@@ -6,8 +6,10 @@ class DummyStrategy:
         self.signal = signal
 
     def execute(self, context=None):
-        return self.signal
+        if context is None:
+            return self.signal
 
+        return (self.signal, context)
 
 def test_create_executor():
     executor = StrategyExecutor()
@@ -74,3 +76,25 @@ def test_count():
     ]
 
     assert executor.count(strategies) == 2
+
+def test_execute_with_context():
+    executor = StrategyExecutor()
+
+    strategy = DummyStrategy("BUY")
+
+    assert executor.execute(strategy, "MARKET") == (
+        "BUY",
+        "MARKET",
+    )
+
+
+def test_execute_first_empty():
+    executor = StrategyExecutor()
+
+    assert executor.execute_first([]) is None
+
+
+def test_execute_last_empty():
+    executor = StrategyExecutor()
+
+    assert executor.execute_last([]) is None

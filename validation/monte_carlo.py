@@ -27,21 +27,3 @@ class MonteCarlo:
             results.append(sum(shuffled))
 
         return results
-
-    def run(self, trades):
-        if not trades:
-            return []
-
-        if self.simulations <= 0:
-            return []
-
-        results = []
-
-        for _ in range(self.simulations):
-            shuffled = list(trades)
-
-            self.random.shuffle(shuffled)
-
-            results.append(sum(shuffled))
-
-        return results

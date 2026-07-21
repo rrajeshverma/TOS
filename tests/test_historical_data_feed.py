@@ -139,3 +139,43 @@ def test_iterates_over_all_candles():
     closes = [candle["close"] for candle in feed]
 
     assert closes == [100, 101, 102]
+
+import pytest
+
+
+def test_next_after_end_raises_stop_iteration():
+    candles = [
+        {
+            "timestamp": datetime(2025, 1, 1, 9, 15),
+            "close": 100,
+        }
+    ]
+
+    feed = HistoricalDataFeed(candles)
+
+    feed.next()
+
+    with pytest.raises(
+        StopIteration,
+        match="No more candles available.",
+    ):
+        feed.next()
+
+
+def test_peek_after_end_raises_stop_iteration():
+    candles = [
+        {
+            "timestamp": datetime(2025, 1, 1, 9, 15),
+            "close": 100,
+        }
+    ]
+
+    feed = HistoricalDataFeed(candles)
+
+    feed.next()
+
+    with pytest.raises(
+        StopIteration,
+        match="No more candles available.",
+    ):
+        feed.peek()

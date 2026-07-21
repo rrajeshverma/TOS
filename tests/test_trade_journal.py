@@ -70,3 +70,35 @@ def test_trade_journal(tmp_path):
     journal.record(trade)
 
     assert journal.exists()
+
+def test_trade_journal_count_empty(tmp_path):
+    journal = TradeJournal(file_path=str(tmp_path / "trade_journal.csv"))
+
+    assert journal.count() == 0
+
+
+def test_trade_journal_count_after_record(tmp_path):
+    journal = TradeJournal(file_path=str(tmp_path / "trade_journal.csv"))
+
+    journal.record(create_trade())
+
+    assert journal.count() == 1
+
+
+def test_trade_journal_count_multiple_records(tmp_path):
+    journal = TradeJournal(file_path=str(tmp_path / "trade_journal.csv"))
+
+    journal.record(create_trade())
+    journal.record(create_trade())
+    journal.record(create_trade())
+
+    assert journal.count() == 3
+
+
+def test_trade_journal_count_missing_file(tmp_path):
+    journal = TradeJournal(file_path=str(tmp_path / "missing" / "trade_journal.csv"))
+
+    # Simulate the file being removed after initialization.
+    journal.file_path.unlink()
+
+    assert journal.count() == 0

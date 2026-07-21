@@ -425,3 +425,69 @@ def test_summary_expectancy():
     performance.add_trade(-50)
 
     assert performance.summary()["expectancy"] == 25
+
+# ============================================================
+# Guard Clauses
+# ============================================================
+
+def test_largest_win_no_winners():
+    performance = StrategyPerformance()
+
+    assert performance.largest_win() == 0
+
+
+def test_largest_loss_no_losers():
+    performance = StrategyPerformance()
+
+    assert performance.largest_loss() == 0
+
+
+def test_average_win_no_winners():
+    performance = StrategyPerformance()
+
+    assert performance.average_win() == 0
+
+
+def test_average_loss_no_losers():
+    performance = StrategyPerformance()
+
+    assert performance.average_loss() == 0
+
+
+def test_expectancy_no_trades():
+    performance = StrategyPerformance()
+
+    assert performance.expectancy() == 0
+
+
+def test_average_trade_no_trades():
+    performance = StrategyPerformance()
+
+    assert performance.average_trade() == 0
+
+
+def test_payoff_ratio_no_losses():
+    performance = StrategyPerformance()
+
+    performance.add_trade(100)
+
+    assert performance.payoff_ratio() == float("inf")
+
+
+def test_running_equity():
+    performance = StrategyPerformance()
+
+    performance.add_trade(100)
+    performance.add_trade(-50)
+
+    assert performance.running_equity(1000) == [1000, 1100, 1050]
+
+
+def test_equity_high():
+    performance = StrategyPerformance()
+
+    performance.add_trade(100)
+    performance.add_trade(-50)
+    performance.add_trade(200)
+
+    assert performance.equity_high(1000) == 1250

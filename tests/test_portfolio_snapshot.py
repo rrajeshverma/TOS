@@ -167,3 +167,14 @@ def test_copy_is_independent():
 
     assert snapshot.cash == 100000
     assert clone.cash == 101000
+
+def test_is_flat_true():
+    snapshot = PortfolioSnapshot(100000, 100000, 0, 0, 0)
+
+    assert snapshot.is_flat() is True
+
+
+def test_is_flat_false():
+    snapshot = PortfolioSnapshot(100000, 100000, 0, 0, 2)
+
+    assert snapshot.is_flat() is False

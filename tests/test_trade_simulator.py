@@ -1,3 +1,5 @@
+import pytest
+
 from backtesting.trade_simulator import TradeSimulator
 
 
@@ -94,3 +96,49 @@ def test_close_returns_trade():
     assert trade["entry_price"] == 100
     assert trade["exit_price"] == 110
     assert trade["pnl"] == 10
+
+def test_open_when_position_already_exists():
+    simulator = TradeSimulator()
+
+    simulator.open(
+        {
+            "action": "BUY",
+            "price": 100,
+        }
+    )
+
+    with pytest.raises(
+        RuntimeError,
+        match="Position already open.",
+    ):
+        simulator.open(
+            {
+                "action": "BUY",
+                "price": 105,
+            }
+        )
+
+
+def test_close_without_open_position():
+    simulator = TradeSimulator()
+
+    with pytest.raises(
+        RuntimeError,
+        match="No open position.",
+    ):
+        simulator.close(100)
+
+
+def test_unknown_action_raises_value_error():
+    simulator = TradeSimulator()
+
+    simulator.position = {
+        "action": "HOLD",
+        "entry_price": 100,
+    }
+
+    with pytest.raises(
+        ValueError,
+        match="Unknown action: HOLD",
+    ):
+        simulator.close(110)

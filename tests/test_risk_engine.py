@@ -64,3 +64,81 @@ def test_daily_loss_reached():
     )
 
     assert not risk.is_approved
+
+from shared.enums import DecisionStatus, Signal
+from config.risk import MAX_DAILY_LOSS, MAX_TRADES_PER_DAY
+
+
+def test_blocked_decision_is_rejected():
+    decision = create_decision()
+
+    decision = decision.__class__(
+        decision_id=decision.decision_id,
+        timestamp=decision.timestamp,
+        market=decision.market,
+        indicator_set=decision.indicator_set,
+        signal=decision.signal,
+        status=DecisionStatus.BLOCKED,
+        reasons=decision.reasons,
+    )
+
+    risk = RiskEngine().evaluate(
+        decision=decision,
+        trades_today=0,
+        daily_loss=0,
+    )
+
+    assert not risk.is_approved
+    assert "Decision not valid" in risk.reasons
+
+
+def test_no_signal_is_rejected():
+    decision = create_decision()
+
+    decision = decision.__class__(
+        decision_id=decision.decision_id,
+        timestamp=decision.timestamp,
+        market=decision.market,
+        indicator_set=decision.indicator_set,
+        signal=Signal.NONE,
+        status=DecisionStatus.VALID,
+        reasons=decision.reasons,
+    )
+
+    risk = RiskEngine().evaluate(
+        decision=decision,
+        trades_today=0,
+        daily_loss=0,
+    )
+
+    assert not risk.is_approved
+    assert "No trading signal" in risk.reasons
+
+
+def test_all_failures_are_collected():
+    decision = create_decision()
+
+    decision = decision.__class__(
+        decision_id=decision.decision_id,
+        timestamp=decision.timestamp,
+        market=decision.market,
+        indicator_set=decision.indicator_set,
+        signal=Signal.NONE,
+        status=DecisionStatus.BLOCKED,
+        reasons=decision.reasons,
+    )
+
+    risk = RiskEngine().evaluate(
+        decision=decision,
+        trades_today=MAX_TRADES_PER_DAY,
+        daily_loss=MAX_DAILY_LOSS,
+    )
+
+    assert not risk.is_approved
+
+    assert "Decision not valid" in risk.reasons
+    assert "No trading signal" in risk.reasons
+    assert "Maximum trades reached" in risk.reasons
+    assert "Daily loss limit reached" in risk.reasons
+
+    assert len(risk.reasons) == 4

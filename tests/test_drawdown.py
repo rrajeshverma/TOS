@@ -101,3 +101,8 @@ def test_max_drawdown_duration():
     dd.update(100000, 100000)
 
     assert dd.max_duration == 3
+
+def test_drawdown_percentage_with_zero_peak():
+    dd = Drawdown()
+
+    assert dd.calculate_percentage(0, 0) == 0.0

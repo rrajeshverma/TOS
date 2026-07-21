@@ -240,3 +240,44 @@ def test_summary_contains_cash():
     summary = PortfolioMetrics().summary(snapshot)
 
     assert summary["cash"] == 75000
+
+def test_return_percent_zero_cash():
+    snapshot = PortfolioSnapshot(
+        cash=0,
+        equity=100000,
+        realized_pnl=1000,
+        unrealized_pnl=500,
+        open_positions=1,
+    )
+
+    metrics = PortfolioMetrics()
+
+    assert metrics.return_percent(snapshot) == 0.0
+
+
+def test_cash_ratio_zero_equity():
+    snapshot = PortfolioSnapshot(
+        cash=100000,
+        equity=0,
+        realized_pnl=0,
+        unrealized_pnl=0,
+        open_positions=0,
+    )
+
+    metrics = PortfolioMetrics()
+
+    assert metrics.cash_ratio(snapshot) == 0.0
+
+
+def test_cash_utilization_zero_equity():
+    snapshot = PortfolioSnapshot(
+        cash=100000,
+        equity=0,
+        realized_pnl=0,
+        unrealized_pnl=0,
+        open_positions=0,
+    )
+
+    metrics = PortfolioMetrics()
+
+    assert metrics.cash_utilization(snapshot) == 0.0

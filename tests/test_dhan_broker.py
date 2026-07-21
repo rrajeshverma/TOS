@@ -1,3 +1,5 @@
+import pytest
+
 from unittest.mock import Mock
 from decimal import Decimal
 
@@ -184,3 +186,51 @@ def test_place_order():
 
     assert placed.broker_order_id == "ORD999"
     assert placed.status == OrderStatus.PENDING
+
+def test_cancel_order():
+    client = Mock()
+    client.cancel_order.return_value = {
+        "status": "success",
+    }
+
+    broker = DhanBroker(client, Mock())
+
+    response = broker.cancel_order("ORD123")
+
+    client.cancel_order.assert_called_once_with("ORD123")
+    assert response["status"] == "success"
+
+
+def test_connect_not_implemented():
+    broker = DhanBroker(Mock(), Mock())
+
+    with pytest.raises(NotImplementedError):
+        broker.connect()
+
+
+def test_disconnect_not_implemented():
+    broker = DhanBroker(Mock(), Mock())
+
+    with pytest.raises(NotImplementedError):
+        broker.disconnect()
+
+
+def test_is_connected_not_implemented():
+    broker = DhanBroker(Mock(), Mock())
+
+    with pytest.raises(NotImplementedError):
+        broker.is_connected()
+
+
+def test_modify_order_not_implemented():
+    broker = DhanBroker(Mock(), Mock())
+
+    with pytest.raises(NotImplementedError):
+        broker.modify_order("ORD123")
+
+
+def test_get_order_not_implemented():
+    broker = DhanBroker(Mock(), Mock())
+
+    with pytest.raises(NotImplementedError):
+        broker.get_order("ORD123")

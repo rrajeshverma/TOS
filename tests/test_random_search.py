@@ -139,3 +139,33 @@ def test_result_type():
     results = search.run(lambda p: OptimizationResult(parameters=p))
 
     assert isinstance(results[0], OptimizationResult)
+
+import pytest
+
+
+def test_best_result_empty():
+    space = ParameterSpace()
+
+    search = RandomSearch(space, sample_size=1)
+
+    assert search.best_result() is None
+
+
+def test_evaluator_returns_invalid_result():
+    space = ParameterSpace()
+
+    space.add("ema", [20])
+
+    search = RandomSearch(
+        space,
+        sample_size=1,
+    )
+
+    def evaluator(params):
+        return object()
+
+    with pytest.raises(
+        TypeError,
+        match="Evaluator must return an OptimizationResult.",
+    ):
+        search.run(evaluator)

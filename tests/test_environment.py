@@ -120,3 +120,37 @@ def test_boolean_zero(monkeypatch):
     monkeypatch.setenv("FLAG", "0")
 
     assert get_bool("FLAG") is False
+
+def test_get_boolean_python_bool_true(monkeypatch):
+    monkeypatch.setattr(os, "getenv", lambda *args, **kwargs: True)
+
+    assert get_bool("FLAG") is True
+
+
+def test_get_boolean_python_bool_false(monkeypatch):
+    monkeypatch.setattr(os, "getenv", lambda *args, **kwargs: False)
+
+    assert get_bool("FLAG") is False
+
+
+def test_boolean_on(monkeypatch):
+    monkeypatch.setenv("FLAG", "on")
+
+    assert get_bool("FLAG") is True
+
+
+def test_boolean_off(monkeypatch):
+    monkeypatch.setenv("FLAG", "off")
+
+    assert get_bool("FLAG") is False
+
+def test_get_boolean_none_default():
+    assert get_bool("UNKNOWN") is None
+
+
+def test_get_integer_none_default():
+    assert get_int("UNKNOWN") is None
+
+
+def test_get_float_none_default():
+    assert get_float("UNKNOWN") is None

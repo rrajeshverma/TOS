@@ -53,45 +53,9 @@ class StrategyManager:
             strategy = self.get(name)
 
             if strategy is not None:
-                strategy.execute()
-
-    def execute_all(
-        self,
-    ):
-        for name in self.enabled_strategies:
-            self.execute(name)
-
-    def execute(
-        self,
-        name,
-    ):
-        if self.is_enabled(name):
-            strategy = self.get(name)
-
-            if strategy is not None:
                 return strategy.execute()
 
         return None
-
-    def execute_all(
-        self,
-    ):
-        results = {}
-
-        for name in self.enabled_strategies:
-            results[name] = self.execute(name)
-
-        return results
-
-    def execute_all(
-        self,
-    ):
-        results = {}
-
-        for name in self.enabled_strategies:
-            results[name] = self.execute(name)
-
-        return results
 
     def execute_all(
         self,

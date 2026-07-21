@@ -18,3 +18,12 @@ def test_subscriber_handles_event():
     subscriber.handle(event)
 
     assert subscriber.last_event == event
+
+def test_base_subscriber_handle():
+    class BaseSubscriber(Subscriber):
+        def handle(self, event: Event) -> None:
+            super().handle(event)
+
+    subscriber = BaseSubscriber()
+
+    subscriber.handle(Event(name="TEST", payload={}))
