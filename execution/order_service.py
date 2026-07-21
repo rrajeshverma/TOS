@@ -16,8 +16,9 @@ class OrderStatus(str, Enum):
     """Represents the lifecycle state of an order."""
 
     NEW = "NEW"
-    PENDING = "PENDING"
+    PENDING = "PENDING" 
     SUBMITTED = "SUBMITTED"
+    PARTIALLY_FILLED = "PARTIALLY_FILLED"
     FILLED = "FILLED"
     CANCELLED = "CANCELLED"
 
@@ -38,6 +39,8 @@ class OrderService:
         self._orders: dict[int, dict[str, Any]] = {}
         self._statuses: dict[int, OrderStatus] = {}
         self._broker_order_ids: dict[int, str] = {}
+        self._filled_quantities: dict[int, int] = {}
+        self._filled_values: dict[int, float] = {}
 
         self._next_order_id = 1
 
@@ -56,6 +59,8 @@ class OrderService:
 
         self._orders[order_id] = dict(order)
         self._statuses[order_id] = OrderStatus.NEW
+        self._filled_quantities[order_id] = 0
+        self._filled_values[order_id] = 0.0
 
         self._next_order_id += 1
 
@@ -74,6 +79,105 @@ class OrderService:
         """Return the current status of an order."""
         return self._statuses.get(order_id)
 
+    def filled_quantity(self, order_id: int) -> int:
+        """Return filled quantity."""
+        if order_id not in self._orders:
+            raise KeyError(f"Unknown order id: {order_id}")
+
+        return self._filled_quantities[order_id]
+
+    def remaining_quantity(self, order_id: int) -> int:
+        """Return remaining quantity."""
+        if order_id not in self._orders:
+            raise KeyError(f"Unknown order id: {order_id}")
+
+        total = self._orders[order_id]["quantity"]
+        return total - self._filled_quantities[order_id]
+    
+    def average_fill_price(self, order_id: int) -> float:
+        """
+        Return the average execution price for an order.
+        """
+        if order_id not in self._orders:
+            raise KeyError(f"Unknown order id: {order_id}")
+
+        filled = self._filled_quantities[order_id]
+
+        if filled == 0:
+            return 0.0
+
+        return self._filled_values[order_id] / filled
+    
+    def modify_order(
+        self,
+        order_id: int,
+        quantity: int | None = None,
+    ) -> None:
+        """
+        Modify an existing order.
+        """
+        if order_id not in self._orders:
+            raise KeyError(f"Unknown order id: {order_id}")
+
+        current = self.status(order_id)
+
+        if current in (
+            OrderStatus.FILLED,
+            OrderStatus.CANCELLED,
+        ):
+            raise ValueError(
+                f"Cannot modify order in {current.value} state."
+            )
+
+        if quantity is not None:
+            if quantity <= 0:
+                raise ValueError("Quantity must be greater than zero.")
+
+            if quantity < self._filled_quantities[order_id]:
+                raise ValueError(
+                    "Modified quantity cannot be less than filled quantity."
+                )
+
+            self._orders[order_id]["quantity"] = quantity
+
+    def order(self, order_id: int) -> dict[str, Any]:
+        """
+        Return a copy of the order details.
+        """
+        if order_id not in self._orders:
+            raise KeyError(f"Unknown order id: {order_id}")
+
+        return dict(self._orders[order_id])
+
+
+    def record_fill(
+        self,
+        order_id: int,
+        quantity: int,
+        price: float = 0.0,
+    ) -> None:
+        """
+        Record an execution fill.
+        """
+        if order_id not in self._orders:
+            raise KeyError(f"Unknown order id: {order_id}")
+
+        total = self._orders[order_id]["quantity"]
+        filled = self._filled_quantities[order_id]
+
+        new_total = filled + quantity
+
+        if new_total > total:
+            raise ValueError("Order overfilled.")
+
+        self._filled_quantities[order_id] = new_total
+        self._filled_values[order_id] += quantity * price
+
+        if new_total == total:
+            self.update_status(order_id, OrderStatus.FILLED)
+        else:
+            self.update_status(order_id, OrderStatus.PARTIALLY_FILLED)
+
     def update_status(self, order_id: int, status: OrderStatus) -> None:
         """
         Update the status of an existing order.
@@ -85,6 +189,10 @@ class OrderService:
 
         # Ignore duplicate status updates (idempotent)
         if status == current:
+            return
+
+        # Ignore stale / out-of-order status updates
+        if self._STATUS_ORDER[status] < self._STATUS_ORDER[current]:
             return
 
         allowed = self._ALLOWED_TRANSITIONS.get(current, set())
@@ -125,6 +233,16 @@ class OrderService:
         """
         if order_id not in self._orders:
             raise KeyError(f"Unknown order id: {order_id}")
+        
+        current_status = self.status(order_id)
+
+        if current_status in (
+            OrderStatus.FILLED,
+            OrderStatus.CANCELLED,
+        ):
+            raise ValueError(
+                f"Cannot cancel order in {current_status.value} state."
+            )
 
         self._statuses[order_id] = OrderStatus.CANCELLED
 
@@ -162,6 +280,21 @@ class OrderService:
         Return the broker order ID for an internal order.
         """
         return self._broker_order_ids.get(order_id)
+    
+    def process_broker_callback(
+        self,
+        broker_order_id: str,
+        status: OrderStatus,
+    ) -> None:
+        """
+        Process a broker callback using the broker order ID.
+        """
+        for order_id, registered_broker_id in self._broker_order_ids.items():
+            if registered_broker_id == broker_order_id:
+                self.update_status(order_id, status)
+                return
+
+        raise KeyError(f"Unknown broker order id: {broker_order_id}")
 
     def _publish_event(
         self,
@@ -182,19 +315,36 @@ class OrderService:
             )
         )
 
+    _STATUS_ORDER = {
+        OrderStatus.NEW: 0,
+        OrderStatus.PENDING: 1,
+        OrderStatus.SUBMITTED: 2,
+        OrderStatus.PARTIALLY_FILLED: 3,
+        OrderStatus.FILLED: 4,
+        OrderStatus.CANCELLED: 4,
+    }
+
     _ALLOWED_TRANSITIONS = {
         OrderStatus.NEW: {
             OrderStatus.PENDING,
             OrderStatus.SUBMITTED,
+            OrderStatus.PARTIALLY_FILLED,
             OrderStatus.CANCELLED,
             OrderStatus.FILLED,
         },
         OrderStatus.PENDING: {
             OrderStatus.SUBMITTED,
+            OrderStatus.PARTIALLY_FILLED,
             OrderStatus.CANCELLED,
             OrderStatus.FILLED,
         },
         OrderStatus.SUBMITTED: {
+            OrderStatus.PARTIALLY_FILLED,
+            OrderStatus.FILLED,
+            OrderStatus.CANCELLED,
+        },
+        OrderStatus.PARTIALLY_FILLED: {
+            OrderStatus.PARTIALLY_FILLED,
             OrderStatus.FILLED,
             OrderStatus.CANCELLED,
         },

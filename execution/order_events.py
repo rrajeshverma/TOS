@@ -8,6 +8,7 @@ class OrderEventType(str, Enum):
     NEW = "NEW"
     PENDING = "PENDING"
     SUBMITTED = "SUBMITTED"
+    PARTIALLY_FILLED = "PARTIALLY_FILLED"
     FILLED = "FILLED"
     CANCELLED = "CANCELLED"
 
