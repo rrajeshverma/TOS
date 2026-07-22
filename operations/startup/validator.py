@@ -1,36 +1,41 @@
-"""
-Startup Validation Framework
-
-TOS v1.1.1
-"""
-
-from dataclasses import dataclass, field
-from typing import Callable
-
-
-@dataclass(slots=True, frozen=True)
-class ValidationResult:
-    """Result returned by StartupValidator."""
-    success: bool = True
+from operations.startup.validation_result import ValidationResult
 
 
 class StartupValidator:
-    """Runs startup validation checks."""
+    def __init__(self):
+        self._checks = []
 
-    def __init__(self) -> None:
-        self.checks: list[Callable[[], bool]] = []
+    @property
+    def checks(self):
+        # Keep backward compatibility with existing tests
+        return self._checks
 
-    def register(self, check: Callable[[], bool]) -> None:
-        """Register a validation check."""
-        self.checks.append(check)
+    def register(self, check):
+        self._checks.append(check)
+        # Preserve original API
+        return None
 
-    def run(self) -> ValidationResult:
-        """Execute all registered checks."""
+    def run(self):
+        result = ValidationResult()
 
-        success = True
+        for check in self._checks:
+            try:
+                # Backward compatibility: callable checks
+                if callable(check):
+                    ok = check()
+                # New API: validator objects
+                elif hasattr(check, "validate"):
+                    ok = check.validate()
+                else:
+                    raise TypeError(
+                        f"Unsupported check type: {type(check).__name__}"
+                    )
 
-        for check in self.checks:
-            if not check():
-                success = False
+                if ok is False:
+                    result.success = False
 
-        return ValidationResult(success=success)
+            except Exception as exc:
+                result.success = False
+                result.message = str(exc)
+
+        return result
