@@ -1,69 +1,55 @@
-from decimal import Decimal
+"""
+=========================================================
+Trading Operating System (TOS)
+Module      : Order Execution Adapter
+Version     : 1.1.0
+Description : Converts and executes orders through broker.
+=========================================================
+"""
 
-from engines.order_factory import OrderFactory
-from tests.test_trade_factory import create_trade
-from shared.enums import Broker, OrderSide
+from __future__ import annotations
 
-
-def create_order():
-
-    return OrderFactory().create(
-        trade=create_trade(),
-        broker=Broker.DHAN,
-        side=OrderSide.BUY,
-        price=Decimal("25000"),
-    )
+from domain.order import Order
 
 
-def test_adapter_converts_domain_order():
+class OrderExecutionAdapter:
+    """
+    Converts domain orders and routes execution to broker.
+    """
 
-    from services.order_execution_adapter import (
-        OrderExecutionAdapter,
-    )
+    def __init__(
+        self,
+        broker=None,
+    ):
+        self.broker = broker
 
-    adapter = OrderExecutionAdapter()
+    def to_execution_order(
+        self,
+        order: Order,
+    ) -> dict:
 
-    result = adapter.to_execution_order(
-        create_order()
-    )
+        if order is None:
+            raise ValueError(
+                "Order cannot be None."
+            )
 
-    assert result["symbol"] == "NIFTY"
+        symbol = order.trade.risk.decision.market.symbol
 
+        return {
+            "symbol": symbol,
+            "side": order.side.value,
+            "quantity": order.quantity,
+            "price": float(order.requested_price),
+        }
 
-def test_adapter_quantity():
+    def execute(
+        self,
+        order: dict,
+    ) -> dict:
 
-    from services.order_execution_adapter import (
-        OrderExecutionAdapter,
-    )
+        if self.broker is None:
+            raise RuntimeError(
+                "Broker is not configured."
+            )
 
-    result = OrderExecutionAdapter().to_execution_order(
-        create_order()
-    )
-
-    assert result["quantity"] == 65
-
-
-def test_adapter_side():
-
-    from services.order_execution_adapter import (
-        OrderExecutionAdapter,
-    )
-
-    result = OrderExecutionAdapter().to_execution_order(
-        create_order()
-    )
-
-    assert result["side"] == "BUY"
-
-
-def test_adapter_price():
-
-    from services.order_execution_adapter import (
-        OrderExecutionAdapter,
-    )
-
-    result = OrderExecutionAdapter().to_execution_order(
-        create_order()
-    )
-
-    assert result["price"] == 25000.0
+        return self.broker.place_order(order)

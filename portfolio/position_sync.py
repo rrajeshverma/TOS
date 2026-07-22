@@ -62,3 +62,54 @@ class PositionSync:
                     self.broker_positions[position["securityId"]] = position["quantity"]
 
         return positions
+
+    def missing_broker_positions(self):
+        """
+        Positions available locally but missing at broker.
+        """
+
+        return [
+            symbol
+            for symbol in self.local_positions
+            if symbol not in self.broker_positions
+        ]
+
+
+    def extra_broker_positions(self):
+        """
+        Positions available at broker but missing locally.
+        """
+
+        return [
+            symbol
+            for symbol in self.broker_positions
+            if symbol not in self.local_positions
+        ]
+
+
+    def sync_report(self):
+        """
+        Complete position synchronization report.
+        """
+
+        differences = {}
+
+        for symbol in (
+            set(self.local_positions)
+            & set(self.broker_positions)
+        ):
+
+            difference = self.difference(
+                symbol
+            )
+
+            if difference != 0:
+                differences[symbol] = difference
+
+
+        return {
+            "in_sync": self.is_in_sync(),
+            "missing": self.missing_broker_positions(),
+            "extra": self.extra_broker_positions(),
+            "differences": differences,
+        }

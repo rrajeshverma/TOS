@@ -19,6 +19,22 @@ class EventBus:
         if subscriber in subscribers:
             subscribers.remove(subscriber)
 
-    def publish(self, event: Event) -> None:
-        for subscriber in self._subscribers.get(event.name, []):
-            subscriber.handle(event)
+    def publish(self, event: Event):
+
+        failed = 0
+
+        for subscriber in self._subscribers.get(
+            event.name,
+            []
+        ):
+
+            try:
+                subscriber.handle(event)
+
+            except Exception:
+                failed += 1
+
+        return {
+            "published": True,
+            "failed": failed,
+        }

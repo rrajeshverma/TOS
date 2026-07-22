@@ -13,6 +13,34 @@ class ExecutionEngine:
         try:
             order_id = self.order_service.submit(request)
 
+            if hasattr(self.order_service, "place_order"):
+
+                response = self.order_service.place_order(request)
+
+                broker_order_id = response.get(
+                    "orderId"
+                )
+
+                if broker_order_id and hasattr(
+                    self.order_service,
+                    "register_broker_order",
+                ):
+                    self.order_service.register_broker_order(
+                        order_id,
+                        broker_order_id,
+                    )
+
+                if hasattr(
+                    self.order_service,
+                    "update_status",
+                ):
+                    from execution.order_service import OrderStatus
+
+                    self.order_service.update_status(
+                        order_id,
+                        OrderStatus.SUBMITTED,
+                    )
+
             return ExecutionResult(
                 success=True,
                 order_id=order_id,

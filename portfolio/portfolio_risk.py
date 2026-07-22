@@ -37,6 +37,34 @@ class PortfolioRisk:
     def can_open_position(self):
         return self.remaining_risk() > 0
 
+        # --------------------------------------------------
+    # Snapshot Integration
+    # --------------------------------------------------
+
+    def update_from_snapshot(
+        self,
+        snapshot,
+    ):
+        """
+        Update current risk from portfolio snapshot.
+
+        Losses increase risk exposure.
+        Profits do not create risk.
+        """
+
+        total_pnl = (
+            snapshot.realized_pnl
+            +
+            snapshot.unrealized_pnl
+        )
+
+        self.current_risk = max(
+            0,
+            -total_pnl,
+        )
+
+        return self.current_risk
+
     # --------------------------------------------------
     # Summary
     # --------------------------------------------------
