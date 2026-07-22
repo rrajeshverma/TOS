@@ -140,6 +140,7 @@ def test_iterates_over_all_candles():
 
     assert closes == [100, 101, 102]
 
+
 import pytest
 
 

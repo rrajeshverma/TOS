@@ -11,6 +11,7 @@ def build_report():
 # Constructor
 # ============================================================
 
+
 def test_create_performance_report():
     performance = PerformanceModel()
 
@@ -25,6 +26,7 @@ def test_create_performance_report():
 # ============================================================
 # Summary
 # ============================================================
+
 
 def test_default_summary_is_empty():
     report = build_report()
@@ -46,6 +48,7 @@ def test_custom_summary():
 # ============================================================
 # Helper Methods
 # ============================================================
+
 
 def test_has_summary_false():
     report = build_report()
@@ -89,6 +92,7 @@ def test_clear_summary():
 # Dictionary
 # ============================================================
 
+
 def test_to_dict_returns_dictionary():
     report = build_report()
 
@@ -111,6 +115,7 @@ def test_to_dict_contains_summary():
 # Report Name
 # ============================================================
 
+
 def test_report_name():
     report = build_report()
 
@@ -120,6 +125,7 @@ def test_report_name():
 # ============================================================
 # Repeatability
 # ============================================================
+
 
 def test_to_dict_repeatable():
     report = build_report()

@@ -3,10 +3,10 @@ from execution.order_repository import OrderRepository
 from execution.position_synchronizer import PositionSynchronizer
 from execution.trade_reconciliation import TradeReconciliation
 
-
 # ---------------------------------------------------------------------
 # OrderRecovery
 # ---------------------------------------------------------------------
+
 
 def test_order_recovery_initial_state():
     recovery = OrderRecovery()
@@ -60,6 +60,7 @@ def test_order_recovery_summary():
 # OrderRepository
 # ---------------------------------------------------------------------
 
+
 def test_order_repository_add():
     repo = OrderRepository()
 
@@ -91,6 +92,7 @@ def test_order_repository_overwrite():
 # PositionSynchronizer
 # ---------------------------------------------------------------------
 
+
 class FakeBroker:
 
     def __init__(self, positions):
@@ -108,9 +110,7 @@ def test_position_synchronizer_empty():
 
 
 def test_position_synchronizer_single():
-    broker = FakeBroker(
-        [{"symbol": "NIFTY", "qty": 50}]
-    )
+    broker = FakeBroker([{"symbol": "NIFTY", "qty": 50}])
 
     sync = PositionSynchronizer(broker)
 
@@ -133,6 +133,7 @@ def test_position_synchronizer_multiple():
 # ---------------------------------------------------------------------
 # TradeReconciliation
 # ---------------------------------------------------------------------
+
 
 def test_trade_reconciliation_initial():
     rec = TradeReconciliation()

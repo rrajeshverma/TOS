@@ -1,6 +1,6 @@
+from analytics.performance_summary import PerformanceSummary
 from reporting.html_report import HTMLReport
 from reporting.report_builder import ReportBuilder
-from analytics.performance_summary import PerformanceSummary
 
 
 def test_pipeline_generates_report():
@@ -67,25 +67,19 @@ def test_pipeline_contains_table():
 
 
 def test_performance_summary_returns_dict():
-    summary = PerformanceSummary().generate(
-        [100, -50, 25]
-    )
+    summary = PerformanceSummary().generate([100, -50, 25])
 
     assert isinstance(summary, dict)
 
 
 def test_summary_contains_total_return():
-    summary = PerformanceSummary().generate(
-        [100, -50, 25]
-    )
+    summary = PerformanceSummary().generate([100, -50, 25])
 
     assert "total_return" in summary
 
 
 def test_summary_contains_win_rate():
-    summary = PerformanceSummary().generate(
-        [100, -50, 25]
-    )
+    summary = PerformanceSummary().generate([100, -50, 25])
 
     assert "win_rate" in summary
 

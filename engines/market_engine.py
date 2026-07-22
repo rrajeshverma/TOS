@@ -12,13 +12,13 @@ from datetime import datetime
 from typing import Any
 
 from domain.market import Market
-from shared.logger import get_logger
 from exceptions import (
-    MissingFieldError,
-    InvalidTimestampError,
     InvalidPriceError,
+    InvalidTimestampError,
     InvalidVolumeError,
+    MissingFieldError,
 )
+from shared.logger import get_logger
 
 
 class MarketEngine:

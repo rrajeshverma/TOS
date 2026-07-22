@@ -1,5 +1,5 @@
-from optimizer.optimization_result import OptimizationResult
 from optimizer.base_search import BaseSearch
+from optimizer.optimization_result import OptimizationResult
 
 
 class GridSearch(BaseSearch):

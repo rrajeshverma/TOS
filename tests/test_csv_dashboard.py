@@ -1,5 +1,5 @@
-from dashboard.dashboard_model import DashboardModel
 from dashboard.csv_dashboard import CSVDashboard
+from dashboard.dashboard_model import DashboardModel
 
 
 def test_csv_dashboard_contains_portfolio_value():

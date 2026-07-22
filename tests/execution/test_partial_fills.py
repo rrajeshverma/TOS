@@ -18,6 +18,7 @@ def test_partial_fill_updates_status():
     assert service.remaining_quantity(order_id) == 75
     assert service.status(order_id) == OrderStatus.PARTIALLY_FILLED
 
+
 def test_final_fill_marks_order_filled():
     service = OrderService()
 
@@ -35,6 +36,7 @@ def test_final_fill_marks_order_filled():
     assert service.filled_quantity(order_id) == 100
     assert service.remaining_quantity(order_id) == 0
     assert service.status(order_id) == OrderStatus.FILLED
+
 
 import pytest
 

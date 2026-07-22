@@ -51,6 +51,7 @@ def test_connection_cycle():
 
     assert ws.is_connected is True
 
+
 def test_subscribe_adds_symbol():
     ws = WebSocketClient()
 
@@ -105,6 +106,7 @@ def test_clear_all_subscriptions():
 
     assert ws.subscriptions == set()
 
+
 def test_register_tick_callback():
     ws = WebSocketClient()
 
@@ -146,6 +148,7 @@ def test_emit_without_callback_is_safe():
 
     ws.emit_tick(tick)
 
+
 from datetime import datetime
 
 from brokers.dhan.models import BrokerTick
@@ -168,6 +171,7 @@ def test_emit_broker_tick():
     ws.emit_tick(tick)
 
     assert received == [tick]
+
 
 def test_reset_clears_state():
     ws = WebSocketClient()

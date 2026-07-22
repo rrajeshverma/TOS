@@ -1,15 +1,12 @@
 from datetime import datetime
 from decimal import Decimal
 
-from domain.market import Market
 from domain.indicator_set import IndicatorSet
-
+from domain.market import Market
 from engines.decision_engine import DecisionEngine
 from engines.risk_engine import RiskEngine
 from engines.trade_factory import TradeFactory
-
 from journal.trade_journal import TradeJournal
-
 from shared.enums import TradeStatus
 
 
@@ -70,6 +67,7 @@ def test_trade_journal(tmp_path):
     journal.record(trade)
 
     assert journal.exists()
+
 
 def test_trade_journal_count_empty(tmp_path):
     journal = TradeJournal(file_path=str(tmp_path / "trade_journal.csv"))

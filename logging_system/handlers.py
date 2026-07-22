@@ -2,10 +2,10 @@ import logging
 from logging.handlers import RotatingFileHandler
 
 from logging_system.config import (
+    BACKUP_COUNT,
     LOG_FILE,
     LOG_LEVEL,
     ROTATING_FILE_SIZE,
-    BACKUP_COUNT,
 )
 from logging_system.formatter import get_formatter
 

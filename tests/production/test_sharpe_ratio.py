@@ -138,10 +138,13 @@ def test_zero_volatility_with_risk_free():
 
     returns = [0.02] * 20
 
-    assert sharpe.calculate(
-        returns,
-        risk_free_rate=0.02,
-    ) == 0.0
+    assert (
+        sharpe.calculate(
+            returns,
+            risk_free_rate=0.02,
+        )
+        == 0.0
+    )
 
 
 def test_result_is_float():

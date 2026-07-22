@@ -1,9 +1,9 @@
 import pytest
 
 from config.validators import (
+    validate_range,
     validate_required,
     validate_type,
-    validate_range,
 )
 
 

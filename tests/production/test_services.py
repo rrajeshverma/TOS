@@ -1,14 +1,15 @@
 from decimal import Decimal
-from services.paper_trading_service import PaperTradingService
-from services.position_manager import PositionManager
-from services.portfolio_service import PortfolioService
-from services.account_synchronizer import AccountSynchronizer
-from shared.enums import TradeStatus
 
+from services.account_synchronizer import AccountSynchronizer
+from services.paper_trading_service import PaperTradingService
+from services.portfolio_service import PortfolioService
+from services.position_manager import PositionManager
+from shared.enums import TradeStatus
 from tests.helpers.domain_factory import (
-    make_trade,
     make_portfolio,
+    make_trade,
 )
+
 
 class FakePortfolioRepository:
 
@@ -40,6 +41,7 @@ class FakeBroker:
 # ---------------------------------------------------------------------
 # PaperTradingService
 # ---------------------------------------------------------------------
+
 
 def test_execute_creates_open_position():
     service = PaperTradingService()
@@ -94,6 +96,7 @@ def test_close_sets_closed_at():
 # ---------------------------------------------------------------------
 # PositionManager
 # ---------------------------------------------------------------------
+
 
 def test_open_position():
     manager = PositionManager()
@@ -184,6 +187,7 @@ def test_position_is_open():
 # PortfolioService
 # ---------------------------------------------------------------------
 
+
 def test_portfolio_update():
     repo = FakePortfolioRepository()
 
@@ -225,6 +229,7 @@ def test_clear_portfolio():
 # ---------------------------------------------------------------------
 # AccountSynchronizer
 # ---------------------------------------------------------------------
+
 
 def test_account_sync():
     portfolio = make_portfolio()

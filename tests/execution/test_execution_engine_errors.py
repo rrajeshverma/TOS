@@ -1,5 +1,6 @@
-import pytest
 from unittest.mock import Mock
+
+import pytest
 
 from execution.execution_engine import ExecutionEngine
 from execution.execution_request import ExecutionRequest

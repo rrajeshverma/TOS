@@ -27,8 +27,4 @@ class PerformanceMetrics:
     def win_rate(trades):
         if not trades:
             return 0
-        return (
-            PerformanceMetrics.positive_trade_count(trades)
-            / len(trades)
-            * 100
-        )
+        return PerformanceMetrics.positive_trade_count(trades) / len(trades) * 100

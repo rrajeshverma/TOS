@@ -16,7 +16,7 @@ class OrderStatus(str, Enum):
     """Represents the lifecycle state of an order."""
 
     NEW = "NEW"
-    PENDING = "PENDING" 
+    PENDING = "PENDING"
     SUBMITTED = "SUBMITTED"
     PARTIALLY_FILLED = "PARTIALLY_FILLED"
     FILLED = "FILLED"
@@ -93,7 +93,7 @@ class OrderService:
 
         total = self._orders[order_id]["quantity"]
         return total - self._filled_quantities[order_id]
-    
+
     def average_fill_price(self, order_id: int) -> float:
         """
         Return the average execution price for an order.
@@ -107,7 +107,7 @@ class OrderService:
             return 0.0
 
         return self._filled_values[order_id] / filled
-    
+
     def modify_order(
         self,
         order_id: int,
@@ -125,9 +125,7 @@ class OrderService:
             OrderStatus.FILLED,
             OrderStatus.CANCELLED,
         ):
-            raise ValueError(
-                f"Cannot modify order in {current.value} state."
-            )
+            raise ValueError(f"Cannot modify order in {current.value} state.")
 
         if quantity is not None:
             if quantity <= 0:
@@ -148,7 +146,6 @@ class OrderService:
             raise KeyError(f"Unknown order id: {order_id}")
 
         return dict(self._orders[order_id])
-
 
     def record_fill(
         self,
@@ -233,16 +230,14 @@ class OrderService:
         """
         if order_id not in self._orders:
             raise KeyError(f"Unknown order id: {order_id}")
-        
+
         current_status = self.status(order_id)
 
         if current_status in (
             OrderStatus.FILLED,
             OrderStatus.CANCELLED,
         ):
-            raise ValueError(
-                f"Cannot cancel order in {current_status.value} state."
-            )
+            raise ValueError(f"Cannot cancel order in {current_status.value} state.")
 
         self._statuses[order_id] = OrderStatus.CANCELLED
 
@@ -269,9 +264,7 @@ class OrderService:
             raise KeyError(f"Unknown order id: {order_id}")
 
         if order_id in self._broker_order_ids:
-            raise ValueError(
-                f"Broker order already registered for order {order_id}"
-            )
+            raise ValueError(f"Broker order already registered for order {order_id}")
 
         self._broker_order_ids[order_id] = broker_order_id
 
@@ -280,7 +273,7 @@ class OrderService:
         Return the broker order ID for an internal order.
         """
         return self._broker_order_ids.get(order_id)
-    
+
     def process_broker_callback(
         self,
         broker_order_id: str,

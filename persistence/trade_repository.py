@@ -8,7 +8,8 @@ class TradeRepository:
         self._create_table()
 
     def _create_table(self):
-        self.connection.execute("""
+        self.connection.execute(
+            """
             CREATE TABLE IF NOT EXISTS trades (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 symbol TEXT NOT NULL,
@@ -17,7 +18,8 @@ class TradeRepository:
                 quantity REAL NOT NULL,
                 status TEXT NOT NULL
             )
-        """)
+        """
+        )
         self.connection.commit()
 
     def save(self, trade: dict) -> None:

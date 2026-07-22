@@ -1,5 +1,5 @@
 from decimal import Decimal
-from brokers.paper_broker import PaperBroker
+
 from brokers.models import (
     Order,
     OrderSide,
@@ -7,6 +7,7 @@ from brokers.models import (
     OrderType,
     ProductType,
 )
+from brokers.paper_broker import PaperBroker
 
 
 def test_initial_state():
@@ -120,6 +121,7 @@ def test_get_funds():
 
 def modify_order(self, order_id: str, **kwargs):
     raise NotImplementedError
+
 
 import pytest
 

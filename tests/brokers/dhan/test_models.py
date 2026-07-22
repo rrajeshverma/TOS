@@ -44,6 +44,7 @@ def test_broker_account_creation():
     assert account.available_margin == 125000.50
     assert account.utilized_margin == 25000.00
 
+
 from datetime import datetime
 
 from brokers.dhan.models import BrokerTick

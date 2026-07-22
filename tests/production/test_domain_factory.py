@@ -1,6 +1,6 @@
 from tests.helpers.domain_factory import (
-    make_trade,
     make_portfolio,
+    make_trade,
 )
 
 

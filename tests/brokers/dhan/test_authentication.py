@@ -7,10 +7,13 @@ from brokers.dhan.exceptions import AuthenticationError
 def test_authentication_service_accepts_valid_credentials():
     service = AuthenticationService()
 
-    assert service.authenticate(
-        client_id="client123",
-        access_token="token123",
-    ) is True
+    assert (
+        service.authenticate(
+            client_id="client123",
+            access_token="token123",
+        )
+        is True
+    )
 
 
 @pytest.mark.parametrize(

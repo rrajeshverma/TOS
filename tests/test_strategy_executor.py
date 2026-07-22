@@ -11,6 +11,7 @@ class DummyStrategy:
 
         return (self.signal, context)
 
+
 def test_create_executor():
     executor = StrategyExecutor()
 
@@ -76,6 +77,7 @@ def test_count():
     ]
 
     assert executor.count(strategies) == 2
+
 
 def test_execute_with_context():
     executor = StrategyExecutor()

@@ -16,6 +16,7 @@ def test_incomplete_broker_cannot_be_created():
     with pytest.raises(TypeError):
         DummyBroker()
 
+
 class ConcreteBroker(BaseBroker):
     connect = BaseBroker.connect
     disconnect = BaseBroker.disconnect

@@ -1,8 +1,8 @@
-from reporting.report_builder import ReportBuilder
-from reporting.html_report import HTMLReport
 from analytics.performance_summary import PerformanceSummary
 from journal.trade_journal import TradeJournal
 from monitoring.health_check import HealthCheck
+from reporting.html_report import HTMLReport
+from reporting.report_builder import ReportBuilder
 
 
 def test_trading_day_report_created():

@@ -88,6 +88,7 @@ def test_single_trade():
 
     assert results == [100]
 
+
 def test_negative_simulations():
     mc = MonteCarlo(simulations=-5)
 

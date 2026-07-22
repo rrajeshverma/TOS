@@ -5,41 +5,19 @@ class TradeStatistics:
         return len(trades)
 
     def winning_trades(self, trades: list) -> int:
-        return sum(
-            1
-            for trade in trades
-            if trade.pnl > 0
-        )
+        return sum(1 for trade in trades if trade.pnl > 0)
 
     def losing_trades(self, trades: list) -> int:
-        return sum(
-            1
-            for trade in trades
-            if trade.pnl < 0
-        )
+        return sum(1 for trade in trades if trade.pnl < 0)
 
     def gross_profit(self, trades: list) -> float:
-        return sum(
-            trade.pnl
-            for trade in trades
-            if trade.pnl > 0
-        )
+        return sum(trade.pnl for trade in trades if trade.pnl > 0)
 
     def gross_loss(self, trades: list) -> float:
-        return abs(
-            sum(
-                trade.pnl
-                for trade in trades
-                if trade.pnl < 0
-            )
-        )
+        return abs(sum(trade.pnl for trade in trades if trade.pnl < 0))
 
     def largest_win(self, trades: list) -> float:
-        wins = [
-            trade.pnl
-            for trade in trades
-            if trade.pnl > 0
-        ]
+        wins = [trade.pnl for trade in trades if trade.pnl > 0]
 
         if not wins:
             return 0.0
@@ -47,11 +25,7 @@ class TradeStatistics:
         return max(wins)
 
     def largest_loss(self, trades: list) -> float:
-        losses = [
-            trade.pnl
-            for trade in trades
-            if trade.pnl < 0
-        ]
+        losses = [trade.pnl for trade in trades if trade.pnl < 0]
 
         if not losses:
             return 0.0
@@ -59,11 +33,7 @@ class TradeStatistics:
         return abs(min(losses))
 
     def average_win(self, trades: list) -> float:
-        wins = [
-            trade.pnl
-            for trade in trades
-            if trade.pnl > 0
-        ]
+        wins = [trade.pnl for trade in trades if trade.pnl > 0]
 
         if not wins:
             return 0.0
@@ -71,11 +41,7 @@ class TradeStatistics:
         return sum(wins) / len(wins)
 
     def average_loss(self, trades: list) -> float:
-        losses = [
-            trade.pnl
-            for trade in trades
-            if trade.pnl < 0
-        ]
+        losses = [trade.pnl for trade in trades if trade.pnl < 0]
 
         if not losses:
             return 0.0
@@ -88,10 +54,7 @@ class TradeStatistics:
         if total == 0:
             return 0.0
 
-        return (
-            self.winning_trades(trades)
-            / total
-        ) * 100.0
+        return (self.winning_trades(trades) / total) * 100.0
 
     def profit_factor(self, trades: list) -> float:
         gross_profit = self.gross_profit(trades)
@@ -110,7 +73,4 @@ class TradeStatistics:
         win_probability = win_rate / 100.0
         loss_probability = 1.0 - win_probability
 
-        return (
-            (average_win * win_probability)
-            - (average_loss * loss_probability)
-        )
+        return (average_win * win_probability) - (average_loss * loss_probability)

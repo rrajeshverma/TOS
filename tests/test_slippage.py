@@ -26,6 +26,7 @@ def test_sell_slippage():
 
     assert result["entry_price"] == 98
 
+
 import pytest
 
 

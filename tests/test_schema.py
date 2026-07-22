@@ -2,8 +2,8 @@ import pytest
 
 from config.schema import (
     create_schema,
-    validate_schema,
     has_field,
+    validate_schema,
 )
 
 

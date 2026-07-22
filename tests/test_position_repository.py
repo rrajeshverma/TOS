@@ -1,5 +1,5 @@
-from services.position_manager import PositionManager
 from persistence.position_repository import PositionRepository
+from services.position_manager import PositionManager
 
 
 def test_add_and_get_position():

@@ -207,9 +207,11 @@ def test_summary_largest_loss():
 
     assert performance.summary()["largest_loss"] == -300
 
+
 # ============================================================
 # Gross Profit / Loss
 # ============================================================
+
 
 def test_gross_profit():
     performance = StrategyPerformance()
@@ -235,6 +237,7 @@ def test_gross_loss():
 # Average Win / Loss
 # ============================================================
 
+
 def test_average_win():
     performance = StrategyPerformance()
 
@@ -257,6 +260,7 @@ def test_average_loss():
 # Profit Factor
 # ============================================================
 
+
 def test_profit_factor():
     performance = StrategyPerformance()
 
@@ -278,6 +282,7 @@ def test_profit_factor_zero_loss():
 # Expectancy
 # ============================================================
 
+
 def test_expectancy():
     performance = StrategyPerformance()
 
@@ -290,6 +295,7 @@ def test_expectancy():
 # ============================================================
 # Consecutive Wins
 # ============================================================
+
 
 def test_max_consecutive_wins():
     performance = StrategyPerformance()
@@ -308,6 +314,7 @@ def test_max_consecutive_wins():
 # Consecutive Losses
 # ============================================================
 
+
 def test_max_consecutive_losses():
     performance = StrategyPerformance()
 
@@ -320,9 +327,11 @@ def test_max_consecutive_losses():
 
     assert performance.max_consecutive_losses() == 3
 
+
 # ============================================================
 # Average Trade
 # ============================================================
+
 
 def test_average_trade():
     performance = StrategyPerformance()
@@ -337,6 +346,7 @@ def test_average_trade():
 # ============================================================
 # Payoff Ratio
 # ============================================================
+
 
 def test_payoff_ratio():
     performance = StrategyPerformance()
@@ -359,6 +369,7 @@ def test_payoff_ratio_zero_losses():
 # Running Equity
 # ============================================================
 
+
 def test_running_equity():
     performance = StrategyPerformance()
 
@@ -371,6 +382,7 @@ def test_running_equity():
 # ============================================================
 # Equity High
 # ============================================================
+
 
 def test_equity_high():
     performance = StrategyPerformance()
@@ -385,6 +397,7 @@ def test_equity_high():
 # ============================================================
 # Summary Extensions
 # ============================================================
+
 
 def test_summary_average_trade():
     performance = StrategyPerformance()
@@ -426,9 +439,11 @@ def test_summary_expectancy():
 
     assert performance.summary()["expectancy"] == 25
 
+
 # ============================================================
 # Guard Clauses
 # ============================================================
+
 
 def test_largest_win_no_winners():
     performance = StrategyPerformance()

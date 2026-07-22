@@ -6,10 +6,13 @@ from analytics.annual_return import AnnualReturn
 def test_same_value():
     annual = AnnualReturn()
 
-    assert annual.calculate(
-        beginning_value=100,
-        ending_value=100,
-    ) == 0.0
+    assert (
+        annual.calculate(
+            beginning_value=100,
+            ending_value=100,
+        )
+        == 0.0
+    )
 
 
 def test_positive_return():
@@ -75,10 +78,13 @@ def test_half_value():
 def test_zero_beginning_value():
     annual = AnnualReturn()
 
-    assert annual.calculate(
-        beginning_value=0,
-        ending_value=100,
-    ) == 0.0
+    assert (
+        annual.calculate(
+            beginning_value=0,
+            ending_value=100,
+        )
+        == 0.0
+    )
 
 
 def test_large_return():

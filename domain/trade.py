@@ -13,8 +13,7 @@ from datetime import datetime
 from decimal import Decimal
 
 from domain.risk import Risk
-from shared.enums import ExitReason
-from shared.enums import TradeStatus
+from shared.enums import ExitReason, TradeStatus
 
 
 @dataclass(frozen=True, slots=True)

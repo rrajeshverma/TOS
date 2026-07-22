@@ -1,5 +1,5 @@
-from events.subscriber import Subscriber
 from events.event import Event
+from events.subscriber import Subscriber
 
 
 class DummySubscriber(Subscriber):
@@ -18,6 +18,7 @@ def test_subscriber_handles_event():
     subscriber.handle(event)
 
     assert subscriber.last_event == event
+
 
 def test_base_subscriber_handle():
     class BaseSubscriber(Subscriber):

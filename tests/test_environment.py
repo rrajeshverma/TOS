@@ -3,10 +3,10 @@ import os
 import pytest
 
 from config.environment import (
-    get_env,
     get_bool,
-    get_int,
+    get_env,
     get_float,
+    get_int,
 )
 
 
@@ -121,6 +121,7 @@ def test_boolean_zero(monkeypatch):
 
     assert get_bool("FLAG") is False
 
+
 def test_get_boolean_python_bool_true(monkeypatch):
     monkeypatch.setattr(os, "getenv", lambda *args, **kwargs: True)
 
@@ -143,6 +144,7 @@ def test_boolean_off(monkeypatch):
     monkeypatch.setenv("FLAG", "off")
 
     assert get_bool("FLAG") is False
+
 
 def test_get_boolean_none_default():
     assert get_bool("UNKNOWN") is None

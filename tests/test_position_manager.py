@@ -1,8 +1,8 @@
 from decimal import Decimal
 
+from domain.position import Position
 from services.position_manager import PositionManager
 from shared.enums import TradeStatus
-from domain.position import Position
 
 
 def test_open_position():

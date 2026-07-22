@@ -55,6 +55,7 @@ def test_calculate_and_cumulative_are_equal():
 
 
 from math import isclose
+
 from analytics.returns import Returns
 
 
@@ -86,6 +87,7 @@ def test_cagr_invalid_years():
     returns = Returns()
 
     assert returns.cagr(120000, 100000, 0) == 0.0
+
 
 def test_calculate_zero_initial_value():
     returns = Returns()

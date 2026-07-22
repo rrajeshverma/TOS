@@ -12,12 +12,10 @@ from __future__ import annotations
 
 from datetime import datetime
 
-from domain.trade import Trade
 from domain.position import Position
-
+from domain.trade import Trade
 from shared.enums import TradeStatus
 from shared.logger import get_logger
-
 from utils.id_generator import generate_position_id
 
 

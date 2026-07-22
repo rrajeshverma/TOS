@@ -62,28 +62,22 @@ class StrategyPerformance:
             "net_profit": self.net_profit(),
             "gross_profit": self.gross_profit(),
             "gross_loss": self.gross_loss(),
-
             "total_trades": self.total_trades(),
             "winning_trades": self.winning_trades(),
             "losing_trades": self.losing_trades(),
-
             "win_rate": self.win_rate(),
-
             "average_trade": self.average_trade(),
             "average_win": self.average_win(),
             "average_loss": self.average_loss(),
-
             "payoff_ratio": self.payoff_ratio(),
             "profit_factor": self.profit_factor(),
             "expectancy": self.expectancy(),
-
             "largest_win": self.largest_win(),
             "largest_loss": self.largest_loss(),
-
             "max_consecutive_wins": self.max_consecutive_wins(),
             "max_consecutive_losses": self.max_consecutive_losses(),
         }
-    
+
     # --------------------------------------------------
     # Gross Profit / Loss
     # --------------------------------------------------
@@ -165,7 +159,7 @@ class StrategyPerformance:
                 current = 0
 
         return maximum
-    
+
     # --------------------------------------------------
     # Average Trade
     # --------------------------------------------------

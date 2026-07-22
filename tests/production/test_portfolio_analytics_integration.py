@@ -29,9 +29,7 @@ def build_metrics():
 def test_sharpe_matches():
     metrics = build_metrics()
 
-    expected = SharpeRatio().calculate(
-        [0.02, -0.01, 0.03]
-    )
+    expected = SharpeRatio().calculate([0.02, -0.01, 0.03])
 
     assert metrics["sharpe_ratio"] == expected
 
@@ -39,9 +37,7 @@ def test_sharpe_matches():
 def test_sortino_matches():
     metrics = build_metrics()
 
-    expected = SortinoRatio().calculate(
-        [0.02, -0.01, 0.03]
-    )
+    expected = SortinoRatio().calculate([0.02, -0.01, 0.03])
 
     assert metrics["sortino_ratio"] == expected
 
@@ -49,9 +45,7 @@ def test_sortino_matches():
 def test_volatility_matches():
     metrics = build_metrics()
 
-    expected = Volatility().calculate(
-        [0.02, -0.01, 0.03]
-    )
+    expected = Volatility().calculate([0.02, -0.01, 0.03])
 
     assert metrics["volatility"] == expected
 
@@ -120,9 +114,7 @@ def test_recovery_matches():
 def test_var_matches():
     metrics = build_metrics()
 
-    expected = ValueAtRisk().calculate(
-        [0.02, -0.01, 0.03]
-    )
+    expected = ValueAtRisk().calculate([0.02, -0.01, 0.03])
 
     assert metrics["value_at_risk"] == expected
 
@@ -130,8 +122,6 @@ def test_var_matches():
 def test_expected_shortfall_matches():
     metrics = build_metrics()
 
-    expected = ExpectedShortfall().calculate(
-        [0.02, -0.01, 0.03]
-    )
+    expected = ExpectedShortfall().calculate([0.02, -0.01, 0.03])
 
     assert metrics["expected_shortfall"] == expected

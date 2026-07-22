@@ -1,5 +1,5 @@
-from optimizer.strategy_ranker import StrategyRanker
 from optimizer.optimization_result import OptimizationResult
+from optimizer.strategy_ranker import StrategyRanker
 
 
 def make_result(**kwargs):

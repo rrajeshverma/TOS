@@ -15,9 +15,7 @@ class ValueAtRisk:
 
         sorted_returns = sorted(returns)
 
-        index = math.floor(
-            (1 - confidence) * (len(sorted_returns) - 1)
-        )
+        index = math.floor((1 - confidence) * (len(sorted_returns) - 1))
 
         var = sorted_returns[index]
 

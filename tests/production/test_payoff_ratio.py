@@ -6,19 +6,25 @@ from analytics.payoff_ratio import PayoffRatio
 def test_zero_average_win():
     ratio = PayoffRatio()
 
-    assert ratio.calculate(
-        average_win=0,
-        average_loss=100,
-    ) == 0.0
+    assert (
+        ratio.calculate(
+            average_win=0,
+            average_loss=100,
+        )
+        == 0.0
+    )
 
 
 def test_zero_average_loss():
     ratio = PayoffRatio()
 
-    assert ratio.calculate(
-        average_win=100,
-        average_loss=0,
-    ) == 0.0
+    assert (
+        ratio.calculate(
+            average_win=100,
+            average_loss=0,
+        )
+        == 0.0
+    )
 
 
 def test_equal_values():

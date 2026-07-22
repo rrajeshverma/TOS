@@ -14,19 +14,15 @@ from __future__ import annotations
 from datetime import datetime
 from decimal import Decimal
 
-from domain.risk import Risk
-from domain.trade import Trade
-
-from shared.enums import TradeStatus
-
-from shared.logger import get_logger
-
-from utils.id_generator import generate_trade_id
-
 from config.risk import (
     DEFAULT_NIFTY_QTY,
     RISK_REWARD_RATIO,
 )
+from domain.risk import Risk
+from domain.trade import Trade
+from shared.enums import TradeStatus
+from shared.logger import get_logger
+from utils.id_generator import generate_trade_id
 
 
 class TradeFactory:

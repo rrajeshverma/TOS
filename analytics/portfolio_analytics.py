@@ -44,15 +44,9 @@ class PortfolioAnalytics:
         )
 
         return {
-            "sharpe_ratio": self._sharpe.calculate(
-                returns
-            ),
-            "sortino_ratio": self._sortino.calculate(
-                returns
-            ),
-            "volatility": self._volatility.calculate(
-                returns
-            ),
+            "sharpe_ratio": self._sharpe.calculate(returns),
+            "sortino_ratio": self._sortino.calculate(returns),
+            "volatility": self._volatility.calculate(returns),
             "calmar_ratio": self._calmar.calculate(
                 annual_return,
                 max_drawdown,
@@ -71,10 +65,6 @@ class PortfolioAnalytics:
                 net_profit,
                 max_drawdown,
             ),
-            "value_at_risk": self._var.calculate(
-                returns
-            ),
-            "expected_shortfall": self._expected_shortfall.calculate(
-                returns
-            ),
+            "value_at_risk": self._var.calculate(returns),
+            "expected_shortfall": self._expected_shortfall.calculate(returns),
         }

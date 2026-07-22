@@ -6,11 +6,14 @@ from analytics.cagr import CAGR
 def test_same_value():
     cagr = CAGR()
 
-    assert cagr.calculate(
-        beginning_value=100,
-        ending_value=100,
-        years=5,
-    ) == 0.0
+    assert (
+        cagr.calculate(
+            beginning_value=100,
+            ending_value=100,
+            years=5,
+        )
+        == 0.0
+    )
 
 
 def test_one_year_growth():
@@ -64,21 +67,27 @@ def test_loss():
 def test_zero_beginning_value():
     cagr = CAGR()
 
-    assert cagr.calculate(
-        beginning_value=0,
-        ending_value=100,
-        years=5,
-    ) == 0.0
+    assert (
+        cagr.calculate(
+            beginning_value=0,
+            ending_value=100,
+            years=5,
+        )
+        == 0.0
+    )
 
 
 def test_zero_years():
     cagr = CAGR()
 
-    assert cagr.calculate(
-        beginning_value=100,
-        ending_value=120,
-        years=0,
-    ) == 0.0
+    assert (
+        cagr.calculate(
+            beginning_value=100,
+            ending_value=120,
+            years=0,
+        )
+        == 0.0
+    )
 
 
 def test_fractional_years():

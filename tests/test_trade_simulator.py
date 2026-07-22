@@ -97,6 +97,7 @@ def test_close_returns_trade():
     assert trade["exit_price"] == 110
     assert trade["pnl"] == 10
 
+
 def test_open_when_position_already_exists():
     simulator = TradeSimulator()
 

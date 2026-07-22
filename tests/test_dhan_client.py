@@ -9,6 +9,7 @@ def test_client_created():
     assert client is not None
     assert client.sdk is not None
 
+
 @patch("brokers.clients.dhan_client.dhanhq")
 @patch("brokers.clients.dhan_client.DhanContext")
 def test_get_fund_limits(mock_context, mock_dhanhq):

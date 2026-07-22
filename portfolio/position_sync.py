@@ -21,9 +21,8 @@ class PositionSync:
         self.broker_positions.pop(symbol, None)
 
     def difference(self, symbol):
-        return (
-            self.local_positions.get(symbol, 0)
-            - self.broker_positions.get(symbol, 0)
+        return self.local_positions.get(symbol, 0) - self.broker_positions.get(
+            symbol, 0
         )
 
     def is_in_sync(self):
@@ -60,8 +59,6 @@ class PositionSync:
                     and "securityId" in position
                     and "quantity" in position
                 ):
-                    self.broker_positions[
-                        position["securityId"]
-                    ] = position["quantity"]
+                    self.broker_positions[position["securityId"]] = position["quantity"]
 
         return positions

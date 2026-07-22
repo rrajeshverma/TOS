@@ -6,19 +6,25 @@ from analytics.recovery_ratio import RecoveryRatio
 def test_zero_profit():
     ratio = RecoveryRatio()
 
-    assert ratio.calculate(
-        net_profit=0,
-        max_drawdown=100,
-    ) == 0.0
+    assert (
+        ratio.calculate(
+            net_profit=0,
+            max_drawdown=100,
+        )
+        == 0.0
+    )
 
 
 def test_zero_drawdown():
     ratio = RecoveryRatio()
 
-    assert ratio.calculate(
-        net_profit=100,
-        max_drawdown=0,
-    ) == 0.0
+    assert (
+        ratio.calculate(
+            net_profit=100,
+            max_drawdown=0,
+        )
+        == 0.0
+    )
 
 
 def test_equal_values():

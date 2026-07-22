@@ -6,19 +6,25 @@ from analytics.calmar_ratio import CalmarRatio
 def test_zero_return():
     ratio = CalmarRatio()
 
-    assert ratio.calculate(
-        annual_return=0.0,
-        max_drawdown=0.10,
-    ) == 0.0
+    assert (
+        ratio.calculate(
+            annual_return=0.0,
+            max_drawdown=0.10,
+        )
+        == 0.0
+    )
 
 
 def test_zero_drawdown():
     ratio = CalmarRatio()
 
-    assert ratio.calculate(
-        annual_return=0.20,
-        max_drawdown=0.0,
-    ) == 0.0
+    assert (
+        ratio.calculate(
+            annual_return=0.20,
+            max_drawdown=0.0,
+        )
+        == 0.0
+    )
 
 
 def test_positive_values():

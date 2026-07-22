@@ -1,8 +1,8 @@
+from datetime import datetime
 from pathlib import Path
 
 from reporting.html_report import HTMLReport
 from reporting.report_model import ReportModel
-from datetime import datetime
 
 
 def make_report():

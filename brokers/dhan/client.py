@@ -23,7 +23,7 @@ class DhanClient:
     def disconnect(self) -> None:
         """Mark the client as disconnected."""
         self.connected = False
-    
+
     def place_order(
         self,
         order: dict,
@@ -35,7 +35,7 @@ class DhanClient:
             raise RuntimeError("Dhan SDK is not configured.")
 
         return self._sdk.place_order(**order)
-    
+
     def cancel_order(
         self,
         order_id: str,
@@ -47,7 +47,7 @@ class DhanClient:
             raise RuntimeError("Dhan SDK is not configured.")
 
         return self._sdk.cancel_order(order_id)
-    
+
     def modify_order(
         self,
         order_id: str,
@@ -63,7 +63,7 @@ class DhanClient:
             order_id,
             **updates,
         )
-    
+
     def get_order(
         self,
         order_id: str,
@@ -75,7 +75,7 @@ class DhanClient:
             raise RuntimeError("Dhan SDK is not configured.")
 
         return self._sdk.get_order(order_id)
-    
+
     def get_positions(self) -> list[dict]:
         """
         Retrieve all live broker positions.
@@ -84,7 +84,7 @@ class DhanClient:
             raise RuntimeError("Dhan SDK is not configured.")
 
         return self._sdk.get_positions()
-    
+
     def get_holdings(self) -> list[dict]:
         """
         Retrieve all holdings from the broker.
@@ -93,7 +93,7 @@ class DhanClient:
             raise RuntimeError("Dhan SDK is not configured.")
 
         return self._sdk.get_holdings()
-    
+
     def get_funds(self) -> dict:
         """
         Retrieve account funds and margin information.

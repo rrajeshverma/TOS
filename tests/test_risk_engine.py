@@ -1,7 +1,7 @@
 from datetime import datetime
 
-from domain.market import Market
 from domain.indicator_set import IndicatorSet
+from domain.market import Market
 from engines.decision_engine import DecisionEngine
 from engines.risk_engine import RiskEngine
 
@@ -65,8 +65,9 @@ def test_daily_loss_reached():
 
     assert not risk.is_approved
 
-from shared.enums import DecisionStatus, Signal
+
 from config.risk import MAX_DAILY_LOSS, MAX_TRADES_PER_DAY
+from shared.enums import DecisionStatus, Signal
 
 
 def test_blocked_decision_is_rejected():

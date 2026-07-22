@@ -1,18 +1,18 @@
 import pytest
 
 from config.config_manager import ConfigManager
-from config.settings import Settings
 from config.loader import load_dict, merge_configs
+from config.settings import Settings
 from config.validators import (
+    validate_range,
     validate_required,
     validate_type,
-    validate_range,
 )
-
 
 # ---------------------------------------------------------------------
 # ConfigManager
 # ---------------------------------------------------------------------
+
 
 def test_config_manager_initialization():
     manager = ConfigManager({"a": 1})
@@ -38,9 +38,7 @@ def test_config_manager_clear():
 
 
 def test_config_manager_nested_lookup():
-    manager = ConfigManager(
-        {"database": {"host": "localhost"}}
-    )
+    manager = ConfigManager({"database": {"host": "localhost"}})
     assert manager.get("database.host") == "localhost"
 
 
@@ -71,6 +69,7 @@ def test_config_manager_lock_unlock():
 # ---------------------------------------------------------------------
 # Settings
 # ---------------------------------------------------------------------
+
 
 def test_settings_set_get():
     settings = Settings()
@@ -105,6 +104,7 @@ def test_settings_default():
 # ---------------------------------------------------------------------
 # Loader
 # ---------------------------------------------------------------------
+
 
 def test_load_dict_returns_copy():
     data = {"risk": {"capital": 10000}}
@@ -142,6 +142,7 @@ def test_merge_configs_nested():
 # ---------------------------------------------------------------------
 # Validators
 # ---------------------------------------------------------------------
+
 
 def test_validate_required_success():
     assert validate_required("hello") is True

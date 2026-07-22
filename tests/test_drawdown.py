@@ -102,6 +102,7 @@ def test_max_drawdown_duration():
 
     assert dd.max_duration == 3
 
+
 def test_drawdown_percentage_with_zero_peak():
     dd = Drawdown()
 

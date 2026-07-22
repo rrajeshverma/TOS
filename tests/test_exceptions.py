@@ -2,8 +2,8 @@ import pytest
 
 from config.exceptions import (
     ConfigurationError,
-    ValidationError,
     EnvironmentError,
+    ValidationError,
 )
 
 

@@ -15,15 +15,14 @@ from typing import List
 
 import pandas as pd
 
-from domain.market import Market
-from domain.indicator_set import IndicatorSet
-from shared.logger import get_logger
-
 from config.indicators import (
     EMA_PERIOD,
     RSI_PERIOD,
     VOLUME_AVG_PERIOD,
 )
+from domain.indicator_set import IndicatorSet
+from domain.market import Market
+from shared.logger import get_logger
 
 
 class IndicatorEngine:

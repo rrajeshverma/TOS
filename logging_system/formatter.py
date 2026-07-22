@@ -1,8 +1,8 @@
 import logging
 
 from logging_system.config import (
-    LOG_FORMAT,
     DATE_FORMAT,
+    LOG_FORMAT,
 )
 
 

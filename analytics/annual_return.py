@@ -10,6 +10,4 @@ class AnnualReturn:
         if beginning_value <= 0:
             return 0.0
 
-        return (
-            ending_value - beginning_value
-        ) / beginning_value
+        return (ending_value - beginning_value) / beginning_value

@@ -2,17 +2,17 @@ import logging
 from logging import StreamHandler
 from logging.handlers import RotatingFileHandler
 
-from logging_system.logger import get_logger
+from logging_system.formatter import get_formatter
 from logging_system.handlers import (
     get_console_handler,
     get_file_handler,
 )
-from logging_system.formatter import get_formatter
-
+from logging_system.logger import get_logger
 
 # ---------------------------------------------------------------------
 # Logger
 # ---------------------------------------------------------------------
+
 
 def test_get_logger_returns_logger():
     logger = get_logger()
@@ -64,6 +64,7 @@ def test_logger_level():
 # Console Handler
 # ---------------------------------------------------------------------
 
+
 def test_console_handler_type():
     handler = get_console_handler()
 
@@ -86,6 +87,7 @@ def test_console_handler_level():
 # File Handler
 # ---------------------------------------------------------------------
 
+
 def test_file_handler_type():
     handler = get_file_handler()
 
@@ -107,6 +109,7 @@ def test_file_handler_level():
 # ---------------------------------------------------------------------
 # Formatter
 # ---------------------------------------------------------------------
+
 
 def test_get_formatter():
     formatter = get_formatter()

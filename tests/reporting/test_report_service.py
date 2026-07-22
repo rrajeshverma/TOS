@@ -130,6 +130,7 @@ def test_service_generate_returns_new_instance():
 
     assert first is not second
 
+
 from reporting.html_report import HTMLReport
 
 

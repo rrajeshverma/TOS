@@ -241,6 +241,7 @@ def test_summary_contains_cash():
 
     assert summary["cash"] == 75000
 
+
 def test_return_percent_zero_cash():
     snapshot = PortfolioSnapshot(
         cash=0,

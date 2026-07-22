@@ -88,8 +88,9 @@ def test_render_type():
 def test_html_report_instance():
     assert isinstance(HTMLReport(), HTMLReport)
 
-from reporting.report_builder import ReportBuilder
+
 from reporting.html_report import HTMLReport
+from reporting.report_builder import ReportBuilder
 
 
 def make_statistics_report():

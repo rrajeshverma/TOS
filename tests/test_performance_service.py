@@ -289,6 +289,7 @@ def test_calculate_max_consecutive_losses():
 
     assert model.max_consecutive_losses == 3
 
+
 def test_calculate_trade_counts_helper():
     service = PerformanceService()
     model = PerformanceModel()

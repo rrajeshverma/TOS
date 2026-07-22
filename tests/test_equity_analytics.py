@@ -1,9 +1,9 @@
 from analytics.equity_analytics import EquityAnalytics
 
-
 # ============================================================
 # Construction
 # ============================================================
+
 
 def test_initial_equity():
     analytics = EquityAnalytics(10000)
@@ -20,6 +20,7 @@ def test_initial_curve():
 # ============================================================
 # Add Trades
 # ============================================================
+
 
 def test_single_trade():
     analytics = EquityAnalytics(10000)
@@ -42,6 +43,7 @@ def test_multiple_trades():
 # Current Equity
 # ============================================================
 
+
 def test_current_equity():
     analytics = EquityAnalytics(10000)
 
@@ -62,6 +64,7 @@ def test_current_equity_loss():
 # Peak Equity
 # ============================================================
 
+
 def test_peak_equity():
     analytics = EquityAnalytics(10000)
 
@@ -74,6 +77,7 @@ def test_peak_equity():
 # ============================================================
 # Maximum Drawdown
 # ============================================================
+
 
 def test_max_drawdown():
     analytics = EquityAnalytics(10000)
@@ -93,6 +97,7 @@ def test_zero_drawdown():
 # ============================================================
 # Summary
 # ============================================================
+
 
 def test_summary_current_equity():
     analytics = EquityAnalytics(10000)
@@ -129,6 +134,7 @@ def test_summary_initial_equity():
 # Curve Size
 # ============================================================
 
+
 def test_curve_length():
     analytics = EquityAnalytics(10000)
 
@@ -151,6 +157,7 @@ def test_curve_last_value():
 # Total Return
 # ============================================================
 
+
 def test_total_return():
     analytics = EquityAnalytics(10000)
 
@@ -171,6 +178,7 @@ def test_total_return_loss():
 # Return Percent
 # ============================================================
 
+
 def test_return_percent():
     analytics = EquityAnalytics(10000)
 
@@ -183,6 +191,7 @@ def test_return_percent_zero():
     analytics = EquityAnalytics(10000)
 
     assert analytics.return_percent() == 0.0
+
 
 def test_return_percent_zero_initial_equity():
     analytics = EquityAnalytics(0)

@@ -1,13 +1,13 @@
 import time
 
+from monitoring.diagnostics import Diagnostics
 from monitoring.health_check import HealthCheck
 from monitoring.runtime_status import RuntimeStatus
-from monitoring.diagnostics import Diagnostics
-
 
 # ---------------------------------------------------------------------
 # HealthCheck
 # ---------------------------------------------------------------------
+
 
 def test_health_check_empty_is_healthy():
     health = HealthCheck()
@@ -63,6 +63,7 @@ def test_health_check_repr():
 # RuntimeStatus
 # ---------------------------------------------------------------------
 
+
 def test_runtime_initial_state():
     runtime = RuntimeStatus()
     assert runtime.is_running is False
@@ -107,6 +108,7 @@ def test_runtime_repr():
 # ---------------------------------------------------------------------
 # Diagnostics
 # ---------------------------------------------------------------------
+
 
 def test_diagnostics_default_report():
     diagnostics = Diagnostics()

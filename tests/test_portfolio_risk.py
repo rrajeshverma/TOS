@@ -178,6 +178,7 @@ def test_summary_can_open_position():
 
     assert summary["can_open_position"] is True
 
+
 def test_exposure_percent_with_zero_maximum_risk():
     risk = PortfolioRisk(0, 2)
 

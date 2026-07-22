@@ -1,5 +1,5 @@
-from portfolio.strategy_selector import StrategySelector
 from portfolio.strategy_manager import StrategyManager
+from portfolio.strategy_selector import StrategySelector
 
 
 def test_create_strategy_selector():

@@ -11,20 +11,17 @@ Description : Evaluates whether a strategy decision
 
 from __future__ import annotations
 
-from domain.decision import Decision
-from domain.risk import Risk
-
-from shared.enums import (
-    DecisionStatus,
-    Signal,
-)
-
-from shared.logger import get_logger
-
 from config.risk import (
     MAX_DAILY_LOSS,
     MAX_TRADES_PER_DAY,
 )
+from domain.decision import Decision
+from domain.risk import Risk
+from shared.enums import (
+    DecisionStatus,
+    Signal,
+)
+from shared.logger import get_logger
 
 
 class RiskEngine:

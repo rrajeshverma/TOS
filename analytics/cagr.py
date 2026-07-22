@@ -14,7 +14,4 @@ class CAGR:
         if years <= 0:
             return 0.0
 
-        return (
-            (ending_value / beginning_value)
-            ** (1 / years)
-        ) - 1
+        return ((ending_value / beginning_value) ** (1 / years)) - 1

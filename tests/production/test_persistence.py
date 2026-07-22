@@ -1,11 +1,11 @@
-from persistence.trade_repository import TradeRepository
 from persistence.position_repository import PositionRepository
 from persistence.sqlite_repository import SQLiteRepository
-
+from persistence.trade_repository import TradeRepository
 
 # ---------------------------------------------------------------------
 # TradeRepository
 # ---------------------------------------------------------------------
+
 
 def create_trade():
     return {
@@ -91,6 +91,7 @@ def test_trade_repository_missing_trade():
 # ---------------------------------------------------------------------
 # PositionRepository
 # ---------------------------------------------------------------------
+
 
 def create_position():
     return {
@@ -187,6 +188,7 @@ def test_position_repository_multiple():
 # ---------------------------------------------------------------------
 # SQLiteRepository
 # ---------------------------------------------------------------------
+
 
 def test_sqlite_repository_connection():
     repo = SQLiteRepository(":memory:")

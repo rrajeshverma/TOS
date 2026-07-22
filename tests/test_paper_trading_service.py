@@ -1,16 +1,13 @@
 from datetime import datetime
 from decimal import Decimal
 
-from domain.market import Market
 from domain.indicator_set import IndicatorSet
+from domain.market import Market
 from domain.position import Position
-
 from engines.decision_engine import DecisionEngine
 from engines.risk_engine import RiskEngine
 from engines.trade_factory import TradeFactory
-
 from services.paper_trading_service import PaperTradingService
-
 from shared.enums import TradeStatus
 from tests.test_trade_factory import create_trade
 
@@ -240,8 +237,8 @@ def test_close_preserves_position_identity():
     assert closed.closed_at is not None
 
 
-from tests.test_trade_factory import create_trade
 from shared.enums import TradeStatus
+from tests.test_trade_factory import create_trade
 
 
 def test_execute_initializes_position_correctly():

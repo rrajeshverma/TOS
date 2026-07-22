@@ -14,11 +14,9 @@ from collections.abc import Mapping
 from typing import Any
 
 from domain.decision import Decision
-
-from engines.market_engine import MarketEngine
-from engines.indicator_engine import IndicatorEngine
 from engines.decision_engine import DecisionEngine
-
+from engines.indicator_engine import IndicatorEngine
+from engines.market_engine import MarketEngine
 from shared.logger import get_logger
 
 

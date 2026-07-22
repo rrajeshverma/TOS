@@ -57,10 +57,13 @@ def test_custom_confidence():
         -0.01,
     ]
 
-    assert es.calculate(
-        returns,
-        confidence=0.99,
-    ) > 0
+    assert (
+        es.calculate(
+            returns,
+            confidence=0.99,
+        )
+        > 0
+    )
 
 
 def test_result_is_float():

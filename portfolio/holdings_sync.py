@@ -21,10 +21,7 @@ class HoldingsSync:
         self.broker_holdings.pop(symbol, None)
 
     def difference(self, symbol):
-        return (
-            self.local_holdings.get(symbol, 0)
-            - self.broker_holdings.get(symbol, 0)
-        )
+        return self.local_holdings.get(symbol, 0) - self.broker_holdings.get(symbol, 0)
 
     def is_in_sync(self):
         return self.local_holdings == self.broker_holdings
@@ -55,8 +52,6 @@ class HoldingsSync:
                     and "securityId" in holding
                     and "quantity" in holding
                 ):
-                    self.broker_holdings[
-                        holding["securityId"]
-                    ] = holding["quantity"]
+                    self.broker_holdings[holding["securityId"]] = holding["quantity"]
 
         return holdings

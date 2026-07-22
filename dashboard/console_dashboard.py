@@ -1,5 +1,5 @@
-from dashboard.dashboard_renderer import DashboardRenderer
 from dashboard.dashboard_model import DashboardModel
+from dashboard.dashboard_renderer import DashboardRenderer
 
 
 class ConsoleDashboard:

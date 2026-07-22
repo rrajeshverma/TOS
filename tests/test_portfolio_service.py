@@ -1,6 +1,6 @@
 from domain.portfolio import Portfolio
-from storage.portfolio_repository import PortfolioRepository
 from services.portfolio_service import PortfolioService
+from storage.portfolio_repository import PortfolioRepository
 
 
 def sample_portfolio():

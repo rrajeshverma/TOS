@@ -1,5 +1,5 @@
-from events.publisher import Publisher
 from events.event import Event
+from events.publisher import Publisher
 
 
 class DummyPublisher(Publisher):
@@ -18,6 +18,7 @@ def test_publisher_publishes_event():
     publisher.publish(event)
 
     assert publisher.last_event == event
+
 
 def test_base_publisher_publish():
     class BasePublisher(Publisher):

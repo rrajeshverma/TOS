@@ -1,8 +1,8 @@
 import pytest
 
 from brokers.broker_factory import BrokerFactory
-from brokers.paper_broker import PaperBroker
 from brokers.dhan_broker import DhanBroker
+from brokers.paper_broker import PaperBroker
 
 
 def test_create_paper_broker():
@@ -37,6 +37,7 @@ def test_create_dhan_broker():
 def test_invalid_broker():
     with pytest.raises(ValueError):
         BrokerFactory.create("invalid")
+
 
 def test_dhan_requires_client():
     instrument_mapper = Mock()

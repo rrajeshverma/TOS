@@ -2,10 +2,10 @@ from reporting.models.performance_model import PerformanceModel
 from reporting.reports.performance_report import PerformanceReport
 from reporting.reports.report_generator import ReportGenerator
 
-
 # ---------------------------------------------------------------------
 # PerformanceReport
 # ---------------------------------------------------------------------
+
 
 def test_has_summary():
     report = PerformanceReport(
@@ -101,6 +101,7 @@ def test_to_dict():
 # ---------------------------------------------------------------------
 # ReportGenerator
 # ---------------------------------------------------------------------
+
 
 def test_generate_returns_report():
     performance = PerformanceModel()

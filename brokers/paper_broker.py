@@ -1,6 +1,6 @@
+import uuid
 from dataclasses import replace
 from decimal import Decimal
-import uuid
 
 from brokers.base_broker import BaseBroker
 from brokers.models import Funds, OrderStatus

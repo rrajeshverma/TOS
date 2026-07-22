@@ -25,17 +25,13 @@ def test_assign_portfolio_metrics():
         "sharpe_ratio": 1.5,
     }
 
-    assert summary.portfolio_metrics[
-        "sharpe_ratio"
-    ] == 1.5
+    assert summary.portfolio_metrics["sharpe_ratio"] == 1.5
 
 
 def test_summary_contains_dictionary():
     summary = PerformanceSummary()
 
-    summary.portfolio_metrics = {
-        "a": 1.0
-    }
+    summary.portfolio_metrics = {"a": 1.0}
 
     assert isinstance(
         summary.portfolio_metrics,

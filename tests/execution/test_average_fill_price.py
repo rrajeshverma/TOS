@@ -18,6 +18,7 @@ def test_average_fill_price():
 
     assert service.average_fill_price(order_id) == 25013.0
 
+
 def test_average_price_before_fill_is_zero():
     service = OrderService()
 

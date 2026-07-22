@@ -119,6 +119,7 @@ def test_execute_empty():
 
     assert pipeline.execute() == []
 
+
 def test_remove_non_existing_strategy():
     pipeline = StrategyPipeline()
 
@@ -142,6 +143,7 @@ def test_last_empty_pipeline():
     pipeline = StrategyPipeline()
 
     assert pipeline.last() is None
+
 
 def test_execute_with_context():
     pipeline = StrategyPipeline()

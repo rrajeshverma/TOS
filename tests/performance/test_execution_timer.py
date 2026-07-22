@@ -74,6 +74,7 @@ def test_context_manager():
     assert timer.is_running is False
     assert timer.elapsed > 0.0
 
+
 def test_start_again_resets_end_time():
     timer = ExecutionTimer()
 

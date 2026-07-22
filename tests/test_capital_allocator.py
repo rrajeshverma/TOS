@@ -177,6 +177,7 @@ def test_summary_allocate_quarter():
 
     assert allocator.allocate_percent(25) == 25000
 
+
 def test_utilization_with_zero_capital():
     allocator = CapitalAllocator(0)
 

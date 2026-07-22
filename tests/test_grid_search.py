@@ -1,6 +1,6 @@
 from optimizer.grid_search import GridSearch
-from optimizer.parameter_space import ParameterSpace
 from optimizer.optimization_result import OptimizationResult
+from optimizer.parameter_space import ParameterSpace
 
 
 def test_empty_parameter_space():
@@ -131,6 +131,7 @@ def test_result_count():
 
     assert len(results) == space.count()
 
+
 def test_store_invalid_result_raises_type_error():
     space = ParameterSpace()
 
@@ -142,6 +143,7 @@ def test_store_invalid_result_raises_type_error():
     ):
         search._store(object())
 
+
 def test_evaluator_returns_invalid_result():
     space = ParameterSpace()
     space.add("ema", [20])
@@ -149,7 +151,7 @@ def test_evaluator_returns_invalid_result():
     search = GridSearch(space)
 
     def evaluator(params):
-        return object()   # Not an OptimizationResult
+        return object()  # Not an OptimizationResult
 
     with pytest.raises(
         TypeError,

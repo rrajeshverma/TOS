@@ -13,7 +13,6 @@ from datetime import datetime
 from decimal import Decimal
 
 from domain.trade import Trade
-
 from shared.enums import (
     Broker,
     OrderSide,

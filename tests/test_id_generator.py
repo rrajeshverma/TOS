@@ -1,8 +1,8 @@
 from utils.id_generator import (
     generate_decision_id,
-    generate_trade_id,
     generate_order_id,
     generate_position_id,
+    generate_trade_id,
 )
 
 

@@ -1,4 +1,5 @@
 from math import isclose
+
 from analytics.statistics import Statistics
 
 
@@ -301,6 +302,7 @@ def test_calmar_ratio_negative_cagr():
         ),
         -2.0,
     )
+
 
 def test_sortino_ratio_zero_downside_volatility():
     stats = Statistics()

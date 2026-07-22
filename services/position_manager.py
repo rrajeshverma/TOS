@@ -13,12 +13,10 @@ from __future__ import annotations
 from datetime import datetime
 from decimal import Decimal
 
-from domain.position import Position
 from domain.order import Order
-
+from domain.position import Position
 from shared.enums import TradeStatus
 from shared.logger import get_logger
-
 from utils.id_generator import generate_position_id
 
 

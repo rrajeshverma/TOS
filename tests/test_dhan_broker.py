@@ -1,17 +1,17 @@
-import pytest
-
-from unittest.mock import Mock
 from decimal import Decimal
+from unittest.mock import Mock
+
+import pytest
 
 from brokers.dhan_broker import DhanBroker
 from brokers.models import (
     Funds,
-    Position,
     Holding,
     Order,
     OrderSide,
     OrderStatus,
     OrderType,
+    Position,
     ProductType,
 )
 
@@ -186,6 +186,7 @@ def test_place_order():
 
     assert placed.broker_order_id == "ORD999"
     assert placed.status == OrderStatus.PENDING
+
 
 def test_cancel_order():
     client = Mock()

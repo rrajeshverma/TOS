@@ -13,10 +13,7 @@ def test_empty_portfolio():
         max_drawdown=0,
     )
 
-    assert all(
-        value == 0.0
-        for value in metrics.values()
-    )
+    assert all(value == 0.0 for value in metrics.values())
 
 
 def test_all_winning_returns():

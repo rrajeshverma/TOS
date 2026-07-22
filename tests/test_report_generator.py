@@ -1,9 +1,6 @@
+from reporting.models.performance_model import PerformanceModel
 from reporting.reports.performance_report import PerformanceReport
 from reporting.reports.report_generator import ReportGenerator
-from reporting.models.performance_model import PerformanceModel
-
-
-from reporting.models.performance_model import PerformanceModel
 
 
 def test_generate_report():

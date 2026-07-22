@@ -19,10 +19,7 @@ class TradeReconciliation:
         self.broker_trades.pop(trade_id, None)
 
     def difference(self, trade_id):
-        return (
-            self.local_trades.get(trade_id, 0)
-            - self.broker_trades.get(trade_id, 0)
-        )
+        return self.local_trades.get(trade_id, 0) - self.broker_trades.get(trade_id, 0)
 
     def is_reconciled(self):
         return self.local_trades == self.broker_trades

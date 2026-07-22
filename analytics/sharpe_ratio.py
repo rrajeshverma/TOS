@@ -13,18 +13,11 @@ class SharpeRatio:
         if len(returns) < 2:
             return 0.0
 
-        excess_returns = [
-            value - risk_free_rate
-            for value in returns
-        ]
+        excess_returns = [value - risk_free_rate for value in returns]
 
-        mean_return = statistics.mean(
-            excess_returns
-        )
+        mean_return = statistics.mean(excess_returns)
 
-        std_dev = statistics.stdev(
-            excess_returns
-        )
+        std_dev = statistics.stdev(excess_returns)
 
         if std_dev == 0:
             return 0.0

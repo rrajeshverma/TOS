@@ -26,4 +26,4 @@ def test_update_order_status():
 def test_unknown_order_status():
     service = OrderService()
 
-    assert service.status(999) is None  
+    assert service.status(999) is None

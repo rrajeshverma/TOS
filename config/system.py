@@ -8,8 +8,8 @@ Description : Global system configuration for TOS.
 =========================================================
 """
 
-from pathlib import Path
 import os
+from pathlib import Path
 
 from dotenv import load_dotenv
 

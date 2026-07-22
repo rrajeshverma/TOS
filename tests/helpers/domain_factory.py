@@ -1,10 +1,9 @@
 from datetime import datetime
 from decimal import Decimal
 
-from domain.market import Market
 from domain.indicator_set import IndicatorSet
+from domain.market import Market
 from domain.portfolio import Portfolio
-
 from engines.decision_engine import DecisionEngine
 from engines.risk_engine import RiskEngine
 from engines.trade_factory import TradeFactory
