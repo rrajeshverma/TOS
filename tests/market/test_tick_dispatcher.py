@@ -1,0 +1,18 @@
+def test_tick_dispatcher_register_handler():
+    ...
+
+
+def test_tick_dispatcher_unregister_handler():
+    ...
+
+
+def test_tick_dispatcher_dispatch_tick():
+    ...
+
+
+def test_tick_dispatcher_multiple_handlers():
+    ...
+
+
+def test_tick_dispatcher_no_handlers():
+    ...

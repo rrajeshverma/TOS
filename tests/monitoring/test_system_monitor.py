@@ -57,3 +57,18 @@ def test_python_version_not_empty():
 def test_cpu_count_integer():
     sm = SystemMonitor()
     assert isinstance(sm.cpu_count, int)
+
+def test_system_monitor_start():
+    ...
+
+def test_system_monitor_stop():
+    ...
+
+def test_system_monitor_collect():
+    ...
+
+def test_system_monitor_reset():
+    ...
+
+def test_system_monitor_snapshot():
+    ...

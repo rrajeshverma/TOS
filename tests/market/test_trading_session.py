@@ -1,0 +1,18 @@
+def test_trading_session_open():
+    ...
+
+
+def test_trading_session_close():
+    ...
+
+
+def test_trading_session_is_open():
+    ...
+
+
+def test_trading_session_market_hours():
+    ...
+
+
+def test_trading_session_reset():
+    ...

@@ -155,3 +155,18 @@ def test_profiler_reusable():
     assert profiler.is_running
 
     profiler.stop()
+
+def test_memory_profiler_snapshot():
+    ...
+
+def test_memory_profiler_peak():
+    ...
+
+def test_memory_profiler_growth():
+    ...
+
+def test_memory_profiler_reset():
+    ...
+
+def test_memory_profiler_summary():
+    ...
