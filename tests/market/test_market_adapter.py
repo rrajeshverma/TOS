@@ -5,7 +5,6 @@ from market.market_adapter import MarketAdapter
 
 
 def test_candle_to_market_payload():
-
     candle = Candle(
         symbol="NIFTY",
         timeframe="5m",
@@ -17,9 +16,7 @@ def test_candle_to_market_payload():
         volume=1000,
     )
 
-    adapter = MarketAdapter(
-        exchange="NSE"
-    )
+    adapter = MarketAdapter(exchange="NSE")
 
     payload = adapter.to_market_data(candle)
 

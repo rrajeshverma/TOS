@@ -16,13 +16,11 @@ class OrderIdempotency:
     def __init__(self):
         self._orders = {}
 
-
     def is_duplicate(
         self,
         order_key,
     ):
         return order_key in self._orders
-
 
     def record(
         self,
@@ -31,13 +29,11 @@ class OrderIdempotency:
     ):
         self._orders[order_key] = result
 
-
     def get(
         self,
         order_key,
     ):
         return self._orders.get(order_key)
-
 
     def clear(
         self,
@@ -48,10 +44,8 @@ class OrderIdempotency:
             None,
         )
 
-
     def reset(self):
         self._orders.clear()
-
 
     def count(self):
         return len(self._orders)

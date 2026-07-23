@@ -14,7 +14,6 @@ from execution.order_status import OrderStatus
 
 
 def test_create_new_order_event():
-
     event = OrderEvent(
         order_id=1,
         event_type=OrderEventType.NEW,
@@ -25,7 +24,6 @@ def test_create_new_order_event():
 
 
 def test_event_contains_broker_order_id():
-
     event = OrderEvent(
         order_id=1,
         event_type=OrderEventType.SUBMITTED,
@@ -36,7 +34,6 @@ def test_event_contains_broker_order_id():
 
 
 def test_event_without_broker_id():
-
     event = OrderEvent(
         order_id=1,
         event_type=OrderEventType.NEW,
@@ -46,7 +43,6 @@ def test_event_without_broker_id():
 
 
 def test_order_event_types():
-
     assert OrderEventType.FILLED.value == "FILLED"
     assert OrderEventType.CANCELLED.value == "CANCELLED"
 
@@ -57,14 +53,11 @@ def test_order_event_types():
 
 
 def test_dispatcher_publish_event():
-
     dispatcher = OrderEventDispatcher()
 
     received = []
 
-    dispatcher.subscribe(
-        lambda event: received.append(event)
-    )
+    dispatcher.subscribe(lambda event: received.append(event))
 
     event = OrderEvent(
         order_id=1,
@@ -77,19 +70,14 @@ def test_dispatcher_publish_event():
 
 
 def test_dispatcher_multiple_subscribers():
-
     dispatcher = OrderEventDispatcher()
 
     first = []
     second = []
 
-    dispatcher.subscribe(
-        lambda e: first.append(e)
-    )
+    dispatcher.subscribe(lambda e: first.append(e))
 
-    dispatcher.subscribe(
-        lambda e: second.append(e)
-    )
+    dispatcher.subscribe(lambda e: second.append(e))
 
     event = OrderEvent(
         order_id=1,
@@ -103,22 +91,15 @@ def test_dispatcher_multiple_subscribers():
 
 
 def test_dispatcher_preserves_order():
-
     dispatcher = OrderEventDispatcher()
 
     received = []
 
-    dispatcher.subscribe(
-        lambda e: received.append(e.event_type)
-    )
+    dispatcher.subscribe(lambda e: received.append(e.event_type))
 
-    dispatcher.publish(
-        OrderEvent(1, OrderEventType.NEW)
-    )
+    dispatcher.publish(OrderEvent(1, OrderEventType.NEW))
 
-    dispatcher.publish(
-        OrderEvent(1, OrderEventType.FILLED)
-    )
+    dispatcher.publish(OrderEvent(1, OrderEventType.FILLED))
 
     assert received == [
         OrderEventType.NEW,
@@ -127,20 +108,15 @@ def test_dispatcher_preserves_order():
 
 
 def test_dispatcher_clear():
-
     dispatcher = OrderEventDispatcher()
 
     received = []
 
-    dispatcher.subscribe(
-        lambda e: received.append(e)
-    )
+    dispatcher.subscribe(lambda e: received.append(e))
 
     dispatcher.clear()
 
-    dispatcher.publish(
-        OrderEvent(1, OrderEventType.NEW)
-    )
+    dispatcher.publish(OrderEvent(1, OrderEventType.NEW))
 
     assert received == []
 
@@ -151,14 +127,12 @@ def test_dispatcher_clear():
 
 
 def test_default_order_status():
-
     status = OrderStatus()
 
     assert status.state == "NEW"
 
 
 def test_mark_submitted():
-
     status = OrderStatus()
 
     status.mark_submitted()
@@ -167,7 +141,6 @@ def test_mark_submitted():
 
 
 def test_mark_filled():
-
     status = OrderStatus()
 
     status.mark_filled()
@@ -176,7 +149,6 @@ def test_mark_filled():
 
 
 def test_mark_cancelled():
-
     status = OrderStatus()
 
     status.mark_cancelled()
@@ -185,14 +157,12 @@ def test_mark_cancelled():
 
 
 def test_open_status():
-
     status = OrderStatus()
 
     assert status.is_open()
 
 
 def test_closed_status():
-
     status = OrderStatus()
 
     status.mark_filled()
@@ -201,7 +171,6 @@ def test_closed_status():
 
 
 def test_status_reset():
-
     status = OrderStatus()
 
     status.mark_filled()

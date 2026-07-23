@@ -37,7 +37,6 @@ class TradeJournal:
         self,
         file_path: str = "journal/trade_journal.csv",
     ) -> None:
-
         self._logger = get_logger(__name__)
 
         self.file_path = Path(file_path)
@@ -54,7 +53,6 @@ class TradeJournal:
                 newline="",
                 encoding="utf-8",
             ) as file:
-
                 writer = csv.writer(file)
                 writer.writerow(self.HEADER)
 
@@ -72,7 +70,6 @@ class TradeJournal:
             newline="",
             encoding="utf-8",
         ) as file:
-
             writer = csv.writer(file)
 
             writer.writerow(
@@ -114,5 +111,4 @@ class TradeJournal:
             newline="",
             encoding="utf-8",
         ) as file:
-
             return max(sum(1 for _ in file) - 1, 0)

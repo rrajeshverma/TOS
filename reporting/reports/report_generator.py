@@ -9,7 +9,6 @@ class ReportGenerator:
         self,
         performance: PerformanceModel,
     ) -> PerformanceReport:
-
         summary = (
             "Trades\n"
             "--------------------\n"

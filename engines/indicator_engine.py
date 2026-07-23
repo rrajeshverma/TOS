@@ -80,7 +80,6 @@ class IndicatorEngine:
         self,
         candles: List[Market],
     ) -> None:
-
         if candles is None:
             raise ValueError("Market history is None.")
 
@@ -91,7 +90,6 @@ class IndicatorEngine:
     def _to_dataframe(
         candles: List[Market],
     ) -> pd.DataFrame:
-
         return pd.DataFrame(
             {
                 "high": [c.high for c in candles],

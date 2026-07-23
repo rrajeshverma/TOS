@@ -5,7 +5,6 @@ from market.market_history import MarketHistory
 
 
 def create_market():
-
     return Market(
         symbol="NIFTY",
         exchange="NSE",
@@ -20,38 +19,27 @@ def create_market():
 
 
 def test_add_market():
-
     history = MarketHistory()
 
-    history.add(
-        create_market()
-    )
+    history.add(create_market())
 
     assert history.count() == 1
 
 
-
 def test_get_history():
-
     history = MarketHistory()
 
-    history.add(
-        create_market()
-    )
+    history.add(create_market())
 
     candles = history.get()
 
     assert len(candles) == 1
 
 
-
 def test_clear_history():
-
     history = MarketHistory()
 
-    history.add(
-        create_market()
-    )
+    history.add(create_market())
 
     history.clear()
 

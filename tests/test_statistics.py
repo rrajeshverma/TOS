@@ -256,9 +256,6 @@ def test_sortino_ratio_single_negative_return():
     assert stats.sortino_ratio(returns) == 0.0
 
 
-from math import isclose
-
-
 def test_calmar_ratio():
     stats = Statistics()
 

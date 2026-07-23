@@ -47,8 +47,6 @@ class ConfigValidator:
         validate_required(mode)
 
         if mode not in self.VALID_MODES:
-            raise ValueError(
-                f"Unsupported trading mode: {mode}"
-            )
+            raise ValueError(f"Unsupported trading mode: {mode}")
 
         return True

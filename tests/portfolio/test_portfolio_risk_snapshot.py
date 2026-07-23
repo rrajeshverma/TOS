@@ -3,7 +3,6 @@ from portfolio.portfolio_snapshot import PortfolioSnapshot
 
 
 def test_update_risk_from_snapshot():
-
     risk = PortfolioRisk(
         100000,
         2,
@@ -23,7 +22,6 @@ def test_update_risk_from_snapshot():
 
 
 def test_positive_profit_does_not_create_risk():
-
     risk = PortfolioRisk(
         100000,
         2,

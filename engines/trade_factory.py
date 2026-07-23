@@ -31,7 +31,6 @@ class TradeFactory:
     """
 
     def __init__(self) -> None:
-
         self._logger = get_logger(__name__)
 
     def create(
@@ -40,7 +39,6 @@ class TradeFactory:
         entry_price: Decimal,
         stop_loss: Decimal,
     ) -> Trade:
-
         if not risk.is_approved:
             raise ValueError("Cannot create Trade from rejected Risk.")
 

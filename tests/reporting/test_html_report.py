@@ -1,6 +1,7 @@
 from datetime import datetime
 
 from reporting.html_report import HTMLReport
+from reporting.report_builder import ReportBuilder
 from reporting.report_model import ReportModel
 
 
@@ -87,17 +88,6 @@ def test_render_type():
 
 def test_html_report_instance():
     assert isinstance(HTMLReport(), HTMLReport)
-
-
-from reporting.html_report import HTMLReport
-from reporting.report_builder import ReportBuilder
-
-
-def make_statistics_report():
-    return ReportBuilder().build(
-        "Daily",
-        [100, -50, 25],
-    )
 
 
 def test_summary_table_exists():

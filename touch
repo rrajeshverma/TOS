@@ -1,0 +1,171 @@
+import pytest
+
+from execution.execution_engine import ExecutionEngine
+from risk.risk_manager import RiskManager
+
+
+class DummyOrderService:
+    def __init__(self):
+        self.orders = []
+
+    def place_order(self, order):
+        self.orders.append(order)
+        return "ORDER-1"
+
+
+def order(quantity):
+    return {
+        "symbol": "NIFTY",
+        "quantity": quantity,
+        "price": 25000,
+        "side": "BUY",
+    }
+
+
+def engine(limit=100):
+    return ExecutionEngine(
+        order_service=DummyOrderService(),
+        risk_manager=RiskManager(max_position_size=limit),
+    )
+
+
+def test_engine_accepts_valid_order():
+    e = engine()
+
+    assert e.execute(order(50)) == "ORDER-1"
+
+
+def test_engine_rejects_large_order():
+    e = engine()
+
+    with pytest.raises(ValueError):
+        e.execute(order(150))
+
+
+def test_engine_accepts_limit_order():
+    e = engine()
+
+    assert e.execute(order(100)) == "ORDER-1"
+
+
+def test_engine_rejects_zero_quantity():
+    e = engine()
+
+    with pytest.raises(ValueError):
+        e.execute(order(0))
+
+
+def test_engine_rejects_negative_quantity():
+    e = engine()
+
+    with pytest.raises(ValueError):
+        e.execute(order(-5))
+
+
+def test_order_service_called_once():
+    e = engine()
+
+    e.execute(order(10))
+
+    assert len(e.order_service.orders) == 1
+
+
+def test_multiple_valid_orders():
+    e = engine()
+
+    e.execute(order(10))
+    e.execute(order(20))
+
+    assert len(e.order_service.orders) == 2
+
+
+def test_invalid_order_not_sent():
+    e = engine()
+
+    with pytest.raises(ValueError):
+        e.execute(order(500))
+
+    assert len(e.order_service.orders) == 0
+
+
+def test_custom_limit():
+    e = engine(limit=25)
+
+    assert e.execute(order(25)) == "ORDER-1"
+
+
+def test_custom_limit_rejects():
+    e = engine(limit=25)
+
+    with pytest.raises(ValueError):
+        e.execute(order(26))
+
+
+def test_repeatable_execution():
+    e = engine()
+
+    assert e.execute(order(1)) == "ORDER-1"
+
+
+def test_engine_keeps_order_service():
+    e = engine()
+
+    assert e.order_service is not None
+
+
+def test_engine_keeps_risk_manager():
+    e = engine()
+
+    assert e.risk_manager is not None
+
+
+def test_validate_before_execution():
+    e = engine()
+
+    with pytest.raises(ValueError):
+        e.execute(order(1000))
+
+    assert len(e.order_service.orders) == 0
+
+
+def test_multiple_rejections():
+    e = engine()
+
+    for _ in range(3):
+        with pytest.raises(ValueError):
+            e.execute(order(1000))
+
+
+def test_boundary_value():
+    e = engine()
+
+    assert e.execute(order(99)) == "ORDER-1"
+
+
+def test_quantity_one():
+    e = engine()
+
+    assert e.execute(order(1)) == "ORDER-1"
+
+
+def test_large_custom_limit():
+    e = engine(limit=1000)
+
+    assert e.execute(order(999)) == "ORDER-1"
+
+
+def test_engine_is_repeatable():
+    e = engine()
+
+    first = e.execute(order(5))
+    second = e.execute(order(6))
+
+    assert first == second == "ORDER-1"
+
+
+def test_order_contents_preserved():
+    e = engine()
+
+    e.execute(order(15))
+
+    assert e.order_service.orders[0]["quantity"] == 15

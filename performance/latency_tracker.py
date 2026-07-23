@@ -45,4 +45,4 @@ class LatencyTracker:
         return len(self._samples)
 
     def __repr__(self):
-        return f"LatencyTracker(count={self.count}, " f"avg={self.average:.6f})"
+        return f"LatencyTracker(count={self.count}, avg={self.average:.6f})"

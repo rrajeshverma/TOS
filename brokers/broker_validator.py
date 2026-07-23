@@ -32,8 +32,6 @@ class BrokerValidator:
         validate_required(access_token)
 
         if name not in self.VALID_BROKERS:
-            raise ValueError(
-                f"Unsupported broker: {name}"
-            )
+            raise ValueError(f"Unsupported broker: {name}")
 
         return True

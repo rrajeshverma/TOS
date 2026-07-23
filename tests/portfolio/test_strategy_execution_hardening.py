@@ -6,7 +6,6 @@ from portfolio.strategy_lifecycle import StrategyLifecycle
 
 
 class FakeStrategy:
-
     def __init__(self):
         self.calls = 0
         self.initialized = False
@@ -29,18 +28,14 @@ class FakeStrategy:
 
 
 def test_executor_runs_strategy():
-
     strategy = FakeStrategy()
 
-    result = StrategyExecutor().execute(
-        strategy
-    )
+    result = StrategyExecutor().execute(strategy)
 
     assert result == "RESULT"
 
 
 def test_executor_with_context():
-
     strategy = FakeStrategy()
 
     StrategyExecutor().execute(
@@ -52,33 +47,26 @@ def test_executor_with_context():
 
 
 def test_execute_many():
-
     strategies = [
         FakeStrategy(),
         FakeStrategy(),
     ]
 
-    result = StrategyExecutor().execute_many(
-        strategies
-    )
+    result = StrategyExecutor().execute_many(strategies)
 
     assert len(result) == 2
 
 
 def test_execute_first():
-
     strategies = [
         FakeStrategy(),
         FakeStrategy(),
     ]
 
-    assert StrategyExecutor().execute_first(
-        strategies
-    ) == "RESULT"
+    assert StrategyExecutor().execute_first(strategies) == "RESULT"
 
 
 def test_execute_empty_first():
-
     assert StrategyExecutor().execute_first([]) is None
 
 
@@ -88,7 +76,6 @@ def test_execute_empty_first():
 
 
 def test_pipeline_add():
-
     pipeline = StrategyPipeline()
 
     strategy = FakeStrategy()
@@ -99,7 +86,6 @@ def test_pipeline_add():
 
 
 def test_pipeline_remove():
-
     pipeline = StrategyPipeline()
 
     strategy = FakeStrategy()
@@ -111,20 +97,14 @@ def test_pipeline_remove():
 
 
 def test_pipeline_execute():
-
     pipeline = StrategyPipeline()
 
-    pipeline.add(
-        FakeStrategy()
-    )
+    pipeline.add(FakeStrategy())
 
-    assert pipeline.execute() == [
-        "RESULT"
-    ]
+    assert pipeline.execute() == ["RESULT"]
 
 
 def test_pipeline_first():
-
     pipeline = StrategyPipeline()
 
     strategy = FakeStrategy()
@@ -140,7 +120,6 @@ def test_pipeline_first():
 
 
 def test_scheduler_disabled():
-
     scheduler = StrategyScheduler()
 
     scheduler.disable()
@@ -149,22 +128,16 @@ def test_scheduler_disabled():
 
 
 def test_scheduler_runs_pipeline():
-
     scheduler = StrategyScheduler()
 
     pipeline = StrategyPipeline()
 
-    pipeline.add(
-        FakeStrategy()
-    )
+    pipeline.add(FakeStrategy())
 
-    assert scheduler.run(pipeline) == [
-        "RESULT"
-    ]
+    assert scheduler.run(pipeline) == ["RESULT"]
 
 
 def test_scheduler_enable():
-
     scheduler = StrategyScheduler()
 
     scheduler.disable()
@@ -179,32 +152,19 @@ def test_scheduler_enable():
 
 
 def test_validator_name():
-
-    assert StrategyValidator().is_valid_name(
-        "NIFTY"
-    )
+    assert StrategyValidator().is_valid_name("NIFTY")
 
 
 def test_validator_invalid_name():
-
-    assert not StrategyValidator().is_valid_name(
-        ""
-    )
+    assert not StrategyValidator().is_valid_name("")
 
 
 def test_validator_strategy():
-
-    assert StrategyValidator().is_valid_strategy(
-        FakeStrategy()
-    )
+    assert StrategyValidator().is_valid_strategy(FakeStrategy())
 
 
 def test_validator_full_validation():
-
-    assert StrategyValidator().validate(
-        "S1",
-        FakeStrategy()
-    )
+    assert StrategyValidator().validate("S1", FakeStrategy())
 
 
 # -------------------------
@@ -213,7 +173,6 @@ def test_validator_full_validation():
 
 
 def test_lifecycle_start():
-
     lifecycle = StrategyLifecycle()
 
     lifecycle.start()
@@ -222,7 +181,6 @@ def test_lifecycle_start():
 
 
 def test_lifecycle_restart():
-
     lifecycle = StrategyLifecycle()
 
     lifecycle.restart()
@@ -231,22 +189,16 @@ def test_lifecycle_restart():
 
 
 def test_lifecycle_initialize():
-
     strategy = FakeStrategy()
 
-    StrategyLifecycle().initialize(
-        strategy
-    )
+    StrategyLifecycle().initialize(strategy)
 
     assert strategy.initialized
 
 
 def test_lifecycle_shutdown():
-
     strategy = FakeStrategy()
 
-    StrategyLifecycle().shutdown(
-        strategy
-    )
+    StrategyLifecycle().shutdown(strategy)
 
     assert strategy.shutdown_called

@@ -2,7 +2,6 @@ from portfolio.allocation.risk_allocator import RiskAllocator
 
 
 def test_max_strategy_risk():
-
     allocator = RiskAllocator(10000)
 
     allocator.allocate_risk("NIFTY", 2000)
@@ -11,7 +10,6 @@ def test_max_strategy_risk():
 
 
 def test_total_portfolio_risk():
-
     allocator = RiskAllocator(10000)
 
     allocator.allocate_risk("A", 2000)
@@ -21,7 +19,6 @@ def test_total_portfolio_risk():
 
 
 def test_remaining_risk():
-
     allocator = RiskAllocator(10000)
 
     allocator.allocate_risk("A", 3000)
@@ -30,7 +27,6 @@ def test_remaining_risk():
 
 
 def test_risk_limit():
-
     allocator = RiskAllocator(10000)
 
     result = allocator.allocate_risk(
@@ -42,14 +38,12 @@ def test_risk_limit():
 
 
 def test_negative_risk():
-
     allocator = RiskAllocator(10000)
 
     assert allocator.allocate_risk("A", -500) == 0
 
 
 def test_daily_loss_distribution():
-
     allocator = RiskAllocator(10000)
 
     allocator.distribute_daily_loss(500)
@@ -58,14 +52,12 @@ def test_daily_loss_distribution():
 
 
 def test_margin_validation_true():
-
     allocator = RiskAllocator(10000)
 
     assert allocator.validate_margin(5000)
 
 
 def test_margin_validation_false():
-
     allocator = RiskAllocator(10000)
 
     allocator.allocate_risk("A", 8000)
@@ -74,7 +66,6 @@ def test_margin_validation_false():
 
 
 def test_summary():
-
     allocator = RiskAllocator(10000)
 
     allocator.allocate_risk("A", 2000)
@@ -85,7 +76,6 @@ def test_summary():
 
 
 def test_multiple_strategies():
-
     allocator = RiskAllocator(10000)
 
     allocator.allocate_risk("A", 1000)

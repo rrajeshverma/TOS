@@ -5,15 +5,9 @@ from execution.execution_result import ExecutionResult
 
 
 def test_map_successful_broker_response():
-
     mapper = ExecutionResultMapper()
 
-    response = {
-        "status": "success",
-        "data": {
-            "orderId": "ORD123"
-        }
-    }
+    response = {"status": "success", "data": {"orderId": "ORD123"}}
 
     result = mapper.map(response)
 
@@ -27,7 +21,6 @@ def test_map_successful_broker_response():
 
 
 def test_map_failed_broker_response():
-
     mapper = ExecutionResultMapper()
 
     response = {

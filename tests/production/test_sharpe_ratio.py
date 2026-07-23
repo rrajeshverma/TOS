@@ -1,6 +1,5 @@
 import math
 
-import pytest
 
 from analytics.sharpe_ratio import SharpeRatio
 

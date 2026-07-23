@@ -27,8 +27,6 @@ class BrokerSyncService:
             except Exception as exc:
                 results["errors"][name] = str(exc)
 
-        results["success"] = (
-            len(results["errors"]) == 0
-        )
+        results["success"] = len(results["errors"]) == 0
 
         return results

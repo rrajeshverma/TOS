@@ -10,14 +10,12 @@ from production.runtime_validator import RuntimeValidator
 
 
 def test_deployment_initial_state():
-
     checker = DeploymentChecker()
 
     assert checker is not None
 
 
 def test_deployment_add_component():
-
     checker = DeploymentChecker()
 
     checker.add_component("broker")
@@ -26,7 +24,6 @@ def test_deployment_add_component():
 
 
 def test_deployment_ready():
-
     checker = DeploymentChecker()
 
     checker.add_component("broker")
@@ -35,14 +32,12 @@ def test_deployment_ready():
 
 
 def test_deployment_missing_component():
-
     checker = DeploymentChecker()
 
     assert not checker.is_ready()
 
 
 def test_deployment_summary():
-
     checker = DeploymentChecker()
 
     result = checker.summary()
@@ -56,14 +51,12 @@ def test_deployment_summary():
 
 
 def test_failover_initial():
-
     validator = FailoverValidator()
 
     assert validator is not None
 
 
 def test_failover_register():
-
     validator = FailoverValidator()
 
     validator.register("broker")
@@ -72,7 +65,6 @@ def test_failover_register():
 
 
 def test_failover_available():
-
     validator = FailoverValidator()
 
     validator.register("broker")
@@ -81,7 +73,6 @@ def test_failover_available():
 
 
 def test_failover_failure():
-
     validator = FailoverValidator()
 
     validator.register("broker")
@@ -91,7 +82,6 @@ def test_failover_failure():
 
 
 def test_failover_summary():
-
     result = FailoverValidator().summary()
 
     assert "services" in result
@@ -103,7 +93,6 @@ def test_failover_summary():
 
 
 def test_health_register():
-
     auditor = HealthAuditor()
 
     auditor.register("database")
@@ -112,7 +101,6 @@ def test_health_register():
 
 
 def test_health_ok():
-
     auditor = HealthAuditor()
 
     auditor.register("database")
@@ -121,7 +109,6 @@ def test_health_ok():
 
 
 def test_health_failure():
-
     auditor = HealthAuditor()
 
     auditor.register("database")
@@ -131,7 +118,6 @@ def test_health_failure():
 
 
 def test_health_report():
-
     report = HealthAuditor().report()
 
     assert "health" in report
@@ -143,14 +129,12 @@ def test_health_report():
 
 
 def test_runtime_initial():
-
     validator = RuntimeValidator()
 
     assert validator is not None
 
 
 def test_runtime_set():
-
     validator = RuntimeValidator()
 
     validator.set("python", "3.12")
@@ -159,7 +143,6 @@ def test_runtime_set():
 
 
 def test_runtime_validate():
-
     validator = RuntimeValidator()
 
     validator.set("mode", "production")
@@ -168,14 +151,12 @@ def test_runtime_validate():
 
 
 def test_runtime_invalid():
-
     validator = RuntimeValidator()
 
     assert not validator.validate()
 
 
 def test_runtime_summary():
-
     result = RuntimeValidator().summary()
 
     assert "runtime" in result

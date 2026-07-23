@@ -258,36 +258,6 @@ def test_find_closed_trades_returns_only_closed():
     assert trades[0]["status"] == "CLOSED"
 
 
-def test_find_closed_trades_returns_only_closed():
-    repo = TradeRepository(":memory:")
-
-    repo.save(
-        {
-            "symbol": "BTCUSDT",
-            "side": "BUY",
-            "price": 65000.0,
-            "quantity": 0.01,
-            "status": "OPEN",
-        }
-    )
-
-    repo.save(
-        {
-            "symbol": "ETHUSDT",
-            "side": "SELL",
-            "price": 3500.0,
-            "quantity": 0.10,
-            "status": "CLOSED",
-        }
-    )
-
-    trades = repo.find_closed_trades()
-
-    assert len(trades) == 1
-    assert trades[0]["symbol"] == "ETHUSDT"
-    assert trades[0]["status"] == "CLOSED"
-
-
 def test_find_by_symbol_returns_empty_when_not_found():
     repo = TradeRepository(":memory:")
 

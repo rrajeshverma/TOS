@@ -27,9 +27,7 @@ class StartupValidator:
                 elif hasattr(check, "validate"):
                     ok = check.validate()
                 else:
-                    raise TypeError(
-                        f"Unsupported check type: {type(check).__name__}"
-                    )
+                    raise TypeError(f"Unsupported check type: {type(check).__name__}")
 
                 if ok is False:
                     result.success = False

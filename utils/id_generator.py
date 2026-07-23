@@ -31,7 +31,7 @@ def _generate(prefix: str) -> str:
     with _lock:
         sequence = next(_counter)
 
-    return f"{prefix}" f"{datetime.now():%Y%m%d}" f"{sequence:04d}"
+    return f"{prefix}{datetime.now():%Y%m%d}{sequence:04d}"
 
 
 def generate_decision_id() -> str:

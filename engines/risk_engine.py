@@ -30,7 +30,6 @@ class RiskEngine:
     """
 
     def __init__(self) -> None:
-
         self._logger = get_logger(__name__)
 
     def evaluate(
@@ -39,7 +38,6 @@ class RiskEngine:
         trades_today: int,
         daily_loss,
     ) -> Risk:
-
         reasons = []
 
         approved = True

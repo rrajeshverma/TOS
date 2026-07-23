@@ -1,3 +1,4 @@
+import pytest
 from optimizer.grid_search import GridSearch
 from optimizer.optimization_result import OptimizationResult
 from optimizer.parameter_space import ParameterSpace
@@ -102,9 +103,6 @@ def test_generation_order():
 
     assert results[0].parameters["ema"] == 20
     assert results[1].parameters["ema"] == 30
-
-
-import pytest
 
 
 def test_evaluator_exception():

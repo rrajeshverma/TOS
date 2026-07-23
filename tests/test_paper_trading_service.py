@@ -9,11 +9,9 @@ from engines.risk_engine import RiskEngine
 from engines.trade_factory import TradeFactory
 from services.paper_trading_service import PaperTradingService
 from shared.enums import TradeStatus
-from tests.test_trade_factory import create_trade
 
 
 def create_trade():
-
     market = Market(
         symbol="NIFTY",
         exchange="NSE",
@@ -53,7 +51,6 @@ def create_trade():
 
 
 def test_execute_trade():
-
     trade = create_trade()
 
     service = PaperTradingService()
@@ -67,7 +64,6 @@ def test_execute_trade():
 
 
 def test_update_price():
-
     trade = create_trade()
 
     service = PaperTradingService()
@@ -83,7 +79,6 @@ def test_update_price():
 
 
 def test_close_position():
-
     trade = create_trade()
 
     service = PaperTradingService()
@@ -200,9 +195,6 @@ def test_position_lifecycle():
     assert position.closed_at is not None
 
 
-from tests.test_trade_factory import create_trade
-
-
 def test_update_price_preserves_position_identity():
     service = PaperTradingService()
 
@@ -216,9 +208,6 @@ def test_update_price_preserves_position_identity():
     assert updated.average_price == position.average_price
     assert updated.opened_at == position.opened_at
     assert updated.last_traded_price == 25150
-
-
-from tests.test_trade_factory import create_trade
 
 
 def test_close_preserves_position_identity():
@@ -237,10 +226,6 @@ def test_close_preserves_position_identity():
     assert closed.closed_at is not None
 
 
-from shared.enums import TradeStatus
-from tests.test_trade_factory import create_trade
-
-
 def test_execute_initializes_position_correctly():
     service = PaperTradingService()
 
@@ -253,9 +238,6 @@ def test_execute_initializes_position_correctly():
     assert position.last_traded_price == trade.entry_price
     assert position.status == TradeStatus.OPEN
     assert position.opened_at is not None
-
-
-from tests.test_trade_factory import create_trade
 
 
 def test_update_price_keeps_position_open():
@@ -271,9 +253,6 @@ def test_update_price_keeps_position_open():
     assert updated.last_traded_price == 25125
 
 
-from tests.test_trade_factory import create_trade
-
-
 def test_close_preserves_average_price():
     service = PaperTradingService()
 
@@ -285,4 +264,4 @@ def test_close_preserves_average_price():
     assert closed.average_price == position.average_price
     assert closed.quantity == position.quantity
     assert closed.position_id == position.position_id
-    assert closed.status == position.status.CLOSED
+    assert closed.status == TradeStatus.CLOSED

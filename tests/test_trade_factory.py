@@ -1,11 +1,14 @@
 from datetime import datetime
 from decimal import Decimal
 
+import pytest
+
 from domain.indicator_set import IndicatorSet
 from domain.market import Market
 from engines.decision_engine import DecisionEngine
 from engines.risk_engine import RiskEngine
 from engines.trade_factory import TradeFactory
+from shared.enums import TradeStatus
 
 
 def create_trade():
@@ -50,7 +53,6 @@ def create_trade():
 
 
 def test_trade_factory():
-
     trade = create_trade()
 
     assert trade.quantity == 65
@@ -62,11 +64,6 @@ def test_trade_factory():
     assert trade.target == Decimal("25100")
 
     assert trade.risk.is_approved
-
-
-import pytest
-
-from shared.enums import DecisionStatus, Signal, TradeStatus
 
 
 def create_rejected_risk():

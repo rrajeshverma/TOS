@@ -6,7 +6,6 @@ class Statistics:
         winning_trades: int,
         total_trades: int,
     ) -> float:
-
         if total_trades == 0:
             return 0.0
 
@@ -17,7 +16,6 @@ class Statistics:
         gross_profit: float,
         gross_loss: float,
     ) -> float:
-
         if gross_loss == 0:
             return 0.0
 
@@ -28,7 +26,6 @@ class Statistics:
         gross_profit: float,
         winning_trades: int,
     ) -> float:
-
         if winning_trades == 0:
             return 0.0
 
@@ -39,7 +36,6 @@ class Statistics:
         gross_loss: float,
         losing_trades: int,
     ) -> float:
-
         if losing_trades == 0:
             return 0.0
 
@@ -51,7 +47,6 @@ class Statistics:
         average_loss: float,
         win_rate: float,
     ) -> float:
-
         win_probability = win_rate / 100.0
         loss_probability = 1.0 - win_probability
 

@@ -1,10 +1,7 @@
-from execution.execution_engine import ExecutionEngine
-from execution.execution_request import ExecutionRequest
 from services.order_execution_adapter import OrderExecutionAdapter
 
 
 class FakePaperBroker:
-
     def __init__(self):
         self.orders = []
 
@@ -18,12 +15,9 @@ class FakePaperBroker:
 
 
 def test_execution_engine_with_broker():
-
     broker = FakePaperBroker()
 
-    adapter = OrderExecutionAdapter(
-        broker=broker
-    )
+    adapter = OrderExecutionAdapter(broker=broker)
 
     result = adapter.execute(
         {
@@ -38,12 +32,9 @@ def test_execution_engine_with_broker():
 
 
 def test_broker_receives_order():
-
     broker = FakePaperBroker()
 
-    adapter = OrderExecutionAdapter(
-        broker=broker
-    )
+    adapter = OrderExecutionAdapter(broker=broker)
 
     adapter.execute(
         {
@@ -58,12 +49,9 @@ def test_broker_receives_order():
 
 
 def test_buy_order_payload():
-
     broker = FakePaperBroker()
 
-    adapter = OrderExecutionAdapter(
-        broker=broker
-    )
+    adapter = OrderExecutionAdapter(broker=broker)
 
     order = {
         "symbol": "NIFTY",
@@ -78,12 +66,9 @@ def test_buy_order_payload():
 
 
 def test_sell_order_payload():
-
     broker = FakePaperBroker()
 
-    adapter = OrderExecutionAdapter(
-        broker=broker
-    )
+    adapter = OrderExecutionAdapter(broker=broker)
 
     adapter.execute(
         {
@@ -98,12 +83,9 @@ def test_sell_order_payload():
 
 
 def test_quantity_preserved():
-
     broker = FakePaperBroker()
 
-    adapter = OrderExecutionAdapter(
-        broker=broker
-    )
+    adapter = OrderExecutionAdapter(broker=broker)
 
     adapter.execute(
         {

@@ -1,3 +1,5 @@
+import pytest
+
 from optimizer.optimization_result import OptimizationResult
 from optimizer.parameter_space import ParameterSpace
 from optimizer.random_search import RandomSearch
@@ -139,9 +141,6 @@ def test_result_type():
     results = search.run(lambda p: OptimizationResult(parameters=p))
 
     assert isinstance(results[0], OptimizationResult)
-
-
-import pytest
 
 
 def test_best_result_empty():

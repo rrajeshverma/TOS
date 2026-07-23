@@ -6,7 +6,6 @@ class PayoffRatio:
         average_win: float,
         average_loss: float,
     ) -> float:
-
         if average_win == 0:
             return 0.0
 

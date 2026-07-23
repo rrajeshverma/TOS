@@ -10,7 +10,6 @@ from engines.trade_factory import TradeFactory
 
 
 def make_trade():
-
     market = Market(
         symbol="NIFTY",
         exchange="NSE",
@@ -50,7 +49,6 @@ def make_trade():
 
 
 def make_portfolio():
-
     return Portfolio(
         account_id="ACC001",
         cash=100000.0,

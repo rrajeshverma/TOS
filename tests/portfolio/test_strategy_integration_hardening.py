@@ -5,7 +5,6 @@ from portfolio.strategy_selector import StrategySelector
 
 
 class FakeStrategy:
-
     def __init__(self, value="OK"):
         self.value = value
 
@@ -19,14 +18,12 @@ class FakeStrategy:
 
 
 def test_strategy_allocator_initial_capital():
-
     allocator = StrategyAllocator(100000)
 
     assert allocator.total_capital == 100000
 
 
 def test_allocate_strategy_capital():
-
     allocator = StrategyAllocator(100000)
 
     result = allocator.allocate(
@@ -38,27 +35,30 @@ def test_allocate_strategy_capital():
 
 
 def test_allocator_prevents_negative():
-
     allocator = StrategyAllocator(100000)
 
-    assert allocator.allocate(
-        "NIFTY",
-        -100,
-    ) == 0
+    assert (
+        allocator.allocate(
+            "NIFTY",
+            -100,
+        )
+        == 0
+    )
 
 
 def test_allocator_limits_amount():
-
     allocator = StrategyAllocator(100000)
 
-    assert allocator.allocate(
-        "NIFTY",
-        200000,
-    ) == 100000
+    assert (
+        allocator.allocate(
+            "NIFTY",
+            200000,
+        )
+        == 100000
+    )
 
 
 def test_allocator_release():
-
     allocator = StrategyAllocator(100000)
 
     allocator.allocate(
@@ -70,7 +70,6 @@ def test_allocator_release():
 
 
 def test_allocator_utilization():
-
     allocator = StrategyAllocator(100000)
 
     allocator.allocate(
@@ -87,7 +86,6 @@ def test_allocator_utilization():
 
 
 def test_register_strategy():
-
     registry = StrategyRegistry()
 
     registry.register(
@@ -99,7 +97,6 @@ def test_register_strategy():
 
 
 def test_get_strategy():
-
     registry = StrategyRegistry()
 
     strategy = FakeStrategy()
@@ -113,7 +110,6 @@ def test_get_strategy():
 
 
 def test_unregister_strategy():
-
     registry = StrategyRegistry()
 
     registry.register(
@@ -127,7 +123,6 @@ def test_unregister_strategy():
 
 
 def test_list_strategies():
-
     registry = StrategyRegistry()
 
     registry.register(
@@ -144,7 +139,6 @@ def test_list_strategies():
 
 
 def test_manager_register():
-
     manager = StrategyManager()
 
     manager.register(
@@ -156,7 +150,6 @@ def test_manager_register():
 
 
 def test_enable_strategy():
-
     manager = StrategyManager()
 
     manager.enable("S1")
@@ -165,7 +158,6 @@ def test_enable_strategy():
 
 
 def test_disable_strategy():
-
     manager = StrategyManager()
 
     manager.enable("S1")
@@ -176,7 +168,6 @@ def test_disable_strategy():
 
 
 def test_execute_strategy():
-
     manager = StrategyManager()
 
     manager.register(
@@ -195,7 +186,6 @@ def test_execute_strategy():
 
 
 def test_select_strategy():
-
     selector = StrategySelector()
 
     selector.select("S1")
@@ -204,7 +194,6 @@ def test_select_strategy():
 
 
 def test_clear_selection():
-
     selector = StrategySelector()
 
     selector.select("S1")
@@ -215,7 +204,6 @@ def test_clear_selection():
 
 
 def test_select_many():
-
     selector = StrategySelector()
 
     selector.manager.register(
@@ -223,15 +211,12 @@ def test_select_many():
         FakeStrategy(),
     )
 
-    selector.select_many(
-        ["A", "B"]
-    )
+    selector.select_many(["A", "B"])
 
     assert selector.get_selected_many() == ["A"]
 
 
 def test_selected_count():
-
     selector = StrategySelector()
 
     selector.selected_strategies = [
@@ -243,7 +228,6 @@ def test_selected_count():
 
 
 def test_select_all():
-
     selector = StrategySelector()
 
     selector.manager.register(

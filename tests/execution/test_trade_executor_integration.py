@@ -7,10 +7,7 @@ from tests.test_trade_factory import create_trade
 
 
 def test_trade_executor_creates_position():
-
-    executor = TradeExecutor(
-        PositionManager()
-    )
+    executor = TradeExecutor(PositionManager())
 
     trade = create_trade()
 
@@ -24,10 +21,7 @@ def test_trade_executor_creates_position():
 
 
 def test_trade_executor_preserves_price():
-
-    executor = TradeExecutor(
-        PositionManager()
-    )
+    executor = TradeExecutor(PositionManager())
 
     trade = create_trade()
 
@@ -41,10 +35,7 @@ def test_trade_executor_preserves_price():
 
 
 def test_trade_executor_opens_position():
-
-    executor = TradeExecutor(
-        PositionManager()
-    )
+    executor = TradeExecutor(PositionManager())
 
     trade = create_trade()
 
@@ -58,10 +49,7 @@ def test_trade_executor_opens_position():
 
 
 def test_trade_executor_requires_trade():
-
-    executor = TradeExecutor(
-        PositionManager()
-    )
+    executor = TradeExecutor(PositionManager())
 
     try:
         executor.execute(

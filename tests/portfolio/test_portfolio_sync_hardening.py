@@ -10,22 +10,16 @@ from portfolio.sync import BrokerSyncService
 
 
 def test_account_sync_fetches_balance():
-
     class Broker:
         def get_funds(self):
-            return {
-                "cash": 100000
-            }
+            return {"cash": 100000}
 
-    sync = AccountSync(
-        broker=Broker()
-    )
+    sync = AccountSync(broker=Broker())
 
     assert sync.sync()["cash"] == 100000
 
 
 def test_account_sync_without_broker():
-
     import pytest
 
     with pytest.raises(RuntimeError):
@@ -33,7 +27,6 @@ def test_account_sync_without_broker():
 
 
 def test_account_sync_reset():
-
     sync = AccountSync()
 
     sync.account_data["cash"] = 100
@@ -44,12 +37,9 @@ def test_account_sync_reset():
 
 
 def test_account_summary():
-
     sync = AccountSync()
 
-    sync.account_data = {
-        "cash": 100
-    }
+    sync.account_data = {"cash": 100}
 
     assert sync.summary()["cash"] == 100
 
@@ -60,7 +50,6 @@ def test_account_summary():
 
 
 def test_holdings_difference():
-
     sync = HoldingsSync()
 
     sync.set_local(
@@ -73,13 +62,10 @@ def test_holdings_difference():
         80,
     )
 
-    assert sync.difference(
-        "NIFTY"
-    ) == 20
+    assert sync.difference("NIFTY") == 20
 
 
 def test_holdings_in_sync():
-
     sync = HoldingsSync()
 
     sync.set_local(
@@ -96,9 +82,7 @@ def test_holdings_in_sync():
 
 
 def test_holdings_sync_from_broker():
-
     class Broker:
-
         def get_holdings(self):
             return [
                 {
@@ -107,9 +91,7 @@ def test_holdings_sync_from_broker():
                 }
             ]
 
-    sync = HoldingsSync(
-        broker=Broker()
-    )
+    sync = HoldingsSync(broker=Broker())
 
     sync.sync()
 
@@ -117,7 +99,6 @@ def test_holdings_sync_from_broker():
 
 
 def test_holdings_reset():
-
     sync = HoldingsSync()
 
     sync.set_local(
@@ -136,7 +117,6 @@ def test_holdings_reset():
 
 
 def test_position_difference():
-
     sync = PositionSync()
 
     sync.set_local(
@@ -149,15 +129,11 @@ def test_position_difference():
         60,
     )
 
-    assert sync.difference(
-        "NIFTY"
-    ) == 5
+    assert sync.difference("NIFTY") == 5
 
 
 def test_position_sync_from_broker():
-
     class Broker:
-
         def get_positions(self):
             return [
                 {
@@ -166,9 +142,7 @@ def test_position_sync_from_broker():
                 }
             ]
 
-    sync = PositionSync(
-        broker=Broker()
-    )
+    sync = PositionSync(broker=Broker())
 
     sync.sync()
 
@@ -176,7 +150,6 @@ def test_position_sync_from_broker():
 
 
 def test_position_sync_without_broker():
-
     import pytest
 
     with pytest.raises(RuntimeError):
@@ -189,12 +162,9 @@ def test_position_sync_without_broker():
 
 
 def test_sync_all_success():
-
     class Sync:
-
         def sync(self):
             return "OK"
-
 
     service = BrokerSyncService(
         Sync(),
@@ -209,20 +179,13 @@ def test_sync_all_success():
 
 
 def test_sync_all_partial_failure():
-
     class Good:
-
         def sync(self):
             return "OK"
 
-
     class Bad:
-
         def sync(self):
-            raise Exception(
-                "failed"
-            )
-
+            raise Exception("failed")
 
     service = BrokerSyncService(
         Bad(),
@@ -236,20 +199,13 @@ def test_sync_all_partial_failure():
 
 
 def test_sync_all_keeps_other_results():
-
     class Good:
-
         def sync(self):
             return "OK"
 
-
     class Bad:
-
         def sync(self):
-            raise Exception(
-                "failed"
-            )
-
+            raise Exception("failed")
 
     service = BrokerSyncService(
         Good(),
@@ -264,7 +220,6 @@ def test_sync_all_keeps_other_results():
 
 
 def test_holdings_remove_local():
-
     sync = HoldingsSync()
 
     sync.set_local(
@@ -272,15 +227,12 @@ def test_holdings_remove_local():
         10,
     )
 
-    sync.remove_local(
-        "ABC"
-    )
+    sync.remove_local("ABC")
 
     assert "ABC" not in sync.local_holdings
 
 
 def test_position_remove_local():
-
     sync = PositionSync()
 
     sync.set_local(
@@ -288,15 +240,12 @@ def test_position_remove_local():
         10,
     )
 
-    sync.remove_local(
-        "ABC"
-    )
+    sync.remove_local("ABC")
 
     assert "ABC" not in sync.local_positions
 
 
 def test_holdings_summary():
-
     sync = HoldingsSync()
 
     result = sync.summary()
@@ -305,7 +254,6 @@ def test_holdings_summary():
 
 
 def test_position_summary():
-
     sync = PositionSync()
 
     result = sync.summary()

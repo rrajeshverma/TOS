@@ -2,7 +2,6 @@ from live.broker_session import BrokerSession
 
 
 def test_connect_is_idempotent():
-
     session = BrokerSession()
 
     session.connect()
@@ -11,9 +10,7 @@ def test_connect_is_idempotent():
     assert session.is_connected() is True
 
 
-
 def test_disconnect_is_safe_multiple_times():
-
     session = BrokerSession()
 
     session.disconnect()
@@ -22,9 +19,7 @@ def test_disconnect_is_safe_multiple_times():
     assert session.is_connected() is False
 
 
-
 def test_reconnect_after_connection():
-
     session = BrokerSession()
 
     session.connect()
@@ -33,9 +28,7 @@ def test_reconnect_after_connection():
     assert session.is_connected() is True
 
 
-
 def test_session_status():
-
     session = BrokerSession()
 
     status = session.status()

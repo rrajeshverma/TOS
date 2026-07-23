@@ -20,7 +20,6 @@ def create_order():
 
 
 def test_trade_to_position_flow():
-
     order = create_order()
 
     payload = OrderExecutionAdapter().to_execution_order(order)
@@ -37,11 +36,8 @@ def test_trade_to_position_flow():
 
     assert service.status(order_id) == OrderStatus.FILLED
 
-from services.position_manager import PositionManager
-
 
 def test_filled_order_opens_position():
-
     order = create_order()
 
     position = PositionManager().open_position(

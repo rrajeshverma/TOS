@@ -37,10 +37,7 @@ class RiskGuard:
         if self._blocked:
             return False
 
-        if (
-            self.daily_loss_limit > 0
-            and self.daily_loss >= self.daily_loss_limit
-        ):
+        if self.daily_loss_limit > 0 and self.daily_loss >= self.daily_loss_limit:
             return False
 
         return True

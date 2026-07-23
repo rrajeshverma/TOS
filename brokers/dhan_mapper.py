@@ -2,7 +2,6 @@ from brokers.models import OrderSide, OrderType, ProductType
 
 
 class DhanMapper:
-
     @staticmethod
     def transaction_type(side: OrderSide) -> str:
         return side.value

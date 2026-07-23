@@ -74,7 +74,6 @@ class PositionSync:
             if symbol not in self.broker_positions
         ]
 
-
     def extra_broker_positions(self):
         """
         Positions available at broker but missing locally.
@@ -86,7 +85,6 @@ class PositionSync:
             if symbol not in self.local_positions
         ]
 
-
     def sync_report(self):
         """
         Complete position synchronization report.
@@ -94,18 +92,11 @@ class PositionSync:
 
         differences = {}
 
-        for symbol in (
-            set(self.local_positions)
-            & set(self.broker_positions)
-        ):
-
-            difference = self.difference(
-                symbol
-            )
+        for symbol in set(self.local_positions) & set(self.broker_positions):
+            difference = self.difference(symbol)
 
             if difference != 0:
                 differences[symbol] = difference
-
 
         return {
             "in_sync": self.is_in_sync(),

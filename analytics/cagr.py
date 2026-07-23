@@ -7,7 +7,6 @@ class CAGR:
         ending_value: float,
         years: float,
     ) -> float:
-
         if beginning_value <= 0:
             return 0.0
 

@@ -8,7 +8,6 @@ from execution.trade_reconciliation import TradeReconciliation
 
 
 def test_add_pending_order():
-
     recovery = OrderRecovery()
 
     recovery.add_order(
@@ -16,13 +15,10 @@ def test_add_pending_order():
         "NIFTY",
     )
 
-    assert recovery.get_order(
-        "ORD001"
-    ) == "NIFTY"
+    assert recovery.get_order("ORD001") == "NIFTY"
 
 
 def test_pending_order_count():
-
     recovery = OrderRecovery()
 
     recovery.add_order(
@@ -39,7 +35,6 @@ def test_pending_order_count():
 
 
 def test_has_pending_orders():
-
     recovery = OrderRecovery()
 
     assert recovery.has_pending_orders() is False
@@ -53,7 +48,6 @@ def test_has_pending_orders():
 
 
 def test_remove_pending_order():
-
     recovery = OrderRecovery()
 
     recovery.add_order(
@@ -61,28 +55,20 @@ def test_remove_pending_order():
         "NIFTY",
     )
 
-    recovery.remove_order(
-        "ORD001"
-    )
+    recovery.remove_order("ORD001")
 
-    assert recovery.get_order(
-        "ORD001"
-    ) is None
+    assert recovery.get_order("ORD001") is None
 
 
 def test_remove_unknown_order_safe():
-
     recovery = OrderRecovery()
 
-    recovery.remove_order(
-        "UNKNOWN"
-    )
+    recovery.remove_order("UNKNOWN")
 
     assert recovery.pending_count() == 0
 
 
 def test_clear_all_pending_orders():
-
     recovery = OrderRecovery()
 
     recovery.add_order(
@@ -96,7 +82,6 @@ def test_clear_all_pending_orders():
 
 
 def test_recovery_summary():
-
     recovery = OrderRecovery()
 
     recovery.add_order(
@@ -116,7 +101,6 @@ def test_recovery_summary():
 
 
 def test_add_local_trade():
-
     recon = TradeReconciliation()
 
     recon.add_local(
@@ -128,7 +112,6 @@ def test_add_local_trade():
 
 
 def test_add_broker_trade():
-
     recon = TradeReconciliation()
 
     recon.add_broker(
@@ -140,7 +123,6 @@ def test_add_broker_trade():
 
 
 def test_trade_difference():
-
     recon = TradeReconciliation()
 
     recon.add_local(
@@ -153,13 +135,10 @@ def test_trade_difference():
         80,
     )
 
-    assert recon.difference(
-        "T001"
-    ) == 20
+    assert recon.difference("T001") == 20
 
 
 def test_reconciliation_success():
-
     recon = TradeReconciliation()
 
     recon.add_local(
@@ -176,7 +155,6 @@ def test_reconciliation_success():
 
 
 def test_reconciliation_failure():
-
     recon = TradeReconciliation()
 
     recon.add_local(
@@ -193,7 +171,6 @@ def test_reconciliation_failure():
 
 
 def test_remove_local_trade():
-
     recon = TradeReconciliation()
 
     recon.add_local(
@@ -201,15 +178,12 @@ def test_remove_local_trade():
         65,
     )
 
-    recon.remove_local(
-        "T001"
-    )
+    recon.remove_local("T001")
 
     assert "T001" not in recon.local_trades
 
 
 def test_remove_broker_trade():
-
     recon = TradeReconciliation()
 
     recon.add_broker(
@@ -217,15 +191,12 @@ def test_remove_broker_trade():
         65,
     )
 
-    recon.remove_broker(
-        "T001"
-    )
+    recon.remove_broker("T001")
 
     assert "T001" not in recon.broker_trades
 
 
 def test_reconciliation_reset():
-
     recon = TradeReconciliation()
 
     recon.add_local(

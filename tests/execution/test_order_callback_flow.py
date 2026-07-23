@@ -5,8 +5,8 @@ from execution.order_service import (
     OrderStatus,
 )
 
-def create_order(service):
 
+def create_order(service):
     return service.submit(
         {
             "symbol": "NIFTY",
@@ -16,7 +16,6 @@ def create_order(service):
 
 
 def test_register_broker_order():
-
     service = OrderService()
 
     order_id = create_order(service)
@@ -26,13 +25,10 @@ def test_register_broker_order():
         "BROKER001",
     )
 
-    assert service.broker_order_id(
-        order_id
-    ) == "BROKER001"
+    assert service.broker_order_id(order_id) == "BROKER001"
 
 
 def test_process_submitted_callback():
-
     service = OrderService()
 
     order_id = create_order(service)
@@ -47,13 +43,10 @@ def test_process_submitted_callback():
         OrderStatus.SUBMITTED,
     )
 
-    assert service.status(
-        order_id
-    ) == OrderStatus.SUBMITTED
+    assert service.status(order_id) == OrderStatus.SUBMITTED
 
 
 def test_process_filled_callback():
-
     service = OrderService()
 
     order_id = create_order(service)
@@ -68,13 +61,10 @@ def test_process_filled_callback():
         OrderStatus.FILLED,
     )
 
-    assert service.status(
-        order_id
-    ) == OrderStatus.FILLED
+    assert service.status(order_id) == OrderStatus.FILLED
 
 
 def test_process_cancelled_callback():
-
     service = OrderService()
 
     order_id = create_order(service)
@@ -89,19 +79,15 @@ def test_process_cancelled_callback():
         OrderStatus.CANCELLED,
     )
 
-    assert service.status(
-        order_id
-    ) == OrderStatus.CANCELLED
+    assert service.status(order_id) == OrderStatus.CANCELLED
 
 
 def test_unknown_broker_callback_rejected():
-
     import pytest
 
     service = OrderService()
 
     with pytest.raises(KeyError):
-
         service.process_broker_callback(
             "UNKNOWN",
             OrderStatus.FILLED,
@@ -109,7 +95,6 @@ def test_unknown_broker_callback_rejected():
 
 
 def test_multiple_broker_orders():
-
     service = OrderService()
 
     first = create_order(service)
@@ -130,17 +115,12 @@ def test_multiple_broker_orders():
         OrderStatus.FILLED,
     )
 
-    assert service.status(
-        second
-    ) == OrderStatus.FILLED
+    assert service.status(second) == OrderStatus.FILLED
 
-    assert service.status(
-        first
-    ) == OrderStatus.NEW
+    assert service.status(first) == OrderStatus.NEW
 
 
 def test_duplicate_registration_rejected():
-
     import pytest
 
     service = OrderService()
@@ -153,24 +133,20 @@ def test_duplicate_registration_rejected():
     )
 
     with pytest.raises(ValueError):
-
         service.register_broker_order(
             order_id,
             "BROKER002",
         )
 
-def test_callback_publishes_event():
 
+def test_callback_publishes_event():
     events = []
 
     class Dispatcher:
-
         def publish(self, event):
             events.append(event)
 
-    service = OrderService(
-        dispatcher=Dispatcher()
-    )
+    service = OrderService(dispatcher=Dispatcher())
 
     order_id = create_order(service)
 
@@ -188,7 +164,6 @@ def test_callback_publishes_event():
 
 
 def test_callback_updates_only_matching_order():
-
     service = OrderService()
 
     first = create_order(service)
@@ -214,7 +189,6 @@ def test_callback_updates_only_matching_order():
 
 
 def test_partial_fill_callback():
-
     service = OrderService()
 
     order_id = create_order(service)
@@ -233,7 +207,6 @@ def test_partial_fill_callback():
 
 
 def test_duplicate_callback_is_safe():
-
     service = OrderService()
 
     order_id = create_order(service)
@@ -257,7 +230,6 @@ def test_duplicate_callback_is_safe():
 
 
 def test_stale_callback_ignored():
-
     service = OrderService()
 
     order_id = create_order(service)
@@ -281,7 +253,6 @@ def test_stale_callback_ignored():
 
 
 def test_broker_order_lookup():
-
     service = OrderService()
 
     order_id = create_order(service)
@@ -295,7 +266,6 @@ def test_broker_order_lookup():
 
 
 def test_callback_after_cancel():
-
     service = OrderService()
 
     order_id = create_order(service)
@@ -314,7 +284,6 @@ def test_callback_after_cancel():
 
 
 def test_callback_status_persistence():
-
     service = OrderService()
 
     order_id = create_order(service)

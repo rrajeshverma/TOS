@@ -38,24 +38,15 @@ class ValidationReport:
 
     @property
     def pass_count(self) -> int:
-        return sum(
-            issue.status == ValidationStatus.PASS
-            for issue in self.issues
-        )
+        return sum(issue.status == ValidationStatus.PASS for issue in self.issues)
 
     @property
     def fail_count(self) -> int:
-        return sum(
-            issue.status == ValidationStatus.FAIL
-            for issue in self.issues
-        )
+        return sum(issue.status == ValidationStatus.FAIL for issue in self.issues)
 
     @property
     def warning_count(self) -> int:
-        return sum(
-            issue.status == ValidationStatus.WARNING
-            for issue in self.issues
-        )
+        return sum(issue.status == ValidationStatus.WARNING for issue in self.issues)
 
     @property
     def success(self) -> bool:

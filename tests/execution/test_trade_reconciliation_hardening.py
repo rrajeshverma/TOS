@@ -2,7 +2,6 @@ from execution.trade_reconciliation import TradeReconciliation
 
 
 def test_detect_missing_broker_trade():
-
     r = TradeReconciliation()
 
     r.add_local(
@@ -10,13 +9,10 @@ def test_detect_missing_broker_trade():
         65,
     )
 
-    assert r.missing_broker_trades() == [
-        "T1"
-    ]
+    assert r.missing_broker_trades() == ["T1"]
 
 
 def test_detect_extra_broker_trade():
-
     r = TradeReconciliation()
 
     r.add_broker(
@@ -24,13 +20,10 @@ def test_detect_extra_broker_trade():
         65,
     )
 
-    assert r.extra_broker_trades() == [
-        "T2"
-    ]
+    assert r.extra_broker_trades() == ["T2"]
 
 
 def test_reconciliation_report():
-
     r = TradeReconciliation()
 
     r.add_local(

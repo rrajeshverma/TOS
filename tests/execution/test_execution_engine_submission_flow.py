@@ -3,9 +3,7 @@ from execution.execution_request import ExecutionRequest
 
 
 def test_execution_engine_places_order_after_submission():
-
     class FakeOrderService:
-
         def __init__(self):
             self.submitted = False
             self.placed = False
@@ -21,7 +19,6 @@ def test_execution_engine_places_order_after_submission():
                 "orderId": "BROKER123",
                 "status": "SUBMITTED",
             }
-
 
     service = FakeOrderService()
 

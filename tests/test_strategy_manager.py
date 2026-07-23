@@ -119,6 +119,26 @@ class DummyStrategy:
         self.executed = True
 
 
+class DummyResultStrategy:
+    def execute(self):
+        return "BUY"
+
+
+class BuyStrategy:
+    def execute(self):
+        return "BUY"
+
+
+class SellStrategy:
+    def execute(self):
+        return "SELL"
+
+
+class FailingStrategy:
+    def execute(self):
+        raise RuntimeError("Strategy failed")
+
+
 def test_execute_enabled_strategy():
     manager = StrategyManager()
 
@@ -136,14 +156,6 @@ def test_execute_enabled_strategy():
     assert strategy.executed is True
 
 
-class DummyStrategy:
-    def __init__(self):
-        self.executed = False
-
-    def execute(self):
-        self.executed = True
-
-
 def test_execute_disabled_strategy():
     manager = StrategyManager()
 
@@ -157,14 +169,6 @@ def test_execute_disabled_strategy():
     manager.execute("ORB")
 
     assert strategy.executed is False
-
-
-class DummyStrategy:
-    def __init__(self):
-        self.executed = False
-
-    def execute(self):
-        self.executed = True
 
 
 def test_execute_all_enabled_strategies():
@@ -191,11 +195,6 @@ def test_execute_all_enabled_strategies():
     assert vwap.executed is True
 
 
-class DummyResultStrategy:
-    def execute(self):
-        return "BUY"
-
-
 def test_execute_returns_result():
     manager = StrategyManager()
 
@@ -211,16 +210,6 @@ def test_execute_returns_result():
     assert result == "BUY"
 
 
-class BuyStrategy:
-    def execute(self):
-        return "BUY"
-
-
-class SellStrategy:
-    def execute(self):
-        return "SELL"
-
-
 def test_execute_all_returns_results():
     manager = StrategyManager()
 
@@ -242,49 +231,6 @@ def test_execute_all_returns_results():
         "ORB": "BUY",
         "VWAP": "SELL",
     }
-
-
-class BuyStrategy:
-    def execute(self):
-        return "BUY"
-
-
-class SellStrategy:
-    def execute(self):
-        return "SELL"
-
-
-def test_execute_all_returns_results():
-    manager = StrategyManager()
-
-    manager.register(
-        "ORB",
-        BuyStrategy(),
-    )
-    manager.register(
-        "VWAP",
-        SellStrategy(),
-    )
-
-    manager.enable("ORB")
-    manager.enable("VWAP")
-
-    results = manager.execute_all()
-
-    assert results == {
-        "ORB": "BUY",
-        "VWAP": "SELL",
-    }
-
-
-class FailingStrategy:
-    def execute(self):
-        raise RuntimeError("Strategy failed")
-
-
-class BuyStrategy:
-    def execute(self):
-        return "BUY"
 
 
 def test_execute_all_continues_after_exception():

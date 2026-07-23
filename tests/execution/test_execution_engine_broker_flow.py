@@ -3,9 +3,7 @@ from execution.execution_result import ExecutionResult
 
 
 def test_execution_engine_places_order_with_broker():
-
     class FakeOrderService:
-
         def __init__(self):
             self.registered = None
 
@@ -28,7 +26,6 @@ def test_execution_engine_places_order_with_broker():
                 broker_order_id,
             )
 
-
     service = FakeOrderService()
 
     engine = ExecutionEngine(service)
@@ -40,7 +37,6 @@ def test_execution_engine_places_order_with_broker():
             "quantity": 65,
         }
     )
-
 
     assert isinstance(
         result,

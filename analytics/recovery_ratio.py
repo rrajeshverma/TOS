@@ -6,7 +6,6 @@ class RecoveryRatio:
         net_profit: float,
         max_drawdown: float,
     ) -> float:
-
         if net_profit == 0:
             return 0.0
 

@@ -13,7 +13,6 @@ class OrderValidator:
         self,
         order,
     ):
-
         if not isinstance(order, dict):
             return False
 
@@ -21,10 +20,7 @@ class OrderValidator:
             if field not in order:
                 return False
 
-        if (
-            not isinstance(order["symbol"], str)
-            or not order["symbol"].strip()
-        ):
+        if not isinstance(order["symbol"], str) or not order["symbol"].strip():
             return False
 
         if order["quantity"] <= 0:

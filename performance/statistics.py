@@ -42,4 +42,4 @@ class Statistics:
         return len(self._values)
 
     def __repr__(self):
-        return f"Statistics(count={self.count}, " f"avg={self.average:.2f})"
+        return f"Statistics(count={self.count}, avg={self.average:.2f})"

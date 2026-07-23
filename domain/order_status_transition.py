@@ -19,17 +19,13 @@ class OrderStatusTransition:
         OrderStatus.CREATED: {
             OrderStatus.PENDING,
         },
-
         OrderStatus.PENDING: {
             OrderStatus.EXECUTED,
             OrderStatus.REJECTED,
             OrderStatus.CANCELLED,
         },
-
         OrderStatus.EXECUTED: set(),
-
         OrderStatus.REJECTED: set(),
-
         OrderStatus.CANCELLED: set(),
     }
 

@@ -5,12 +5,10 @@ class StreakStatistics:
         self,
         trades: list,
     ) -> int:
-
         max_wins = 0
         current_wins = 0
 
         for trade in trades:
-
             if trade.pnl > 0:
                 current_wins += 1
                 max_wins = max(
@@ -26,12 +24,10 @@ class StreakStatistics:
         self,
         trades: list,
     ) -> int:
-
         max_losses = 0
         current_losses = 0
 
         for trade in trades:
-
             if trade.pnl < 0:
                 current_losses += 1
                 max_losses = max(

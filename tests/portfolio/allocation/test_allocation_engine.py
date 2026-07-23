@@ -8,7 +8,6 @@ def test_initialize_engine():
 
 
 def test_allocate_capital():
-
     engine = AllocationEngine(100000)
 
     result = engine.allocate(
@@ -20,7 +19,6 @@ def test_allocate_capital():
 
 
 def test_get_allocation():
-
     engine = AllocationEngine(100000)
 
     engine.allocate("NIFTY", 20000)
@@ -29,7 +27,6 @@ def test_get_allocation():
 
 
 def test_total_allocated():
-
     engine = AllocationEngine(100000)
 
     engine.allocate("NIFTY", 20000)
@@ -39,7 +36,6 @@ def test_total_allocated():
 
 
 def test_remaining_capital():
-
     engine = AllocationEngine(100000)
 
     engine.allocate("NIFTY", 25000)
@@ -48,7 +44,6 @@ def test_remaining_capital():
 
 
 def test_allocation_limit():
-
     engine = AllocationEngine(100000)
 
     result = engine.allocate(
@@ -60,7 +55,6 @@ def test_allocation_limit():
 
 
 def test_negative_allocation():
-
     engine = AllocationEngine(100000)
 
     result = engine.allocate(
@@ -72,7 +66,6 @@ def test_negative_allocation():
 
 
 def test_multiple_strategies():
-
     engine = AllocationEngine(100000)
 
     engine.allocate("A", 10000)
@@ -82,7 +75,6 @@ def test_multiple_strategies():
 
 
 def test_remove_allocation():
-
     engine = AllocationEngine(100000)
 
     engine.allocate("A", 10000)
@@ -93,7 +85,6 @@ def test_remove_allocation():
 
 
 def test_summary():
-
     engine = AllocationEngine(100000)
 
     engine.allocate("A", 25000)

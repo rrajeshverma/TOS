@@ -1,3 +1,6 @@
+from datetime import datetime
+
+from brokers.dhan.models import BrokerTick
 from brokers.dhan.websocket import WebSocketClient
 
 
@@ -147,11 +150,6 @@ def test_emit_without_callback_is_safe():
     }
 
     ws.emit_tick(tick)
-
-
-from datetime import datetime
-
-from brokers.dhan.models import BrokerTick
 
 
 def test_emit_broker_tick():

@@ -2,7 +2,6 @@ from execution.execution_result import ExecutionResult
 
 
 class ExecutionEngine:
-
     def __init__(self, order_service):
         self.order_service = order_service
 
@@ -14,12 +13,9 @@ class ExecutionEngine:
             order_id = self.order_service.submit(request)
 
             if hasattr(self.order_service, "place_order"):
-
                 response = self.order_service.place_order(request)
 
-                broker_order_id = response.get(
-                    "orderId"
-                )
+                broker_order_id = response.get("orderId")
 
                 if broker_order_id and hasattr(
                     self.order_service,

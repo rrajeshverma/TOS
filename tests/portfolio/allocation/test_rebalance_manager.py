@@ -2,7 +2,6 @@ from portfolio.allocation.rebalance_manager import RebalanceManager
 
 
 def test_rebalance_trigger():
-
     manager = RebalanceManager(threshold=10)
 
     assert manager.should_rebalance(
@@ -12,7 +11,6 @@ def test_rebalance_trigger():
 
 
 def test_no_rebalance_below_threshold():
-
     manager = RebalanceManager(threshold=10)
 
     assert not manager.should_rebalance(
@@ -22,7 +20,6 @@ def test_no_rebalance_below_threshold():
 
 
 def test_rebalance_execution():
-
     manager = RebalanceManager()
 
     result = manager.rebalance(
@@ -35,7 +32,6 @@ def test_rebalance_execution():
 
 
 def test_rebalance_history():
-
     manager = RebalanceManager()
 
     manager.rebalance(50, 80)
@@ -44,7 +40,6 @@ def test_rebalance_history():
 
 
 def test_last_rebalance():
-
     manager = RebalanceManager()
 
     manager.rebalance(50, 80)
@@ -53,7 +48,6 @@ def test_last_rebalance():
 
 
 def test_rebalance_report():
-
     manager = RebalanceManager()
 
     report = manager.report()
@@ -62,14 +56,12 @@ def test_rebalance_report():
 
 
 def test_custom_threshold():
-
     manager = RebalanceManager(threshold=5)
 
     assert manager.threshold == 5
 
 
 def test_multiple_rebalances():
-
     manager = RebalanceManager()
 
     manager.rebalance(50, 60)
@@ -79,14 +71,12 @@ def test_multiple_rebalances():
 
 
 def test_empty_history():
-
     manager = RebalanceManager()
 
     assert manager.last_rebalance() is None
 
 
 def test_report_history():
-
     manager = RebalanceManager()
 
     manager.rebalance(10, 20)

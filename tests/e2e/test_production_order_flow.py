@@ -1,9 +1,8 @@
 from decimal import Decimal
 
 from engines.order_factory import OrderFactory
-from engines.trade_factory import TradeFactory
 from services.order_execution_adapter import OrderExecutionAdapter
-from execution.order_service import OrderService, OrderStatus
+from execution.order_service import OrderService
 
 from shared.enums import Broker, OrderSide
 
@@ -11,7 +10,6 @@ from tests.test_trade_factory import create_trade
 
 
 def create_order():
-
     return OrderFactory().create(
         trade=create_trade(),
         broker=Broker.DHAN,
@@ -21,7 +19,6 @@ def create_order():
 
 
 def test_real_order_flow():
-
     order = create_order()
 
     payload = OrderExecutionAdapter().to_execution_order(order)

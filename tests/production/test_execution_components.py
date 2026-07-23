@@ -94,7 +94,6 @@ def test_order_repository_overwrite():
 
 
 class FakeBroker:
-
     def __init__(self, positions):
         self.positions = positions
 

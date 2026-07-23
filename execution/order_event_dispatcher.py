@@ -16,44 +16,32 @@ class OrderEventDispatcher:
     """
 
     def __init__(self) -> None:
-        self._subscribers: list[
-            Callable[[OrderEvent], None]
-        ] = []
-
+        self._subscribers: list[Callable[[OrderEvent], None]] = []
 
     def subscribe(
         self,
         callback: Callable[[OrderEvent], None],
     ) -> None:
-
         if callback not in self._subscribers:
             self._subscribers.append(callback)
-
-
 
     def publish(
         self,
         event: OrderEvent,
     ) -> dict:
-
         failed = 0
 
-
         for callback in self._subscribers:
-
             try:
                 callback(event)
 
             except Exception:
                 failed += 1
 
-
         return {
             "published": True,
             "failed": failed,
         }
-
-
 
     def clear(self) -> None:
         self._subscribers.clear()

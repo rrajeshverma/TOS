@@ -145,7 +145,6 @@ def test_formatter_multiple_records():
     formatter = get_formatter()
 
     for i in range(5):
-
         record = logging.LogRecord(
             name="TEST",
             level=logging.INFO,

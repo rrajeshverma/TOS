@@ -2,7 +2,6 @@ from services.order_execution_adapter import OrderExecutionAdapter
 
 
 class FakeBroker:
-
     def __init__(self, connected=True):
         self.connected = connected
         self.called = False
@@ -19,17 +18,12 @@ class FakeBroker:
 
 
 def test_adapter_rejects_disconnected_broker():
-
     broker = FakeBroker(False)
 
-    adapter = OrderExecutionAdapter(
-        broker=broker
-    )
+    adapter = OrderExecutionAdapter(broker=broker)
 
     try:
-        adapter.execute(
-            {"symbol": "NIFTY"}
-        )
+        adapter.execute({"symbol": "NIFTY"})
 
         assert False
 
@@ -38,16 +32,11 @@ def test_adapter_rejects_disconnected_broker():
 
 
 def test_adapter_executes_connected_broker():
-
     broker = FakeBroker(True)
 
-    adapter = OrderExecutionAdapter(
-        broker=broker
-    )
+    adapter = OrderExecutionAdapter(broker=broker)
 
-    result = adapter.execute(
-        {"symbol": "NIFTY"}
-    )
+    result = adapter.execute({"symbol": "NIFTY"})
 
     assert result["status"] == "SUCCESS"
     assert broker.called is True

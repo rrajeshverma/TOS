@@ -2,14 +2,12 @@ from portfolio.strategy_allocator import StrategyAllocator
 
 
 def test_initialize_allocator():
-
     allocator = StrategyAllocator(100000)
 
     assert allocator.total_capital == 100000
 
 
 def test_allocate_strategy_capital():
-
     allocator = StrategyAllocator(100000)
 
     result = allocator.allocate(
@@ -21,7 +19,6 @@ def test_allocate_strategy_capital():
 
 
 def test_get_strategy_allocation():
-
     allocator = StrategyAllocator(100000)
 
     allocator.allocate("ORB", 20000)
@@ -30,7 +27,6 @@ def test_get_strategy_allocation():
 
 
 def test_total_allocated():
-
     allocator = StrategyAllocator(100000)
 
     allocator.allocate("A", 10000)
@@ -40,7 +36,6 @@ def test_total_allocated():
 
 
 def test_remaining_capital():
-
     allocator = StrategyAllocator(100000)
 
     allocator.allocate("A", 25000)
@@ -49,7 +44,6 @@ def test_remaining_capital():
 
 
 def test_allocation_limit():
-
     allocator = StrategyAllocator(100000)
 
     result = allocator.allocate(
@@ -61,17 +55,18 @@ def test_allocation_limit():
 
 
 def test_negative_allocation():
-
     allocator = StrategyAllocator(100000)
 
-    assert allocator.allocate(
-        "A",
-        -500,
-    ) == 0
+    assert (
+        allocator.allocate(
+            "A",
+            -500,
+        )
+        == 0
+    )
 
 
 def test_release_strategy():
-
     allocator = StrategyAllocator(100000)
 
     allocator.allocate("A", 20000)
@@ -82,7 +77,6 @@ def test_release_strategy():
 
 
 def test_utilization():
-
     allocator = StrategyAllocator(100000)
 
     allocator.allocate("A", 25000)
@@ -91,7 +85,6 @@ def test_utilization():
 
 
 def test_summary():
-
     allocator = StrategyAllocator(100000)
 
     allocator.allocate("A", 25000)

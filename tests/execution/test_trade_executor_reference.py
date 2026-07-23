@@ -10,7 +10,6 @@ from tests.test_trade_factory import create_trade
 
 
 def create_order():
-
     trade = create_trade()
 
     return OrderFactory().create(
@@ -22,10 +21,7 @@ def create_order():
 
 
 def test_position_keeps_order_reference():
-
-    executor = TradeExecutor(
-        PositionManager()
-    )
+    executor = TradeExecutor(PositionManager())
 
     order = create_order()
 

@@ -23,15 +23,11 @@ def validate_type(value, expected_type):
     """
     if not isinstance(value, expected_type):
         if isinstance(expected_type, tuple):
-            expected_name = ", ".join(
-                t.__name__ for t in expected_type
-            )
+            expected_name = ", ".join(t.__name__ for t in expected_type)
         else:
             expected_name = expected_type.__name__
 
-        raise TypeError(
-            f"Expected {expected_name}, got {type(value).__name__}"
-        )
+        raise TypeError(f"Expected {expected_name}, got {type(value).__name__}")
 
     return True
 
@@ -41,13 +37,9 @@ def validate_range(value, minimum, maximum):
     Validate that a numeric value falls within the specified range.
     """
     if value < minimum:
-        raise ValueError(
-            f"Value {value} is less than minimum {minimum}"
-        )
+        raise ValueError(f"Value {value} is less than minimum {minimum}")
 
     if value > maximum:
-        raise ValueError(
-            f"Value {value} is greater than maximum {maximum}"
-        )
+        raise ValueError(f"Value {value} is greater than maximum {maximum}")
 
     return True

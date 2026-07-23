@@ -2,7 +2,6 @@ from live.trade_supervisor import TradeSupervisor
 
 
 def test_supervisor_start():
-
     supervisor = TradeSupervisor()
 
     supervisor.start()
@@ -11,7 +10,6 @@ def test_supervisor_start():
 
 
 def test_supervisor_stop():
-
     supervisor = TradeSupervisor()
 
     supervisor.start()
@@ -21,7 +19,6 @@ def test_supervisor_stop():
 
 
 def test_supervisor_pause():
-
     supervisor = TradeSupervisor()
 
     supervisor.pause()
@@ -30,7 +27,6 @@ def test_supervisor_pause():
 
 
 def test_supervisor_resume():
-
     supervisor = TradeSupervisor()
 
     supervisor.pause()
@@ -40,7 +36,6 @@ def test_supervisor_resume():
 
 
 def test_supervisor_status():
-
     supervisor = TradeSupervisor()
 
     assert supervisor.status() is not None

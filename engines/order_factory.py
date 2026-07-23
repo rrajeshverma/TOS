@@ -43,14 +43,10 @@ class OrderFactory:
         """
 
         if trade is None:
-            raise ValueError(
-                "Cannot create Order without Trade."
-            )
+            raise ValueError("Cannot create Order without Trade.")
 
         if not trade.risk.is_approved:
-            raise ValueError(
-                "Cannot create Order from rejected Trade."
-            )
+            raise ValueError("Cannot create Order from rejected Trade.")
 
         order = Order(
             order_id=generate_order_id(),

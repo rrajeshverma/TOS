@@ -38,6 +38,7 @@ class PortfolioRisk:
         return self.remaining_risk() > 0
 
         # --------------------------------------------------
+
     # Snapshot Integration
     # --------------------------------------------------
 
@@ -52,11 +53,7 @@ class PortfolioRisk:
         Profits do not create risk.
         """
 
-        total_pnl = (
-            snapshot.realized_pnl
-            +
-            snapshot.unrealized_pnl
-        )
+        total_pnl = snapshot.realized_pnl + snapshot.unrealized_pnl
 
         self.current_risk = max(
             0,

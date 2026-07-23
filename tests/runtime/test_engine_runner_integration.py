@@ -12,6 +12,7 @@ from services.paper_trading_service import PaperTradingService
 # Engine Initialization
 # ==========================================================
 
+
 def test_engine_runner_initializes_paper_broker():
     broker = PaperBroker()
 
@@ -60,6 +61,7 @@ def test_engine_runner_initializes_health_monitor():
 # ==========================================================
 # Broker Lifecycle
 # ==========================================================
+
 
 def test_engine_runner_connects_broker():
     broker = PaperBroker()
@@ -119,6 +121,7 @@ def test_engine_runner_reconnect_broker():
 # Dependency Injection
 # ==========================================================
 
+
 def test_engine_runner_assigns_execution_engine():
     runner = EngineRunner()
     engine = ExecutionEngine(Mock())
@@ -167,6 +170,7 @@ def test_engine_runner_has_all_dependencies():
 # Runtime Readiness
 # ==========================================================
 
+
 def test_engine_runner_ready_when_dependencies_present():
     runner = EngineRunner()
 
@@ -205,17 +209,17 @@ def test_engine_runner_start_requires_ready_state():
 
     assert runner.can_start() is False
 
-def test_engine_runner_shutdown_disconnects_market():
-    ...
 
-def test_engine_runner_restart_reconnects_market():
-    ...
+def test_engine_runner_shutdown_disconnects_market(): ...
 
-def test_engine_runner_health_after_market_cycle():
-    ...
 
-def test_engine_runner_runtime_cycle_count():
-    ...
+def test_engine_runner_restart_reconnects_market(): ...
 
-def test_engine_runner_complete_market_workflow():
-    ...
+
+def test_engine_runner_health_after_market_cycle(): ...
+
+
+def test_engine_runner_runtime_cycle_count(): ...
+
+
+def test_engine_runner_complete_market_workflow(): ...

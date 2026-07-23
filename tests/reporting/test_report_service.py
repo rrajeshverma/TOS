@@ -1,5 +1,6 @@
 from datetime import datetime
 
+from reporting.html_report import HTMLReport
 from reporting.report_model import ReportModel
 from reporting.report_service import ReportService
 from reporting.report_template import ReportTemplate
@@ -129,9 +130,6 @@ def test_service_generate_returns_new_instance():
     second = service.generate("A")
 
     assert first is not second
-
-
-from reporting.html_report import HTMLReport
 
 
 def test_render_report_returns_html():

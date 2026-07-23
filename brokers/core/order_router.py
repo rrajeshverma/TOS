@@ -1,5 +1,4 @@
 class OrderRouter:
-
     def __init__(self, broker):
         self.broker = broker
 

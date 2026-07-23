@@ -6,7 +6,6 @@ class CalmarRatio:
         annual_return: float,
         max_drawdown: float,
     ) -> float:
-
         if annual_return == 0:
             return 0.0
 

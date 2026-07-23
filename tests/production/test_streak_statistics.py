@@ -1,5 +1,3 @@
-import pytest
-
 from reporting.reports.streak_statistics import (
     StreakStatistics,
 )

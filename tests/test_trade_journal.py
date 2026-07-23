@@ -11,7 +11,6 @@ from shared.enums import TradeStatus
 
 
 def create_trade():
-
     market = Market(
         symbol="NIFTY",
         exchange="NSE",
@@ -59,7 +58,6 @@ def create_trade():
 
 
 def test_trade_journal(tmp_path):
-
     journal = TradeJournal(file_path=str(tmp_path / "trade_journal.csv"))
 
     trade = create_trade()

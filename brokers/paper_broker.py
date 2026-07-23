@@ -41,7 +41,13 @@ class PaperBroker(BaseBroker):
         return broker_order
 
     def modify_order(self, order_id: str, **kwargs):
-        raise NotImplementedError
+        order = self._orders[order_id]
+
+        updated_order = replace(order, **kwargs)
+
+        self._orders[order_id] = updated_order
+
+        return updated_order
 
     def cancel_order(self, order_id: str) -> bool:
         order = self._orders[order_id]

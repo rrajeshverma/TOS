@@ -27,6 +27,4 @@ class HealthCheck:
         return len(self._checks)
 
     def __repr__(self):
-        return (
-            f"HealthCheck(" f"checks={len(self)}, " f"healthy={self.overall_status()})"
-        )
+        return f"HealthCheck(checks={len(self)}, healthy={self.overall_status()})"

@@ -1,5 +1,3 @@
-import pytest
-
 from operations.startup.checks import (
     api_key_check,
     broker_name_check,

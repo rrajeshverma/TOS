@@ -1,5 +1,7 @@
 from decimal import Decimal
 
+import pytest
+
 from brokers.models import (
     Order,
     OrderSide,
@@ -119,15 +121,8 @@ def test_get_funds():
     assert funds.utilised_margin == Decimal("0")
 
 
-def modify_order(self, order_id: str, **kwargs):
-    raise NotImplementedError
-
-
-import pytest
-
-
-def test_modify_order_not_implemented():
+def test_modify_order_unknown_order():
     broker = PaperBroker()
 
-    with pytest.raises(NotImplementedError):
+    with pytest.raises(KeyError):
         broker.modify_order("dummy_order_id")

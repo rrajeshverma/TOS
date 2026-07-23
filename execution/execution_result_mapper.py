@@ -10,9 +10,7 @@ class ExecutionResultMapper:
         self,
         response: dict,
     ) -> ExecutionResult:
-
         if response.get("status") == "success":
-
             data = response.get(
                 "data",
                 {},
@@ -20,9 +18,7 @@ class ExecutionResultMapper:
 
             return ExecutionResult(
                 success=True,
-                order_id=data.get(
-                    "orderId"
-                ),
+                order_id=data.get("orderId"),
             )
 
         return ExecutionResult(

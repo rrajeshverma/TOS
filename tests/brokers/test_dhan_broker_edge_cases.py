@@ -7,7 +7,6 @@ from brokers.dhan_broker import DhanBroker
 from brokers.models import (
     Order,
     OrderSide,
-    OrderStatus,
     OrderType,
     ProductType,
 )
@@ -19,7 +18,6 @@ from brokers.models import (
 
 
 class EmptyFundsClient:
-
     def get_fund_limits(self):
         return {
             "status": "success",
@@ -31,7 +29,6 @@ class EmptyFundsClient:
 
 
 def test_get_funds_zero_balance():
-
     broker = DhanBroker(
         EmptyFundsClient(),
         Mock(),
@@ -44,7 +41,6 @@ def test_get_funds_zero_balance():
 
 
 class EmptyOrdersClient:
-
     def get_order_list(self):
         return {
             "status": "success",
@@ -53,7 +49,6 @@ class EmptyOrdersClient:
 
 
 def test_get_orders_empty():
-
     broker = DhanBroker(
         EmptyOrdersClient(),
         Mock(),
@@ -63,7 +58,6 @@ def test_get_orders_empty():
 
 
 class EmptyPositionsClient:
-
     def get_positions(self):
         return {
             "status": "success",
@@ -72,7 +66,6 @@ class EmptyPositionsClient:
 
 
 def test_get_positions_empty():
-
     broker = DhanBroker(
         EmptyPositionsClient(),
         Mock(),
@@ -82,7 +75,6 @@ def test_get_positions_empty():
 
 
 class EmptyHoldingsClient:
-
     def get_holdings(self):
         return {
             "status": "success",
@@ -91,7 +83,6 @@ class EmptyHoldingsClient:
 
 
 def test_get_holdings_empty():
-
     broker = DhanBroker(
         EmptyHoldingsClient(),
         Mock(),
@@ -106,7 +97,6 @@ def test_get_holdings_empty():
 
 
 def test_funds_decimal_conversion():
-
     client = Mock()
 
     client.get_fund_limits.return_value = {
@@ -135,32 +125,23 @@ def test_funds_decimal_conversion():
 
 
 class DummyInstrument:
-
     security_id = "13"
     exchange_segment = "NSE_FNO"
 
 
 class DummyMapper:
-
     def get(self, symbol):
         return DummyInstrument()
 
 
 class DummySellClient:
-
     def place_order(self, **kwargs):
-
         assert kwargs["transaction_type"] == "SELL"
 
-        return {
-            "data": {
-                "orderId": "SELL001"
-            }
-        }
+        return {"data": {"orderId": "SELL001"}}
 
 
 def test_place_sell_order():
-
     broker = DhanBroker(
         DummySellClient(),
         DummyMapper(),
@@ -185,13 +166,11 @@ def test_place_sell_order():
 
 
 class InvalidMapper:
-
     def get(self, symbol):
         return None
 
 
 def test_place_order_invalid_instrument():
-
     broker = DhanBroker(
         Mock(),
         InvalidMapper(),
@@ -206,5 +185,4 @@ def test_place_order_invalid_instrument():
     )
 
     with pytest.raises(AttributeError):
-
         broker.place_order(order)

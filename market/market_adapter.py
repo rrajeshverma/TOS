@@ -2,23 +2,18 @@ from domain.candle import Candle
 
 
 class MarketAdapter:
-
     def __init__(
         self,
         exchange="NSE",
     ):
         self.exchange = exchange
 
-
     def to_market_data(
         self,
         candle: Candle,
     ) -> dict:
-
         if candle is None:
-            raise ValueError(
-                "Candle cannot be None"
-            )
+            raise ValueError("Candle cannot be None")
 
         return {
             "symbol": candle.symbol,

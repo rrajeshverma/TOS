@@ -1,12 +1,15 @@
+import pytest
+
 from execution.execution_engine import ExecutionEngine
 from execution.execution_request import ExecutionRequest
 from execution.execution_result import ExecutionResult
-
-import pytest
+from execution.order_service import (
+    OrderService,
+    OrderStatus,
+)
 
 
 def test_engine_rejects_none_request():
-
     engine = ExecutionEngine(None)
 
     with pytest.raises(ValueError):
@@ -14,7 +17,6 @@ def test_engine_rejects_none_request():
 
 
 def test_engine_returns_execution_result():
-
     class Service:
         def submit(self, request):
             return "ORD001"
@@ -32,7 +34,6 @@ def test_engine_returns_execution_result():
 
 
 def test_engine_returns_order_id():
-
     class Service:
         def submit(self, request):
             return "ORD001"
@@ -49,7 +50,6 @@ def test_engine_returns_order_id():
 
 
 def test_engine_handles_service_exception():
-
     class Service:
         def submit(self, request):
             raise Exception("Broker Down")
@@ -67,7 +67,6 @@ def test_engine_handles_service_exception():
 
 
 def test_execution_request_validation():
-
     with pytest.raises(ValueError):
         ExecutionRequest(
             symbol="NIFTY",
@@ -75,18 +74,12 @@ def test_execution_request_validation():
             quantity=0,
         )
 
-from execution.order_service import (
-    OrderService,
-    OrderStatus,
-)
-
 
 def create_service():
     return OrderService()
 
 
 def test_submit_creates_first_order_id():
-
     service = create_service()
 
     order_id = service.submit(
@@ -100,7 +93,6 @@ def test_submit_creates_first_order_id():
 
 
 def test_submit_creates_incremental_order_ids():
-
     service = create_service()
 
     first = service.submit({"symbol": "NIFTY"})
@@ -111,7 +103,6 @@ def test_submit_creates_incremental_order_ids():
 
 
 def test_get_existing_order():
-
     service = create_service()
 
     order_id = service.submit(
@@ -127,14 +118,12 @@ def test_get_existing_order():
 
 
 def test_get_unknown_order():
-
     service = create_service()
 
     assert service.get(999) is None
 
 
 def test_initial_order_status_is_new():
-
     service = create_service()
 
     order_id = service.submit(
@@ -148,7 +137,6 @@ def test_initial_order_status_is_new():
 
 
 def test_initial_filled_quantity_zero():
-
     service = create_service()
 
     order_id = service.submit(
@@ -162,7 +150,6 @@ def test_initial_filled_quantity_zero():
 
 
 def test_remaining_quantity():
-
     service = create_service()
 
     order_id = service.submit(
@@ -176,7 +163,6 @@ def test_remaining_quantity():
 
 
 def test_average_fill_price_before_fill():
-
     service = create_service()
 
     order_id = service.submit(
@@ -190,7 +176,6 @@ def test_average_fill_price_before_fill():
 
 
 def test_partial_fill_updates_status():
-
     service = create_service()
 
     order_id = service.submit(
@@ -210,7 +195,6 @@ def test_partial_fill_updates_status():
 
 
 def test_full_fill_updates_status():
-
     service = create_service()
 
     order_id = service.submit(
@@ -228,11 +212,9 @@ def test_full_fill_updates_status():
 
     assert service.status(order_id) == OrderStatus.FILLED
 
+
 def test_cannot_modify_unknown_order():
-
     service = OrderService()
-
-    import pytest
 
     with pytest.raises(KeyError):
         service.modify_order(
@@ -242,9 +224,6 @@ def test_cannot_modify_unknown_order():
 
 
 def test_cannot_modify_filled_order():
-
-    import pytest
-
     service = OrderService()
 
     order_id = service.submit(
@@ -268,9 +247,6 @@ def test_cannot_modify_filled_order():
 
 
 def test_cannot_overfill_order():
-
-    import pytest
-
     service = OrderService()
 
     order_id = service.submit(
@@ -289,9 +265,6 @@ def test_cannot_overfill_order():
 
 
 def test_duplicate_broker_registration_rejected():
-
-    import pytest
-
     service = OrderService()
 
     order_id = service.submit(
@@ -313,9 +286,6 @@ def test_duplicate_broker_registration_rejected():
 
 
 def test_unknown_broker_callback_rejected():
-
-    import pytest
-
     service = OrderService()
 
     with pytest.raises(KeyError):

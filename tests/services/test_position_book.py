@@ -2,14 +2,12 @@ from services.position_book import PositionBook
 
 
 def test_position_book_starts_empty():
-
     book = PositionBook()
 
     assert book.count() == 0
 
 
 def test_add_position():
-
     book = PositionBook()
 
     position = object()
@@ -23,7 +21,6 @@ def test_add_position():
 
 
 def test_get_position():
-
     book = PositionBook()
 
     position = object()
@@ -37,7 +34,6 @@ def test_get_position():
 
 
 def test_contains_position():
-
     book = PositionBook()
 
     book.add_position(
@@ -49,7 +45,6 @@ def test_contains_position():
 
 
 def test_remove_position():
-
     book = PositionBook()
 
     book.add_position(
@@ -63,7 +58,6 @@ def test_remove_position():
 
 
 def test_clear_positions():
-
     book = PositionBook()
 
     book.add_position(
@@ -77,11 +71,8 @@ def test_clear_positions():
 
 
 def test_remove_unknown_position():
-
     book = PositionBook()
 
-    book.remove_position(
-        "UNKNOWN"
-    )
+    book.remove_position("UNKNOWN")
 
     assert book.count() == 0

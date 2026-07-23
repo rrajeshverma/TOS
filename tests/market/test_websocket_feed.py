@@ -2,7 +2,6 @@ from market.websocket_feed import WebSocketFeed
 
 
 def test_websocket_feed_connect():
-
     feed = WebSocketFeed()
 
     feed.connect()
@@ -10,9 +9,7 @@ def test_websocket_feed_connect():
     assert feed.is_connected() is True
 
 
-
 def test_websocket_feed_disconnect():
-
     feed = WebSocketFeed()
 
     feed.connect()
@@ -21,17 +18,13 @@ def test_websocket_feed_disconnect():
     assert feed.is_connected() is False
 
 
-
 def test_websocket_feed_initial_state():
-
     feed = WebSocketFeed()
 
     assert feed.is_connected() is False
 
 
-
 def test_websocket_feed_subscribe():
-
     feed = WebSocketFeed()
 
     feed.subscribe("NIFTY")
@@ -39,9 +32,7 @@ def test_websocket_feed_subscribe():
     assert "NIFTY" in feed.subscriptions
 
 
-
 def test_websocket_feed_unsubscribe():
-
     feed = WebSocketFeed()
 
     feed.subscribe("NIFTY")

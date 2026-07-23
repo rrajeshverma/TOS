@@ -15,9 +15,10 @@ from brokers.models import (
     ProductType,
 )
 
+from domain.instrument import Instrument
+
 
 class DummyClient:
-
     def get_fund_limits(self):
         return {
             "status": "success",
@@ -29,7 +30,6 @@ class DummyClient:
 
 
 class DummyPositionClient:
-
     def get_positions(self):
         return {
             "status": "success",
@@ -73,7 +73,6 @@ def test_get_positions():
 
 
 class DummyHoldingClient:
-
     def get_holdings(self):
         return {
             "status": "success",
@@ -88,7 +87,6 @@ class DummyHoldingClient:
 
 
 def test_get_holdings():
-
     broker = DhanBroker(DummyHoldingClient(), Mock())
 
     holdings = broker.get_holdings()
@@ -103,7 +101,6 @@ def test_get_holdings():
 
 
 class DummyOrderClient:
-
     def get_order_list(self):
         return {
             "status": "success",
@@ -122,7 +119,6 @@ class DummyOrderClient:
 
 
 def test_get_orders():
-
     broker = DhanBroker(DummyOrderClient(), Mock())
 
     orders = broker.get_orders()
@@ -142,7 +138,6 @@ def test_get_orders():
 
 
 class DummyPlaceOrderClient:
-
     def place_order(self, **kwargs):
         return {
             "status": "success",
@@ -152,11 +147,7 @@ class DummyPlaceOrderClient:
         }
 
 
-from domain.instrument import Instrument
-
-
 class DummyInstrumentMapper:
-
     def get(self, symbol):
         return Instrument(
             symbol="NIFTY",
@@ -168,7 +159,6 @@ class DummyInstrumentMapper:
 
 
 def test_place_order():
-
     broker = DhanBroker(
         DummyPlaceOrderClient(),
         DummyInstrumentMapper(),
@@ -223,15 +213,56 @@ def test_is_connected_not_implemented():
         broker.is_connected()
 
 
-def test_modify_order_not_implemented():
-    broker = DhanBroker(Mock(), Mock())
+def test_modify_order():
+    client = Mock()
 
-    with pytest.raises(NotImplementedError):
-        broker.modify_order("ORD123")
+    client.modify_order.return_value = {
+        "status": "success",
+    }
+
+    broker = DhanBroker(client, Mock())
+
+    response = broker.modify_order(
+        "ORD123",
+        quantity=25,
+        price=25010,
+    )
+
+    client.modify_order.assert_called_once_with(
+        "ORD123",
+        {
+            "quantity": 25,
+            "price": 25010,
+        },
+    )
+
+    assert response["status"] == "success"
 
 
-def test_get_order_not_implemented():
-    broker = DhanBroker(Mock(), Mock())
+def test_get_order():
+    client = Mock()
 
-    with pytest.raises(NotImplementedError):
-        broker.get_order("ORD123")
+    client.get_order.return_value = {
+        "orderId": "ORD123",
+        "tradingSymbol": "NIFTY",
+        "transactionType": "BUY",
+        "quantity": 65,
+        "orderType": "MARKET",
+        "productType": "INTRADAY",
+        "orderStatus": "PENDING",
+    }
+
+    broker = DhanBroker(client, Mock())
+
+    order = broker.get_order("ORD123")
+
+    client.get_order.assert_called_once_with("ORD123")
+
+    assert isinstance(order, Order)
+    assert order.broker_order_id == "ORD123"
+    assert order.symbol == "NIFTY"
+    assert order.side == OrderSide.BUY
+    assert order.quantity == 65
+    assert order.order_type == OrderType.MARKET
+    assert order.product == ProductType.INTRADAY
+    assert order.status == OrderStatus.PENDING

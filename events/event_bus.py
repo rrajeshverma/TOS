@@ -20,14 +20,9 @@ class EventBus:
             subscribers.remove(subscriber)
 
     def publish(self, event: Event):
-
         failed = 0
 
-        for subscriber in self._subscribers.get(
-            event.name,
-            []
-        ):
-
+        for subscriber in self._subscribers.get(event.name, []):
             try:
                 subscriber.handle(event)
 

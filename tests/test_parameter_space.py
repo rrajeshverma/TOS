@@ -1,3 +1,5 @@
+import pytest
+
 from optimizer.parameter_space import ParameterSpace
 
 
@@ -38,9 +40,6 @@ def test_clear():
     space.clear()
 
     assert len(space) == 0
-
-
-import pytest
 
 
 def test_duplicate_parameter_raises():

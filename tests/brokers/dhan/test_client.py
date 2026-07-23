@@ -1,5 +1,3 @@
-import pytest
-
 from brokers.dhan.client import DhanClient
 
 

@@ -1,5 +1,3 @@
-import pytest
-
 from risk.capital_allocator import CapitalAllocator
 
 

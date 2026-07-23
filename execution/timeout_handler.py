@@ -2,7 +2,6 @@ import time
 
 
 class TimeoutHandler:
-
     def __init__(self, timeout_seconds):
         self.timeout_seconds = timeout_seconds
 

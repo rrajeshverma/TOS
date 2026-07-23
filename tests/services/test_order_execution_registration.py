@@ -2,9 +2,7 @@ from services.order_execution_adapter import OrderExecutionAdapter
 
 
 def test_execution_registers_broker_order():
-
     class FakeOrderService:
-
         def __init__(self):
             self.registered = None
 
@@ -24,12 +22,9 @@ def test_execution_registers_broker_order():
                 broker_order_id,
             )
 
-
     service = FakeOrderService()
 
-    adapter = OrderExecutionAdapter(
-        order_service=service
-    )
+    adapter = OrderExecutionAdapter(order_service=service)
 
     result = adapter.execute(
         {

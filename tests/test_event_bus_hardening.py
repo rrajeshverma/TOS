@@ -4,27 +4,19 @@ from events.subscriber import Subscriber
 
 
 class GoodSubscriber(Subscriber):
-
     def __init__(self):
         self.received = []
-
 
     def handle(self, event):
         self.received.append(event)
 
 
-
 class BadSubscriber(Subscriber):
-
     def handle(self, event):
-        raise Exception(
-            "subscriber failed"
-        )
-
+        raise Exception("subscriber failed")
 
 
 def test_failed_subscriber_does_not_stop_others():
-
     bus = EventBus()
 
     bad = BadSubscriber()
@@ -42,21 +34,15 @@ def test_failed_subscriber_does_not_stop_others():
 
     event = Event(
         name="PRICE_UPDATED",
-        payload={
-            "price": 25000
-        },
+        payload={"price": 25000},
     )
 
     bus.publish(event)
 
-    assert good.received == [
-        event
-    ]
-
+    assert good.received == [event]
 
 
 def test_event_bus_reports_failures():
-
     bus = EventBus()
 
     bus.subscribe(

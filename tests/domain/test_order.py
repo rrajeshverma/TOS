@@ -1,26 +1,25 @@
-from dataclasses import FrozenInstanceError, is_dataclass
+from dataclasses import FrozenInstanceError, is_dataclass, replace
 from datetime import datetime
 from decimal import Decimal
 
 import pytest
 
-from domain.order import Order
-from domain.trade import Trade
 from domain.decision import Decision
 from domain.indicator_set import IndicatorSet
 from domain.market import Market
+from domain.order import Order
 from domain.risk import Risk
+from domain.trade import Trade
 from shared.enums import (
     Broker,
+    DecisionStatus,
     OrderSide,
     OrderStatus,
-    DecisionStatus,
     Signal,
 )
 
 
 def create_order():
-
     market = Market(
         symbol="NIFTY",
         exchange="NSE",
@@ -119,8 +118,6 @@ def test_order_is_immutable():
 
     with pytest.raises(FrozenInstanceError):
         order.quantity = 100
-
-from dataclasses import replace
 
 
 def test_order_is_pending():

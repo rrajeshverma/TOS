@@ -3,7 +3,6 @@ from brokers.paper_broker import PaperBroker
 
 
 class BrokerFactory:
-
     @staticmethod
     def create(name: str, client=None, instrument_mapper=None):
         name = name.lower()

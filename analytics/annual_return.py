@@ -6,7 +6,6 @@ class AnnualReturn:
         beginning_value: float,
         ending_value: float,
     ) -> float:
-
         if beginning_value <= 0:
             return 0.0
 

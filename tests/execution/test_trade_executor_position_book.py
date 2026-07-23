@@ -11,7 +11,6 @@ from tests.test_trade_factory import create_trade
 
 
 def create_order():
-
     trade = create_trade()
 
     return OrderFactory().create(
@@ -23,7 +22,6 @@ def create_order():
 
 
 def test_executor_registers_position():
-
     book = PositionBook()
 
     executor = TradeExecutor(
@@ -40,6 +38,4 @@ def test_executor_registers_position():
         price=order.requested_price,
     )
 
-    assert book.contains(
-        position.position_id
-    )
+    assert book.contains(position.position_id)

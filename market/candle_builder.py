@@ -1,5 +1,3 @@
-from datetime import datetime
-
 from brokers.dhan.models import BrokerTick
 from domain.candle import Candle
 
@@ -16,23 +14,16 @@ class CandleBuilder:
         self.timeframe = timeframe
         self._candles = {}
 
-
     def update(
         self,
         tick: BrokerTick,
     ) -> Candle:
-
         if tick is None:
-            raise ValueError(
-                "Tick cannot be None."
-            )
+            raise ValueError("Tick cannot be None.")
 
-        existing = self._candles.get(
-            tick.symbol
-        )
+        existing = self._candles.get(tick.symbol)
 
         if existing is None:
-
             candle = Candle(
                 symbol=tick.symbol,
                 timeframe=self.timeframe,
@@ -45,7 +36,6 @@ class CandleBuilder:
             )
 
         else:
-
             candle = Candle(
                 symbol=existing.symbol,
                 timeframe=existing.timeframe,
@@ -60,10 +50,7 @@ class CandleBuilder:
                     tick.ltp,
                 ),
                 close=tick.ltp,
-                volume=(
-                    existing.volume +
-                    tick.volume
-                ),
+                volume=(existing.volume + tick.volume),
             )
 
         self._candles[tick.symbol] = candle

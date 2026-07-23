@@ -34,7 +34,6 @@ class PositionManager:
         quantity: int,
         price: Decimal,
     ) -> Position:
-
         position = Position(
             position_id=generate_position_id(),
             order=order,
@@ -57,7 +56,6 @@ class PositionManager:
         position: Position,
         ltp: Decimal,
     ) -> Position:
-
         return Position(
             position_id=position.position_id,
             order=position.order,
@@ -74,7 +72,6 @@ class PositionManager:
         position: Position,
         exit_price: Decimal,
     ) -> Position:
-
         return Position(
             position_id=position.position_id,
             order=position.order,
@@ -90,7 +87,6 @@ class PositionManager:
     def unrealized_pnl(
         position: Position,
     ) -> Decimal:
-
         return (position.last_traded_price - position.average_price) * position.quantity
 
     @staticmethod

@@ -87,7 +87,6 @@ class MarketEngine:
         self,
         raw_data: Mapping[str, Any],
     ) -> None:
-
         for field in self.REQUIRED_FIELDS:
             if field not in raw_data:
                 raise MissingFieldError(field)
@@ -96,7 +95,6 @@ class MarketEngine:
     def _validate_timestamp(
         timestamp: datetime,
     ) -> None:
-
         if not isinstance(timestamp, datetime):
             raise InvalidTimestampError("timestamp must be datetime")
 
@@ -104,7 +102,6 @@ class MarketEngine:
     def _validate_prices(
         raw_data: Mapping[str, Any],
     ) -> None:
-
         high = float(raw_data["high"])
         low = float(raw_data["low"])
         open_price = float(raw_data["open"])
@@ -123,6 +120,5 @@ class MarketEngine:
     def _validate_volume(
         volume: int,
     ) -> None:
-
         if int(volume) < 0:
             raise InvalidVolumeError("Volume cannot be negative")

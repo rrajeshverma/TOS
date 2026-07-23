@@ -2,7 +2,6 @@ from portfolio.position_sync import PositionSync
 
 
 def test_missing_broker_positions():
-
     sync = PositionSync()
 
     sync.set_local(
@@ -10,13 +9,10 @@ def test_missing_broker_positions():
         65,
     )
 
-    assert sync.missing_broker_positions() == [
-        "NIFTY"
-    ]
+    assert sync.missing_broker_positions() == ["NIFTY"]
 
 
 def test_extra_broker_positions():
-
     sync = PositionSync()
 
     sync.set_broker(
@@ -24,13 +20,10 @@ def test_extra_broker_positions():
         25,
     )
 
-    assert sync.extra_broker_positions() == [
-        "BANKNIFTY"
-    ]
+    assert sync.extra_broker_positions() == ["BANKNIFTY"]
 
 
 def test_sync_report():
-
     sync = PositionSync()
 
     sync.set_local(

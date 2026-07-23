@@ -5,12 +5,9 @@ from datetime import datetime
 
 
 def test_receive_tick_dispatches():
-
     received = []
 
-    feed = WebSocketFeed(
-        dispatcher=received.append
-    )
+    feed = WebSocketFeed(dispatcher=received.append)
 
     tick = BrokerTick(
         symbol="NIFTY",
@@ -25,7 +22,6 @@ def test_receive_tick_dispatches():
 
 
 def test_invalid_tick_rejected():
-
     feed = WebSocketFeed()
 
     try:
@@ -37,7 +33,6 @@ def test_invalid_tick_rejected():
 
 
 def test_receive_tick_without_dispatcher_safe():
-
     feed = WebSocketFeed()
 
     tick = BrokerTick(

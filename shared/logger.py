@@ -24,7 +24,6 @@ def get_logger(name: str) -> logging.Logger:
     global _LOGGER_INITIALIZED
 
     if not _LOGGER_INITIALIZED:
-
         log_file = Path(LOG_DIR) / "tos.log"
 
         logging.basicConfig(

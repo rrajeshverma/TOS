@@ -1,3 +1,5 @@
+from math import isclose
+
 from analytics.returns import Returns
 
 
@@ -25,9 +27,6 @@ def test_double_capital():
     assert returns.calculate(200000, 100000) == 100.0
 
 
-from analytics.returns import Returns
-
-
 def test_cumulative_return_initially_zero():
     returns = Returns()
 
@@ -52,11 +51,6 @@ def test_calculate_and_cumulative_are_equal():
     assert returns.calculate(118000, 100000) == returns.cumulative_return(
         118000, 100000
     )
-
-
-from math import isclose
-
-from analytics.returns import Returns
 
 
 def test_cagr_zero_growth():

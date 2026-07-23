@@ -2,14 +2,12 @@ from live.broker_session import BrokerSession
 
 
 def test_session_initial_state():
-
     session = BrokerSession()
 
     assert session.is_connected() is False
 
 
 def test_session_connect():
-
     session = BrokerSession()
 
     session.connect()
@@ -18,7 +16,6 @@ def test_session_connect():
 
 
 def test_session_disconnect():
-
     session = BrokerSession()
 
     session.connect()
@@ -28,7 +25,6 @@ def test_session_disconnect():
 
 
 def test_session_reconnect():
-
     session = BrokerSession()
 
     session.reconnect()
@@ -37,7 +33,6 @@ def test_session_reconnect():
 
 
 def test_session_reset():
-
     session = BrokerSession()
 
     session.connect()

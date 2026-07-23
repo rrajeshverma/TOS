@@ -21,10 +21,7 @@ class OrderRecovery:
     """
 
     broker: object | None = None
-    pending_orders: dict = field(
-        default_factory=dict
-    )
-
+    pending_orders: dict = field(default_factory=dict)
 
     def add_order(
         self,
@@ -32,7 +29,6 @@ class OrderRecovery:
         symbol,
     ):
         self.pending_orders[order_id] = symbol
-
 
     def remove_order(
         self,
@@ -43,35 +39,20 @@ class OrderRecovery:
             None,
         )
 
-
     def has_pending_orders(self):
-
-        return len(
-            self.pending_orders
-        ) > 0
-
+        return len(self.pending_orders) > 0
 
     def pending_count(self):
-
-        return len(
-            self.pending_orders
-        )
-
+        return len(self.pending_orders)
 
     def clear(self):
-
         self.pending_orders.clear()
-
 
     def get_order(
         self,
         order_id,
     ):
-
-        return self.pending_orders.get(
-            order_id
-        )
-
+        return self.pending_orders.get(order_id)
 
     def recover(self):
         """
@@ -79,12 +60,9 @@ class OrderRecovery:
         """
 
         if self.broker is None:
-            raise RuntimeError(
-                "Broker is not configured."
-            )
+            raise RuntimeError("Broker is not configured.")
 
         return self.broker.get_orders()
-
 
     def sync(self):
         """
@@ -96,23 +74,15 @@ class OrderRecovery:
         self.pending_orders.clear()
 
         for order in orders:
-
             if order.get("status") in (
                 "PENDING",
                 "OPEN",
             ):
-
-                self.pending_orders[
-                    order["order_id"]
-                ] = order.get(
-                    "symbol"
-                )
+                self.pending_orders[order["order_id"]] = order.get("symbol")
 
         return orders
 
-
     def summary(self):
-
         return {
             "pending_orders": self.pending_orders.copy(),
             "pending_count": self.pending_count(),

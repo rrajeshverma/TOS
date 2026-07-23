@@ -1,5 +1,3 @@
-import pytest
-
 from operations.startup.validator import StartupValidator, ValidationResult
 
 

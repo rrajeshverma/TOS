@@ -12,7 +12,6 @@ from tests.test_trade_factory import create_trade
 
 
 def create_order():
-
     trade = create_trade()
 
     return OrderFactory().create(
@@ -24,10 +23,7 @@ def create_order():
 
 
 def test_rejects_zero_quantity():
-
-    executor = TradeExecutor(
-        PositionManager()
-    )
+    executor = TradeExecutor(PositionManager())
 
     order = create_order()
 
@@ -41,10 +37,7 @@ def test_rejects_zero_quantity():
 
 
 def test_rejects_negative_price():
-
-    executor = TradeExecutor(
-        PositionManager()
-    )
+    executor = TradeExecutor(PositionManager())
 
     order = create_order()
 

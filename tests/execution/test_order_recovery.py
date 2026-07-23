@@ -2,7 +2,6 @@ from execution.order_recovery import OrderRecovery
 
 
 class FakeBroker:
-
     def get_orders(self):
         return [
             {
@@ -13,10 +12,7 @@ class FakeBroker:
 
 
 def test_recovery_fetches_broker_orders():
-
-    recovery = OrderRecovery(
-        broker=FakeBroker()
-    )
+    recovery = OrderRecovery(broker=FakeBroker())
 
     orders = recovery.recover()
 
@@ -25,7 +21,6 @@ def test_recovery_fetches_broker_orders():
 
 
 def test_recovery_requires_broker():
-
     try:
         OrderRecovery().recover()
 

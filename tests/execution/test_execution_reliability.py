@@ -12,26 +12,19 @@ from execution.dead_letter_queue import DeadLetterQueue
 
 
 def test_retry_policy_success_first_attempt():
-
     policy = RetryPolicy()
 
-    result = policy.execute(
-        lambda: "SUCCESS"
-    )
+    result = policy.execute(lambda: "SUCCESS")
 
     assert result == "SUCCESS"
 
 
 def test_retry_policy_retries_after_failure():
-
-    policy = RetryPolicy(
-        max_retries=3
-    )
+    policy = RetryPolicy(max_retries=3)
 
     attempts = []
 
     def failing():
-
         attempts.append(1)
         raise Exception("failed")
 
@@ -42,15 +35,11 @@ def test_retry_policy_retries_after_failure():
 
 
 def test_retry_policy_custom_retry_count():
-
-    policy = RetryPolicy(
-        max_retries=5
-    )
+    policy = RetryPolicy(max_retries=5)
 
     attempts = []
 
     def failing():
-
         attempts.append(1)
         raise Exception("failed")
 
@@ -61,13 +50,11 @@ def test_retry_policy_custom_retry_count():
 
 
 def test_retry_policy_returns_after_recovery():
-
     policy = RetryPolicy()
 
     attempts = []
 
     def recover():
-
         attempts.append(1)
 
         if len(attempts) < 2:
@@ -81,16 +68,10 @@ def test_retry_policy_returns_after_recovery():
 
 
 def test_retry_policy_zero_retry():
-
-    policy = RetryPolicy(
-        max_retries=1
-    )
+    policy = RetryPolicy(max_retries=1)
 
     with pytest.raises(Exception):
-
-        policy.execute(
-            lambda: (_ for _ in ()).throw(Exception())
-        )
+        policy.execute(lambda: (_ for _ in ()).throw(Exception()))
 
 
 # -------------------------------
@@ -99,53 +80,33 @@ def test_retry_policy_zero_retry():
 
 
 def test_timeout_not_reached():
+    handler = TimeoutHandler(timeout_seconds=10)
 
-    handler = TimeoutHandler(
-        timeout_seconds=10
-    )
-
-    assert handler.is_timed_out(
-        time.time()
-    ) is False
+    assert handler.is_timed_out(time.time()) is False
 
 
 def test_timeout_reached():
-
-    handler = TimeoutHandler(
-        timeout_seconds=1
-    )
+    handler = TimeoutHandler(timeout_seconds=1)
 
     start = time.time() - 2
 
-    assert handler.is_timed_out(
-        start
-    ) is True
+    assert handler.is_timed_out(start) is True
 
 
 def test_remaining_time_positive():
+    handler = TimeoutHandler(timeout_seconds=10)
 
-    handler = TimeoutHandler(
-        timeout_seconds=10
-    )
-
-    remaining = handler.remaining_time(
-        time.time()
-    )
+    remaining = handler.remaining_time(time.time())
 
     assert remaining > 0
 
 
 def test_remaining_time_zero_after_timeout():
-
-    handler = TimeoutHandler(
-        timeout_seconds=1
-    )
+    handler = TimeoutHandler(timeout_seconds=1)
 
     start = time.time() - 5
 
-    assert handler.remaining_time(
-        start
-    ) == 0
+    assert handler.remaining_time(start) == 0
 
 
 # -------------------------------
@@ -154,24 +115,17 @@ def test_remaining_time_zero_after_timeout():
 
 
 def test_dead_letter_queue_add():
-
     queue = DeadLetterQueue()
 
-    queue.add(
-        {
-            "order": "123"
-        }
-    )
+    queue.add({"order": "123"})
 
     assert len(queue.orders) == 1
 
-def test_dead_letter_queue_pop():
 
+def test_dead_letter_queue_pop():
     queue = DeadLetterQueue()
 
-    order = {
-        "order": "123"
-    }
+    order = {"order": "123"}
 
     queue.add(order)
 
@@ -179,14 +133,12 @@ def test_dead_letter_queue_pop():
 
 
 def test_dead_letter_queue_empty_pop():
-
     queue = DeadLetterQueue()
 
     assert queue.pop() is None
 
 
 def test_dead_letter_queue_fifo():
-
     queue = DeadLetterQueue()
 
     queue.add("FIRST")
@@ -197,7 +149,6 @@ def test_dead_letter_queue_fifo():
 
 
 def test_dead_letter_queue_multiple_items():
-
     queue = DeadLetterQueue()
 
     for i in range(5):

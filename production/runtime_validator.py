@@ -16,6 +16,4 @@ class RuntimeValidator:
         return len(self.runtime) > 0
 
     def summary(self):
-        return {
-            "runtime": self.runtime.copy()
-        }
+        return {"runtime": self.runtime.copy()}

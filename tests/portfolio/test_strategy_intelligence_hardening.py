@@ -6,7 +6,6 @@ from portfolio.strategy_ranker import StrategyRanker
 
 
 class FakeStrategy:
-
     def execute(self):
         return "OK"
 
@@ -17,7 +16,6 @@ class FakeStrategy:
 
 
 def test_context_set_get():
-
     ctx = StrategyContext()
 
     ctx.set("symbol", "NIFTY")
@@ -26,14 +24,12 @@ def test_context_set_get():
 
 
 def test_context_default():
-
     ctx = StrategyContext()
 
     assert ctx.get("missing", 10) == 10
 
 
 def test_context_contains():
-
     ctx = StrategyContext()
 
     ctx.set("x", 1)
@@ -42,7 +38,6 @@ def test_context_contains():
 
 
 def test_context_remove():
-
     ctx = StrategyContext()
 
     ctx.set("x", 1)
@@ -52,7 +47,6 @@ def test_context_remove():
 
 
 def test_context_size():
-
     ctx = StrategyContext()
 
     ctx.set("a", 1)
@@ -67,7 +61,6 @@ def test_context_size():
 
 
 def test_loader_register():
-
     loader = StrategyLoader()
 
     loader.register(
@@ -79,7 +72,6 @@ def test_loader_register():
 
 
 def test_loader_get():
-
     loader = StrategyLoader()
 
     strategy = FakeStrategy()
@@ -93,7 +85,6 @@ def test_loader_get():
 
 
 def test_loader_load_many():
-
     loader = StrategyLoader()
 
     loader.load_many(
@@ -107,7 +98,6 @@ def test_loader_load_many():
 
 
 def test_loader_clear():
-
     loader = StrategyLoader()
 
     loader.register(
@@ -126,7 +116,6 @@ def test_loader_clear():
 
 
 def test_factory_create():
-
     factory = StrategyFactory()
 
     strategy = FakeStrategy()
@@ -140,7 +129,6 @@ def test_factory_create():
 
 
 def test_factory_count():
-
     factory = StrategyFactory()
 
     factory.register(
@@ -157,7 +145,6 @@ def test_factory_count():
 
 
 def test_add_trade():
-
     perf = StrategyPerformance()
 
     perf.add_trade(100)
@@ -166,7 +153,6 @@ def test_add_trade():
 
 
 def test_net_profit():
-
     perf = StrategyPerformance()
 
     perf.add_trade(100)
@@ -176,7 +162,6 @@ def test_net_profit():
 
 
 def test_win_rate():
-
     perf = StrategyPerformance()
 
     perf.add_trade(100)
@@ -186,7 +171,6 @@ def test_win_rate():
 
 
 def test_profit_factor():
-
     perf = StrategyPerformance()
 
     perf.add_trade(100)
@@ -201,7 +185,6 @@ def test_profit_factor():
 
 
 def test_ranker_add():
-
     ranker = StrategyRanker()
 
     ranker.add_strategy(
@@ -213,7 +196,6 @@ def test_ranker_add():
 
 
 def test_ranker_order():
-
     ranker = StrategyRanker()
 
     ranker.add_strategy("A", 50)
@@ -223,7 +205,6 @@ def test_ranker_order():
 
 
 def test_best_strategy():
-
     ranker = StrategyRanker()
 
     ranker.add_strategy("A", 50)
@@ -233,7 +214,6 @@ def test_best_strategy():
 
 
 def test_ranker_summary():
-
     ranker = StrategyRanker()
 
     result = ranker.summary()

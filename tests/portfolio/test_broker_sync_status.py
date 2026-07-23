@@ -2,12 +2,9 @@ from portfolio.sync import BrokerSyncService
 
 
 def test_sync_all_returns_success_status():
-
     class Sync:
-
         def sync(self):
             return "OK"
-
 
     service = BrokerSyncService(
         Sync(),
@@ -21,14 +18,9 @@ def test_sync_all_returns_success_status():
 
 
 def test_sync_all_returns_failure_status():
-
     class Bad:
-
         def sync(self):
-            raise Exception(
-                "broker failed"
-            )
-
+            raise Exception("broker failed")
 
     service = BrokerSyncService(
         Bad(),

@@ -4,7 +4,6 @@ from portfolio.position_aggregator import PositionAggregator
 
 
 class FakePosition:
-
     def __init__(
         self,
         quantity,
@@ -17,7 +16,6 @@ class FakePosition:
 
 
 def test_build_snapshot():
-
     positions = [
         FakePosition(
             65,

@@ -9,7 +9,6 @@ class ValueAtRisk:
         returns: list[float],
         confidence: float = 0.95,
     ) -> float:
-
         if not returns:
             return 0.0
 

@@ -23,22 +23,17 @@ class PreTradeValidator:
         self.risk = risk
         self.risk_guard = risk_guard
 
-
     def validate(self):
         """
         Return True only when all checks pass.
         """
 
         if self.risk is not None:
-
             if not self.risk.can_open_position():
                 return False
 
-
         if self.risk_guard is not None:
-
             if not self.risk_guard.can_trade():
                 return False
-
 
         return True

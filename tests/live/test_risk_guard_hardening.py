@@ -2,17 +2,13 @@ from live.risk_guard import RiskGuard
 
 
 def test_default_allows_trade():
-
     guard = RiskGuard()
 
     assert guard.can_trade()
 
 
 def test_daily_loss_block():
-
-    guard = RiskGuard(
-        daily_loss_limit=1000
-    )
+    guard = RiskGuard(daily_loss_limit=1000)
 
     guard.record_loss(1500)
 
@@ -20,10 +16,7 @@ def test_daily_loss_block():
 
 
 def test_position_limit():
-
-    guard = RiskGuard(
-        max_positions=2
-    )
+    guard = RiskGuard(max_positions=2)
 
     guard.add_position()
     guard.add_position()
@@ -32,7 +25,6 @@ def test_position_limit():
 
 
 def test_trade_block():
-
     guard = RiskGuard()
 
     guard.block()
@@ -41,7 +33,6 @@ def test_trade_block():
 
 
 def test_trade_allow():
-
     guard = RiskGuard()
 
     guard.allow()

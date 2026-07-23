@@ -12,7 +12,6 @@ from tests.helpers.domain_factory import (
 
 
 class FakePortfolioRepository:
-
     def __init__(self):
         self.portfolio = None
 
@@ -30,7 +29,6 @@ class FakePortfolioRepository:
 
 
 class FakeBroker:
-
     def __init__(self, portfolio):
         self.portfolio = portfolio
 

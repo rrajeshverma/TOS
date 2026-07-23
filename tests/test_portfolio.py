@@ -1,5 +1,3 @@
-import pytest
-
 from domain.portfolio import Portfolio
 
 

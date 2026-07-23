@@ -1,9 +1,11 @@
 from datetime import datetime
 
+from config.risk import MAX_DAILY_LOSS, MAX_TRADES_PER_DAY
 from domain.indicator_set import IndicatorSet
 from domain.market import Market
 from engines.decision_engine import DecisionEngine
 from engines.risk_engine import RiskEngine
+from shared.enums import DecisionStatus, Signal
 
 
 def create_decision():
@@ -34,7 +36,6 @@ def create_decision():
 
 
 def test_risk_approved():
-
     risk = RiskEngine().evaluate(
         decision=create_decision(),
         trades_today=0,
@@ -45,7 +46,6 @@ def test_risk_approved():
 
 
 def test_max_trades_reached():
-
     risk = RiskEngine().evaluate(
         decision=create_decision(),
         trades_today=4,
@@ -56,7 +56,6 @@ def test_max_trades_reached():
 
 
 def test_daily_loss_reached():
-
     risk = RiskEngine().evaluate(
         decision=create_decision(),
         trades_today=0,
@@ -64,10 +63,6 @@ def test_daily_loss_reached():
     )
 
     assert not risk.is_approved
-
-
-from config.risk import MAX_DAILY_LOSS, MAX_TRADES_PER_DAY
-from shared.enums import DecisionStatus, Signal
 
 
 def test_blocked_decision_is_rejected():

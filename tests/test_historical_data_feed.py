@@ -1,5 +1,7 @@
 from datetime import datetime
 
+import pytest
+
 from backtesting.historical_data_feed import HistoricalDataFeed
 
 
@@ -139,9 +141,6 @@ def test_iterates_over_all_candles():
     closes = [candle["close"] for candle in feed]
 
     assert closes == [100, 101, 102]
-
-
-import pytest
 
 
 def test_next_after_end_raises_stop_iteration():

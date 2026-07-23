@@ -2,7 +2,6 @@ from integration.engine_context import EngineContext
 
 
 def test_engine_context_stores_dependencies():
-
     market = object()
     indicator = object()
     strategy = object()

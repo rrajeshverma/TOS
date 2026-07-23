@@ -38,9 +38,7 @@ class OrderExecutionAdapter:
         """
 
         if order is None:
-            raise ValueError(
-                "Order cannot be None."
-            )
+            raise ValueError("Order cannot be None.")
 
         symbol = order.trade.risk.decision.market.symbol
 
@@ -59,48 +57,13 @@ class OrderExecutionAdapter:
         Execute order with duplicate protection.
         """
 
-        order_key = str(
-            sorted(order.items())
-        )
+        order_key = str(sorted(order.items()))
 
-        if self.idempotency.is_duplicate(
-            order_key
-        ):
-            return self.idempotency.get(
-                order_key
-            )
-
+        if self.idempotency.is_duplicate(order_key):
+            return self.idempotency.get(order_key)
 
         if self.order_service is not None:
-
-            result = self.order_service.place_order(
-                order
-            )
-
-            self.idempotency.record(
-            order_key,
-            result,
-        )
-
-            return result
-
-
-        if self.broker is not None:
-
-            if hasattr(
-                self.broker,
-                "is_connected",
-            ):
-
-                if not self.broker.is_connected():
-                    raise RuntimeError(
-                        "Broker is not connected."
-                    )
-
-
-            result = self.broker.place_order(
-                order
-            )
+            result = self.order_service.place_order(order)
 
             self.idempotency.record(
                 order_key,
@@ -109,7 +72,21 @@ class OrderExecutionAdapter:
 
             return result
 
+        if self.broker is not None:
+            if hasattr(
+                self.broker,
+                "is_connected",
+            ):
+                if not self.broker.is_connected():
+                    raise RuntimeError("Broker is not connected.")
 
-        raise RuntimeError(
-            "Execution service is not configured."
-        )
+            result = self.broker.place_order(order)
+
+            self.idempotency.record(
+                order_key,
+                result,
+            )
+
+            return result
+
+        raise RuntimeError("Execution service is not configured.")

@@ -37,7 +37,6 @@ class PortfolioAnalytics:
         net_profit: float,
         max_drawdown: float,
     ) -> dict[str, float]:
-
         annual_return = self._annual_return.calculate(
             beginning_value,
             ending_value,

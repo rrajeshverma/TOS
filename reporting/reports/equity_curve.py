@@ -5,7 +5,6 @@ class EquityCurve:
         self,
         pnl_values: list[float],
     ) -> list[float]:
-
         equity = []
         running = 0
 

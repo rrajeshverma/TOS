@@ -20,6 +20,7 @@ def capital_check(capital: float) -> bool:
 def risk_check(risk_percent: float) -> bool:
     return 0 < risk_percent <= 100
 
+
 VALID_BROKERS = {
     "DHAN",
     "DELTA",

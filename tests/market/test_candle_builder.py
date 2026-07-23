@@ -5,10 +5,7 @@ from market.candle_builder import CandleBuilder
 
 
 def test_create_first_candle():
-
-    builder = CandleBuilder(
-        timeframe="5m"
-    )
+    builder = CandleBuilder(timeframe="5m")
 
     tick = BrokerTick(
         symbol="NIFTY",
@@ -25,12 +22,8 @@ def test_create_first_candle():
     assert candle.close == 25000
 
 
-
 def test_update_high_low_close():
-
-    builder = CandleBuilder(
-        timeframe="5m"
-    )
+    builder = CandleBuilder(timeframe="5m")
 
     t1 = BrokerTick(
         "NIFTY",

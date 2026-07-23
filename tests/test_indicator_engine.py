@@ -1,5 +1,7 @@
 from datetime import datetime, timedelta
 
+import pytest
+
 from domain.indicator_set import IndicatorSet
 from domain.market import Market
 from engines.indicator_engine import IndicatorEngine
@@ -44,9 +46,6 @@ def test_indicator_engine_returns_indicator_set():
     assert indicator.vwap > 0
     assert indicator.rsi >= 0
     assert indicator.volume_average > 0
-
-
-import pytest
 
 
 def test_indicator_engine_none_history():

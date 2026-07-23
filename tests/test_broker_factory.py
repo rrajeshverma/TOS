@@ -1,3 +1,5 @@
+from unittest.mock import Mock
+
 import pytest
 
 from brokers.broker_factory import BrokerFactory
@@ -11,15 +13,7 @@ def test_create_paper_broker():
     assert isinstance(broker, PaperBroker)
 
 
-from unittest.mock import Mock
-
-from brokers.broker_factory import BrokerFactory
-from brokers.dhan_broker import DhanBroker
-
-
 def test_create_dhan_broker():
-    from unittest.mock import Mock
-
     client = Mock()
     instrument_mapper = Mock()
 
@@ -28,8 +22,6 @@ def test_create_dhan_broker():
         client,
         instrument_mapper,
     )
-
-    assert isinstance(broker, DhanBroker)
 
     assert isinstance(broker, DhanBroker)
 

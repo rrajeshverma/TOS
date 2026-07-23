@@ -16,50 +16,33 @@ class MarketHistory:
         self._history: list[Market] = []
         self.max_size = max_size
 
-
     def add(
         self,
         market: Market,
     ) -> None:
-
         if market is None:
-            raise ValueError(
-                "Market cannot be None."
-            )
+            raise ValueError("Market cannot be None.")
 
-        self._history.append(
-            market
-        )
+        self._history.append(market)
 
-        if (
-            self.max_size is not None
-            and len(self._history) > self.max_size
-        ):
+        if self.max_size is not None and len(self._history) > self.max_size:
             self._history.pop(0)
-
 
     def get(self) -> list[Market]:
         """
         Return market history copy.
         """
 
-        return list(
-            self._history
-        )
-
+        return list(self._history)
 
     def count(self) -> int:
-        return len(
-            self._history
-        )
-
+        return len(self._history)
 
     def latest(self) -> Market | None:
         if not self._history:
             return None
 
         return self._history[-1]
-
 
     def clear(self) -> None:
         self._history.clear()

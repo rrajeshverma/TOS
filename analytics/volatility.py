@@ -8,7 +8,6 @@ class Volatility:
         self,
         returns: list[float],
     ) -> float:
-
         if len(returns) < 2:
             return 0.0
 

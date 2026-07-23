@@ -1,3 +1,5 @@
+import pytest
+
 from execution.order_service import OrderService, OrderStatus
 
 
@@ -36,9 +38,6 @@ def test_final_fill_marks_order_filled():
     assert service.filled_quantity(order_id) == 100
     assert service.remaining_quantity(order_id) == 0
     assert service.status(order_id) == OrderStatus.FILLED
-
-
-import pytest
 
 
 def test_cannot_overfill_order():

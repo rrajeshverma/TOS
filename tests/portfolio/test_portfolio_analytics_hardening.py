@@ -4,7 +4,6 @@ from portfolio.portfolio_risk import PortfolioRisk
 
 
 def create_snapshot():
-
     return PortfolioSnapshot(
         cash=100000,
         equity=110000,
@@ -20,7 +19,6 @@ def create_snapshot():
 
 
 def test_snapshot_to_dict():
-
     snapshot = create_snapshot()
 
     result = snapshot.to_dict()
@@ -29,28 +27,24 @@ def test_snapshot_to_dict():
 
 
 def test_snapshot_total_pnl():
-
     snapshot = create_snapshot()
 
     assert snapshot.total_pnl() == 10000
 
 
 def test_snapshot_profitable():
-
     snapshot = create_snapshot()
 
     assert snapshot.is_profitable()
 
 
 def test_snapshot_has_positions():
-
     snapshot = create_snapshot()
 
     assert snapshot.has_open_positions()
 
 
 def test_snapshot_flat():
-
     snapshot = PortfolioSnapshot(
         100,
         100,
@@ -63,7 +57,6 @@ def test_snapshot_flat():
 
 
 def test_increment_positions():
-
     snapshot = create_snapshot()
 
     snapshot.increment_positions()
@@ -72,7 +65,6 @@ def test_increment_positions():
 
 
 def test_decrement_positions():
-
     snapshot = create_snapshot()
 
     snapshot.decrement_positions()
@@ -81,7 +73,6 @@ def test_decrement_positions():
 
 
 def test_deposit():
-
     snapshot = create_snapshot()
 
     snapshot.deposit(1000)
@@ -90,7 +81,6 @@ def test_deposit():
 
 
 def test_withdraw():
-
     snapshot = create_snapshot()
 
     snapshot.withdraw(5000)
@@ -99,7 +89,6 @@ def test_withdraw():
 
 
 def test_snapshot_copy():
-
     snapshot = create_snapshot()
 
     copy = snapshot.copy()
@@ -113,49 +102,33 @@ def test_snapshot_copy():
 
 
 def test_metrics_total_pnl():
-
     metrics = PortfolioMetrics()
 
-    assert metrics.total_pnl(
-        create_snapshot()
-    ) == 10000
+    assert metrics.total_pnl(create_snapshot()) == 10000
 
 
 def test_return_percent():
-
     metrics = PortfolioMetrics()
 
-    assert metrics.return_percent(
-        create_snapshot()
-    ) == 10
+    assert metrics.return_percent(create_snapshot()) == 10
 
 
 def test_cash_ratio():
-
     metrics = PortfolioMetrics()
 
-    assert round(
-        metrics.cash_ratio(create_snapshot()),
-        2
-    ) == 90.91
+    assert round(metrics.cash_ratio(create_snapshot()), 2) == 90.91
 
 
 def test_equity_change():
-
     metrics = PortfolioMetrics()
 
-    assert metrics.equity_change(
-        create_snapshot()
-    ) == 10000
+    assert metrics.equity_change(create_snapshot()) == 10000
 
 
 def test_portfolio_is_growing():
-
     metrics = PortfolioMetrics()
 
-    assert metrics.is_growing(
-        create_snapshot()
-    )
+    assert metrics.is_growing(create_snapshot())
 
 
 # -------------------------
@@ -164,7 +137,6 @@ def test_portfolio_is_growing():
 
 
 def test_maximum_risk():
-
     risk = PortfolioRisk(
         100000,
         2,
@@ -174,7 +146,6 @@ def test_maximum_risk():
 
 
 def test_remaining_risk():
-
     risk = PortfolioRisk(
         100000,
         2,
@@ -186,7 +157,6 @@ def test_remaining_risk():
 
 
 def test_exposure_percent():
-
     risk = PortfolioRisk(
         100000,
         2,
@@ -198,7 +168,6 @@ def test_exposure_percent():
 
 
 def test_can_open_position():
-
     risk = PortfolioRisk(
         100000,
         2,
@@ -208,7 +177,6 @@ def test_can_open_position():
 
 
 def test_risk_summary():
-
     risk = PortfolioRisk(
         100000,
         2,

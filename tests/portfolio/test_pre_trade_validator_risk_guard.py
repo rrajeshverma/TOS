@@ -2,13 +2,11 @@ from portfolio.pre_trade_validator import PreTradeValidator
 
 
 class FakeRisk:
-
     def can_open_position(self):
         return True
 
 
 class FakeRiskGuard:
-
     def __init__(self, allowed=True):
         self.allowed = allowed
 
@@ -17,7 +15,6 @@ class FakeRiskGuard:
 
 
 def test_allows_when_risk_and_guard_allow():
-
     validator = PreTradeValidator(
         risk=FakeRisk(),
         risk_guard=FakeRiskGuard(True),
@@ -27,7 +24,6 @@ def test_allows_when_risk_and_guard_allow():
 
 
 def test_blocks_when_risk_guard_blocks():
-
     validator = PreTradeValidator(
         risk=FakeRisk(),
         risk_guard=FakeRiskGuard(False),

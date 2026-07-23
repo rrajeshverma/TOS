@@ -28,4 +28,4 @@ class RuntimeStatus:
         return int((datetime.now() - self._started_at).total_seconds())
 
     def __repr__(self):
-        return f"RuntimeStatus(" f"running={self._running})"
+        return f"RuntimeStatus(running={self._running})"

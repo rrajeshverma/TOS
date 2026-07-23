@@ -1,5 +1,3 @@
-import pytest
-
 from portfolio.strategy_manager import StrategyManager
 
 

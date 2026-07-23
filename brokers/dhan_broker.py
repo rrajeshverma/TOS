@@ -16,13 +16,11 @@ from brokers.models import (
 
 
 class DhanBroker(BaseBroker):
-
     def __init__(self, client, instrument_mapper):
         self.client = client
         self.instrument_mapper = instrument_mapper
 
     def get_funds(self) -> Funds:
-
         response = self.client.get_fund_limits()
 
         data = response["data"]
@@ -69,23 +67,34 @@ class DhanBroker(BaseBroker):
         )
 
     def modify_order(self, order_id, **kwargs):
-        raise NotImplementedError
+        return self.client.modify_order(
+            order_id,
+            kwargs,
+        )
 
     def cancel_order(self, order_id: str):
         """Cancel an existing order."""
         return self.client.cancel_order(order_id)
 
     def get_order(self, order_id):
-        raise NotImplementedError
+        item = self.client.get_order(order_id)
+
+        return Order(
+            symbol=item["tradingSymbol"],
+            side=OrderSide(item["transactionType"]),
+            quantity=item["quantity"],
+            order_type=OrderType(item["orderType"]),
+            product=ProductType(item["productType"]),
+            broker_order_id=item["orderId"],
+            status=OrderStatus(item["orderStatus"]),
+        )
 
     def get_orders(self):
-
         response = self.client.get_order_list()
 
         orders = []
 
         for item in response["data"]:
-
             orders.append(
                 Order(
                     symbol=item["tradingSymbol"],
@@ -101,13 +110,11 @@ class DhanBroker(BaseBroker):
         return orders
 
     def get_positions(self):
-
         response = self.client.get_positions()
 
         positions = []
 
         for item in response["data"]:
-
             positions.append(
                 Position(
                     symbol=item["tradingSymbol"],
@@ -121,13 +128,11 @@ class DhanBroker(BaseBroker):
         return positions
 
     def get_holdings(self):
-
         response = self.client.get_holdings()
 
         holdings = []
 
         for item in response["data"]:
-
             holdings.append(
                 Holding(
                     symbol=item["tradingSymbol"],

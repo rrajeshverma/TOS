@@ -20,6 +20,4 @@ class FailoverValidator:
             self.services[name] = False
 
     def summary(self):
-        return {
-            "services": self.services.copy()
-        }
+        return {"services": self.services.copy()}

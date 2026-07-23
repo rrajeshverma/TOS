@@ -9,7 +9,6 @@ class SharpeRatio:
         returns: list[float],
         risk_free_rate: float = 0.0,
     ) -> float:
-
         if len(returns) < 2:
             return 0.0
 

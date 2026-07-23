@@ -3,7 +3,6 @@ from execution.order_idempotency import OrderIdempotency
 
 
 class FakeBroker:
-
     def __init__(self):
         self.calls = 0
 
@@ -17,7 +16,6 @@ class FakeBroker:
 
 
 def test_duplicate_order_not_sent_to_broker():
-
     broker = FakeBroker()
 
     adapter = OrderExecutionAdapter(

@@ -1,5 +1,4 @@
 class AccountRouter:
-
     def __init__(self, broker):
         self.broker = broker
 

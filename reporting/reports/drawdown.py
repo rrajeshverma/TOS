@@ -5,7 +5,6 @@ class Drawdown:
         self,
         equity_curve: list[float],
     ) -> float:
-
         if len(equity_curve) <= 1:
             return 0.0
 
@@ -13,7 +12,6 @@ class Drawdown:
         max_drawdown = 0.0
 
         for equity in equity_curve:
-
             if equity > peak:
                 peak = equity
 

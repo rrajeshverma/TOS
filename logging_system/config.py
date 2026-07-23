@@ -8,7 +8,7 @@ LOG_FILE = LOG_DIRECTORY / "tos.log"
 
 LOG_LEVEL = logging.INFO
 
-LOG_FORMAT = "%(asctime)s | %(levelname)-8s | " "%(name)s | %(message)s"
+LOG_FORMAT = "%(asctime)s | %(levelname)-8s | %(name)s | %(message)s"
 
 DATE_FORMAT = "%Y-%m-%d %H:%M:%S"
 

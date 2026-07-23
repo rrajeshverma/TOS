@@ -34,8 +34,4 @@ class SystemMonitor:
         }
 
     def __repr__(self):
-        return (
-            f"SystemMonitor("
-            f"platform={self.platform}, "
-            f"python={self.python_version})"
-        )
+        return f"SystemMonitor(platform={self.platform}, python={self.python_version})"

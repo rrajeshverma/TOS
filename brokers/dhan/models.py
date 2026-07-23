@@ -8,6 +8,7 @@ between the adapter layer and the rest of the Trading Operating System.
 from __future__ import annotations
 
 from dataclasses import dataclass
+from datetime import datetime
 
 
 @dataclass(frozen=True, slots=True)
@@ -37,9 +38,6 @@ class BrokerAccount:
     client_id: str
     available_margin: float
     utilized_margin: float
-
-
-from datetime import datetime
 
 
 @dataclass(frozen=True, slots=True)

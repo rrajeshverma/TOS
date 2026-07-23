@@ -4,9 +4,7 @@ from execution.order_service import OrderStatus
 
 
 def test_execution_engine_registers_broker_order():
-
     class FakeOrderService:
-
         def __init__(self):
             self.registered = None
             self.status = None
@@ -36,7 +34,6 @@ def test_execution_engine_registers_broker_order():
             status,
         ):
             self.status = status
-
 
     service = FakeOrderService()
 

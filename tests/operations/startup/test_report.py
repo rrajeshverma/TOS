@@ -1,5 +1,3 @@
-import pytest
-
 from operations.startup.report import (
     ValidationIssue,
     ValidationReport,
@@ -34,9 +32,7 @@ def test_validation_report_empty():
 def test_add_issue():
     report = ValidationReport()
 
-    report.add(
-        ValidationIssue("Config")
-    )
+    report.add(ValidationIssue("Config"))
 
     assert len(report.issues) == 1
 

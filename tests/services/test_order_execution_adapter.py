@@ -1,55 +1,126 @@
 """
 =========================================================
 Trading Operating System (TOS)
-Module      : Order Execution Adapter
+Module      : Order Execution Adapter Tests
 Version     : 1.1.0
-Description : Converts and executes orders through broker.
 =========================================================
 """
 
-from __future__ import annotations
+import pytest
 
-from domain.order import Order
+from services.order_execution_adapter import OrderExecutionAdapter
 
 
-class OrderExecutionAdapter:
-    """
-    Converts domain orders and routes execution to broker.
-    """
+def test_to_execution_order_none_raises_value_error():
+    adapter = OrderExecutionAdapter()
 
-    def __init__(
-        self,
-        broker=None,
+    with pytest.raises(ValueError, match="Order cannot be None."):
+        adapter.to_execution_order(None)
+
+
+def test_execute_without_broker_raises_runtime_error():
+    adapter = OrderExecutionAdapter()
+
+    with pytest.raises(
+        RuntimeError,
+        match="Execution service is not configured.",
     ):
-        self.broker = broker
+        adapter.execute({"symbol": "NIFTY"})
 
-    def to_execution_order(
-        self,
-        order: Order,
-    ) -> dict:
 
-        if order is None:
-            raise ValueError(
-                "Order cannot be None."
-            )
+class DummyIdempotency:
+    def __init__(self):
+        self.store = {}
 
-        symbol = order.trade.risk.decision.market.symbol
+    def is_duplicate(self, key):
+        return key in self.store
 
-        return {
-            "symbol": symbol,
-            "side": order.side.value,
-            "quantity": order.quantity,
-            "price": float(order.requested_price),
-        }
+    def get(self, key):
+        return self.store[key]
 
-    def execute(
-        self,
-        order: dict,
-    ) -> dict:
+    def record(self, key, value):
+        self.store[key] = value
 
-        if self.broker is None:
-            raise RuntimeError(
-                "Broker is not configured."
-            )
 
-        return self.broker.place_order(order)
+class DummyOrderService:
+    def place_order(self, order):
+        return {"id": 101, "status": "placed"}
+
+
+class DummyBroker:
+    def __init__(self, connected=True):
+        self.connected = connected
+
+    def is_connected(self):
+        return self.connected
+
+    def place_order(self, order):
+        return {"broker": "DHAN", "status": "placed"}
+
+
+def test_execute_duplicate_returns_cached_result():
+    idem = DummyIdempotency()
+
+    order = {"symbol": "NIFTY"}
+
+    key = str(sorted(order.items()))
+
+    idem.record(key, {"cached": True})
+
+    adapter = OrderExecutionAdapter(
+        idempotency=idem,
+    )
+
+    assert adapter.execute(order) == {"cached": True}
+
+
+def test_execute_uses_order_service():
+    adapter = OrderExecutionAdapter(
+        order_service=DummyOrderService(),
+        idempotency=DummyIdempotency(),
+    )
+
+    result = adapter.execute({"symbol": "NIFTY"})
+
+    assert result["status"] == "placed"
+
+
+def test_execute_broker_not_connected():
+    adapter = OrderExecutionAdapter(
+        broker=DummyBroker(False),
+        idempotency=DummyIdempotency(),
+    )
+
+    with pytest.raises(
+        RuntimeError,
+        match="Broker is not connected.",
+    ):
+        adapter.execute({"symbol": "NIFTY"})
+
+
+def test_execute_broker_success():
+    adapter = OrderExecutionAdapter(
+        broker=DummyBroker(True),
+        idempotency=DummyIdempotency(),
+    )
+
+    result = adapter.execute({"symbol": "NIFTY"})
+
+    assert result["broker"] == "DHAN"
+
+
+def test_execute_records_idempotency():
+    idem = DummyIdempotency()
+
+    adapter = OrderExecutionAdapter(
+        broker=DummyBroker(True),
+        idempotency=idem,
+    )
+
+    order = {"symbol": "NIFTY"}
+
+    adapter.execute(order)
+
+    key = str(sorted(order.items()))
+
+    assert idem.is_duplicate(key)

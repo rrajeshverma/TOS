@@ -31,7 +31,6 @@ class PositionAggregator:
 
         return len(positions)
 
-
     def exposure(
         self,
         positions,
@@ -46,14 +45,11 @@ class PositionAggregator:
         total = Decimal("0")
 
         for position in positions:
-            total += (
-                Decimal(str(position.quantity))
-                *
-                Decimal(str(position.average_price))
+            total += Decimal(str(position.quantity)) * Decimal(
+                str(position.average_price)
             )
 
         return total
-
 
     def unrealized_pnl(
         self,
@@ -70,17 +66,11 @@ class PositionAggregator:
 
         for position in positions:
             total += (
-                (
-                    Decimal(str(position.last_traded_price))
-                    -
-                    Decimal(str(position.average_price))
-                )
-                *
-                Decimal(str(position.quantity))
-            )
+                Decimal(str(position.last_traded_price))
+                - Decimal(str(position.average_price))
+            ) * Decimal(str(position.quantity))
 
         return total
-
 
     def build_snapshot(
         self,
@@ -92,28 +82,16 @@ class PositionAggregator:
         Build portfolio snapshot from active positions.
         """
 
-        unrealized = self.unrealized_pnl(
-            positions
-        )
+        unrealized = self.unrealized_pnl(positions)
 
-        total_pnl = (
-            Decimal(str(realized_pnl))
-            +
-            unrealized
-        )
+        total_pnl = Decimal(str(realized_pnl)) + unrealized
 
-        equity = (
-            Decimal(str(cash))
-            +
-            total_pnl
-        )
+        equity = Decimal(str(cash)) + total_pnl
 
         return PortfolioSnapshot(
             cash=cash,
             equity=equity,
             realized_pnl=realized_pnl,
             unrealized_pnl=unrealized,
-            open_positions=self.position_count(
-                positions
-            ),
+            open_positions=self.position_count(positions),
         )

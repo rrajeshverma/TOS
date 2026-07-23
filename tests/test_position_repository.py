@@ -1,3 +1,5 @@
+from decimal import Decimal
+
 from persistence.position_repository import PositionRepository
 from services.position_manager import PositionManager
 
@@ -155,11 +157,6 @@ def test_update_position():
 
     assert position["quantity"] == 0.02
     assert position["avg_price"] == 64800.0
-
-
-from decimal import Decimal
-
-from services.position_manager import PositionManager
 
 
 def test_realized_pnl():

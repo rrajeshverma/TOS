@@ -20,6 +20,4 @@ class HealthAuditor:
         return all(self.health.values()) if self.health else False
 
     def report(self):
-        return {
-            "health": self.health.copy()
-        }
+        return {"health": self.health.copy()}

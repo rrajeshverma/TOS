@@ -21,8 +21,6 @@ def validate_schema(schema, data):
             raise KeyError(f"Missing required field: {field}")
 
         if not isinstance(data[field], expected_type):
-            raise TypeError(
-                f"Field '{field}' must be of type " f"{expected_type.__name__}"
-            )
+            raise TypeError(f"Field '{field}' must be of type {expected_type.__name__}")
 
     return True

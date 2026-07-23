@@ -6,7 +6,6 @@ from shared.enums import TradeStatus
 
 
 def test_open_position():
-
     manager = PositionManager()
 
     position = manager.open_position(
@@ -22,7 +21,6 @@ def test_open_position():
 
 
 def test_update_price():
-
     manager = PositionManager()
 
     position = manager.open_position(
@@ -40,7 +38,6 @@ def test_update_price():
 
 
 def test_unrealized_pnl():
-
     manager = PositionManager()
 
     position = manager.open_position(
@@ -60,7 +57,6 @@ def test_unrealized_pnl():
 
 
 def test_close_position():
-
     manager = PositionManager()
 
     position = manager.open_position(

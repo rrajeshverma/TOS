@@ -1,3 +1,5 @@
+import pytest
+
 from backtesting.slippage import Slippage
 
 
@@ -25,9 +27,6 @@ def test_sell_slippage():
     result = Slippage(2).apply(trade)
 
     assert result["entry_price"] == 98
-
-
-import pytest
 
 
 def test_unknown_action_raises_value_error():

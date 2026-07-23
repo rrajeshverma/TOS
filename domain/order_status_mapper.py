@@ -24,40 +24,20 @@ class OrderStatusMapper:
     """
 
     BROKER_TO_EXECUTION = {
-        BrokerOrderStatus.PENDING:
-            ExecutionOrderStatus.PENDING,
-
-        BrokerOrderStatus.OPEN:
-            ExecutionOrderStatus.SUBMITTED,
-
-        BrokerOrderStatus.COMPLETE:
-            ExecutionOrderStatus.FILLED,
-
-        BrokerOrderStatus.CANCELLED:
-            ExecutionOrderStatus.CANCELLED,
-
-        BrokerOrderStatus.REJECTED:
-            ExecutionOrderStatus.CANCELLED,
+        BrokerOrderStatus.PENDING: ExecutionOrderStatus.PENDING,
+        BrokerOrderStatus.OPEN: ExecutionOrderStatus.SUBMITTED,
+        BrokerOrderStatus.COMPLETE: ExecutionOrderStatus.FILLED,
+        BrokerOrderStatus.CANCELLED: ExecutionOrderStatus.CANCELLED,
+        BrokerOrderStatus.REJECTED: ExecutionOrderStatus.CANCELLED,
     }
 
     EXECUTION_TO_DOMAIN = {
-        ExecutionOrderStatus.NEW:
-            DomainOrderStatus.CREATED,
-
-        ExecutionOrderStatus.PENDING:
-            DomainOrderStatus.PENDING,
-
-        ExecutionOrderStatus.SUBMITTED:
-            DomainOrderStatus.PENDING,
-
-        ExecutionOrderStatus.PARTIALLY_FILLED:
-            DomainOrderStatus.PENDING,
-
-        ExecutionOrderStatus.FILLED:
-            DomainOrderStatus.EXECUTED,
-
-        ExecutionOrderStatus.CANCELLED:
-            DomainOrderStatus.CANCELLED,
+        ExecutionOrderStatus.NEW: DomainOrderStatus.CREATED,
+        ExecutionOrderStatus.PENDING: DomainOrderStatus.PENDING,
+        ExecutionOrderStatus.SUBMITTED: DomainOrderStatus.PENDING,
+        ExecutionOrderStatus.PARTIALLY_FILLED: DomainOrderStatus.PENDING,
+        ExecutionOrderStatus.FILLED: DomainOrderStatus.EXECUTED,
+        ExecutionOrderStatus.CANCELLED: DomainOrderStatus.CANCELLED,
     }
 
     @classmethod
@@ -69,12 +49,10 @@ class OrderStatusMapper:
         Convert broker status to execution status.
         """
 
-        if status not in cls.BROKER_TO_EXECUTION:
-            raise ValueError(
-                f"Unsupported broker order status: {status}"
-            )
-
-        return cls.BROKER_TO_EXECUTION[status]
+        try:
+            return cls.BROKER_TO_EXECUTION[status]
+        except KeyError as exc:
+            raise ValueError(f"Unsupported broker order status: {status}") from exc
 
     @classmethod
     def execution_to_domain(
@@ -85,9 +63,7 @@ class OrderStatusMapper:
         Convert execution status to domain status.
         """
 
-        if status not in cls.EXECUTION_TO_DOMAIN:
-            raise ValueError(
-                f"Unsupported execution order status: {status}"
-            )
-
-        return cls.EXECUTION_TO_DOMAIN[status]
+        try:
+            return cls.EXECUTION_TO_DOMAIN[status]
+        except KeyError as exc:
+            raise ValueError(f"Unsupported execution order status: {status}") from exc
