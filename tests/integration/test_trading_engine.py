@@ -1,3 +1,7 @@
+from unittest.mock import Mock, call
+
+import pytest
+
 from integration.engine_context import EngineContext
 from integration.trading_engine import TradingEngine
 
@@ -165,3 +169,153 @@ def test_trading_engine_has_context():
     engine = TradingEngine(context)
 
     assert engine.context is context
+
+    def create_context():
+        context = Mock(spec=EngineContext)
+
+        context.market_engine.run.return_value = "market"
+        context.indicator_engine.run.return_value = "indicators"
+        context.strategy_engine.run.return_value = "signal"
+        context.decision_engine.run.return_value = "decision"
+        context.risk_engine.run.return_value = "plan"
+        context.trade_factory.create.return_value = "trade"
+
+        return context
+
+
+    def test_run_returns_trade():
+        context = create_context()
+
+        engine = TradingEngine(context)
+
+        assert engine.run() == "trade"
+
+
+    def test_market_engine_called_once():
+        context = create_context()
+
+        TradingEngine(context).run()
+
+        context.market_engine.run.assert_called_once_with()
+
+
+    def test_indicator_receives_market_data():
+        context = create_context()
+
+        TradingEngine(context).run()
+
+        context.indicator_engine.run.assert_called_once_with("market")
+
+
+    def test_strategy_receives_indicators():
+        context = create_context()
+
+        TradingEngine(context).run()
+
+        context.strategy_engine.run.assert_called_once_with("indicators")
+
+
+    def test_decision_receives_signal():
+        context = create_context()
+
+        TradingEngine(context).run()
+
+        context.decision_engine.run.assert_called_once_with("signal")
+
+
+    def test_risk_receives_decision():
+        context = create_context()
+
+        TradingEngine(context).run()
+
+        context.risk_engine.run.assert_called_once_with("decision")
+
+
+    def test_trade_factory_receives_trade_plan():
+        context = create_context()
+
+        TradingEngine(context).run()
+
+        context.trade_factory.create.assert_called_once_with("plan")
+
+
+    def test_market_exception_propagates():
+        context = create_context()
+
+        context.market_engine.run.side_effect = RuntimeError("market failed")
+
+        with pytest.raises(RuntimeError):
+            TradingEngine(context).run()
+
+
+    def test_indicator_exception_propagates():
+        context = create_context()
+
+        context.indicator_engine.run.side_effect = ValueError()
+
+        with pytest.raises(ValueError):
+            TradingEngine(context).run()
+
+
+    def test_strategy_exception_propagates():
+        context = create_context()
+
+        context.strategy_engine.run.side_effect = RuntimeError()
+
+        with pytest.raises(RuntimeError):
+            TradingEngine(context).run()
+
+
+    def test_decision_exception_propagates():
+        context = create_context()
+
+        context.decision_engine.run.side_effect = RuntimeError()
+
+        with pytest.raises(RuntimeError):
+            TradingEngine(context).run()
+
+
+    def test_risk_exception_propagates():
+        context = create_context()
+
+        context.risk_engine.run.side_effect = RuntimeError()
+
+        with pytest.raises(RuntimeError):
+            TradingEngine(context).run()
+
+
+    def test_trade_factory_exception_propagates():
+        context = create_context()
+
+        context.trade_factory.create.side_effect = RuntimeError()
+
+        with pytest.raises(RuntimeError):
+            TradingEngine(context).run()
+
+
+    def test_trade_factory_called_once():
+        context = create_context()
+
+        TradingEngine(context).run()
+
+        assert context.trade_factory.create.call_count == 1
+
+
+    def test_market_called_before_indicator():
+        context = create_context()
+
+        TradingEngine(context).run()
+
+        assert context.mock_calls.index(call.market_engine.run()) < context.mock_calls.index(
+            call.indicator_engine.run("market")
+        )
+
+
+    def test_indicator_called_before_strategy():
+        context = create_context()
+
+        TradingEngine(context).run()
+
+        assert context.mock_calls.index(
+            call.indicator_engine.run("market")
+        ) < context.mock_calls.index(call.strategy_engine.run("indicators"))

@@ -7,6 +7,9 @@ class ReplayMarketFeed:
         return self._index < len(self._ticks)
 
     def next_tick(self):
+        if not self.has_next():
+            raise StopIteration("Replay feed exhausted")
+
         tick = self._ticks[self._index]
         self._index += 1
         return tick
