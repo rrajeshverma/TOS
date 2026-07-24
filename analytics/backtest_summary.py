@@ -13,6 +13,4 @@ class BacktestSummary:
         self.win_rate = performance.win_rate
         self.profit_factor = statistics.profit_factor
 
-        self.final_capital = (
-            initial_capital + self.net_profit
-        )
+        self.final_capital = initial_capital + self.net_profit

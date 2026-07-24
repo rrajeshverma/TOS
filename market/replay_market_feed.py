@@ -14,6 +14,7 @@ class ReplayMarketFeed:
     def reset(self):
         self._index = 0
 
+
 def test_empty_feed():
     feed = ReplayMarketFeed([])
     assert feed.has_next() is False
