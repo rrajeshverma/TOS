@@ -70,3 +70,17 @@ class StrategyEngine:
         )
 
         return decision
+
+    def decide(
+        self,
+        market,
+        indicators,
+    ) -> Decision:
+        """
+        Generate trading decision from market and indicators.
+        """
+
+        return self._decision_engine.evaluate(
+            market,
+            indicators,
+        )

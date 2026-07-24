@@ -37,6 +37,8 @@ def startup(app: Application) -> Startup:
     LOGGER.info("Initializing services...")
     startup.initialize_services()
 
+    app.services.update(startup.services)
+
     app.start()
 
     LOGGER.info("Application started.")
@@ -84,9 +86,19 @@ def main() -> int:
 
     startup(app)
 
+    from runtime.trading_runtime import TradingRuntime
+
+    trading_runtime = TradingRuntime(
+        app.services,
+    )
+
+    trading_runtime.start()
+
+    import time
+
     try:
         while app.running:
-            pass
+            time.sleep(0.1)
 
     except KeyboardInterrupt:
         graceful_shutdown(app)

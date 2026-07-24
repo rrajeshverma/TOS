@@ -28,6 +28,7 @@ class OrderExecutionAdapter:
         self.broker = broker
         self.order_service = order_service
         self.idempotency = idempotency or OrderIdempotency()
+        self._execution_order = None
 
     def to_execution_order(
         self,
@@ -39,6 +40,7 @@ class OrderExecutionAdapter:
 
         if order is None:
             raise ValueError("Order cannot be None.")
+        self._execution_order = order
 
         symbol = order.trade.risk.decision.market.symbol
 
@@ -63,7 +65,9 @@ class OrderExecutionAdapter:
             return self.idempotency.get(order_key)
 
         if self.order_service is not None:
-            result = self.order_service.place_order(order)
+            result = self.order_service.place_order(
+                self._execution_order
+            )
 
             self.idempotency.record(
                 order_key,
