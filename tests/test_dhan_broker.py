@@ -1,8 +1,6 @@
 from decimal import Decimal
 from unittest.mock import Mock
 
-import pytest
-
 from brokers.dhan_broker import DhanBroker
 from brokers.models import (
     Funds,
@@ -159,8 +157,11 @@ class DummyInstrumentMapper:
 
 
 def test_place_order():
+    client = DummyPlaceOrderClient()
+    client.connected = True
+
     broker = DhanBroker(
-        DummyPlaceOrderClient(),
+        client,
         DummyInstrumentMapper(),
     )
 
@@ -192,25 +193,42 @@ def test_cancel_order():
     assert response["status"] == "success"
 
 
-def test_connect_not_implemented():
-    broker = DhanBroker(Mock(), Mock())
+def test_connect():
+    client = Mock()
 
-    with pytest.raises(NotImplementedError):
-        broker.connect()
+    broker = DhanBroker(
+        client,
+        Mock(),
+    )
+
+    broker.connect()
+
+    client.connect.assert_called_once()
 
 
-def test_disconnect_not_implemented():
-    broker = DhanBroker(Mock(), Mock())
+def test_disconnect():
+    client = Mock()
 
-    with pytest.raises(NotImplementedError):
-        broker.disconnect()
+    broker = DhanBroker(
+        client,
+        Mock(),
+    )
+
+    broker.disconnect()
+
+    client.disconnect.assert_called_once()
 
 
-def test_is_connected_not_implemented():
-    broker = DhanBroker(Mock(), Mock())
+def test_is_connected():
+    client = Mock()
+    client.connected = True
 
-    with pytest.raises(NotImplementedError):
-        broker.is_connected()
+    broker = DhanBroker(
+        client,
+        Mock(),
+    )
+
+    assert broker.is_connected() is True
 
 
 def test_modify_order():

@@ -135,10 +135,21 @@ class DummyMapper:
 
 
 class DummySellClient:
+
+    def __init__(self):
+        self.connected = False
+
+    def connect(self):
+        self.connected = True
+
     def place_order(self, **kwargs):
         assert kwargs["transaction_type"] == "SELL"
 
-        return {"data": {"orderId": "SELL001"}}
+        return {
+            "data": {
+                "orderId": "SELL001",
+            }
+        }
 
 
 def test_place_sell_order():
@@ -147,6 +158,8 @@ def test_place_sell_order():
         DummyMapper(),
     )
 
+    broker.connect()
+    
     order = Order(
         symbol="NIFTY",
         side=OrderSide.SELL,
@@ -184,5 +197,5 @@ def test_place_order_invalid_instrument():
         product=ProductType.INTRADAY,
     )
 
-    with pytest.raises(AttributeError):
+    with pytest.raises(ValueError):
         broker.place_order(order)

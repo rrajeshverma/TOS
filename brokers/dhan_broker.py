@@ -36,16 +36,33 @@ class DhanBroker(BaseBroker):
 
     # Remaining methods
     def connect(self):
-        raise NotImplementedError
+        self.client.connect()
+
 
     def disconnect(self):
-        raise NotImplementedError
+        self.client.disconnect()
+
 
     def is_connected(self):
-        raise NotImplementedError
+        return bool(
+            getattr(
+                self.client,
+                "connected",
+                False,
+            )
+        )
 
     def place_order(self, order):
+        if not self.is_connected():
+            raise RuntimeError(
+                "Dhan broker is not connected."
+            )
         instrument = self.instrument_mapper.get(order.symbol)
+
+        if instrument is None:
+            raise ValueError(
+                f"Instrument not found: {order.symbol}"
+            )
 
         response = self.client.place_order(
             security_id=instrument.security_id,
