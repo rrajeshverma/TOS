@@ -66,11 +66,14 @@ class TradeStatistics:
         return gross_profit / gross_loss
 
     def expectancy(self, trades: list) -> float:
-        average_win = self.average_win(trades)
-        average_loss = self.average_loss(trades)
+        average_win = float(self.average_win(trades))
+        average_loss = float(self.average_loss(trades))
         win_rate = self.win_rate(trades)
 
         win_probability = win_rate / 100.0
         loss_probability = 1.0 - win_probability
 
-        return (average_win * win_probability) - (average_loss * loss_probability)
+        return (
+            (average_win * win_probability)
+            - (average_loss * loss_probability)
+        )
