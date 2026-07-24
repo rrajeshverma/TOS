@@ -177,3 +177,159 @@ def test_closed_position_not_open():
     )
 
     assert not closed.is_open
+
+
+# ---------------------------------------------------------
+# Additional Certification Tests
+# ---------------------------------------------------------
+
+
+def test_open_position_generates_position_id():
+    position = create_position()
+
+    assert position.position_id
+
+
+def test_open_position_sets_opened_at():
+    position = create_position()
+
+    assert isinstance(position.opened_at, datetime)
+
+
+def test_open_position_accepts_none_order():
+    position = PositionManager().open_position(
+        order=None,
+        quantity=10,
+        price=Decimal("100"),
+    )
+
+    assert position.order is None
+    assert position.quantity == 10
+    assert position.status == TradeStatus.OPEN
+
+
+def test_update_price_preserves_position_id():
+    position = create_position()
+
+    updated = PositionManager.update_price(
+        position,
+        Decimal("25100"),
+    )
+
+    assert updated.position_id == position.position_id
+
+
+def test_update_price_preserves_average_price():
+    position = create_position()
+
+    updated = PositionManager.update_price(
+        position,
+        Decimal("25100"),
+    )
+
+    assert updated.average_price == position.average_price
+
+
+def test_update_price_preserves_order_reference():
+    position = create_position()
+
+    updated = PositionManager.update_price(
+        position,
+        Decimal("25100"),
+    )
+
+    assert updated.order == position.order
+
+
+def test_update_price_preserves_opened_at():
+    position = create_position()
+
+    updated = PositionManager.update_price(
+        position,
+        Decimal("25100"),
+    )
+
+    assert updated.opened_at == position.opened_at
+
+
+def test_update_price_preserves_status():
+    position = create_position()
+
+    updated = PositionManager.update_price(
+        position,
+        Decimal("25100"),
+    )
+
+    assert updated.status == position.status
+
+
+def test_update_price_returns_new_instance():
+    position = create_position()
+
+    updated = PositionManager.update_price(
+        position,
+        Decimal("25100"),
+    )
+
+    assert updated is not position
+
+
+def test_close_position_preserves_position_id():
+    position = create_position()
+
+    closed = PositionManager.close_position(
+        position,
+        Decimal("25100"),
+    )
+
+    assert closed.position_id == position.position_id
+
+
+def test_close_position_preserves_order_reference():
+    position = create_position()
+
+    closed = PositionManager.close_position(
+        position,
+        Decimal("25100"),
+    )
+
+    assert closed.order == position.order
+
+
+def test_close_position_preserves_opened_at():
+    position = create_position()
+
+    closed = PositionManager.close_position(
+        position,
+        Decimal("25100"),
+    )
+
+    assert closed.opened_at == position.opened_at
+
+
+def test_close_position_returns_new_instance():
+    position = create_position()
+
+    closed = PositionManager.close_position(
+        position,
+        Decimal("25100"),
+    )
+
+    assert closed is not position
+
+
+def test_is_position_open_true():
+    position = create_position()
+
+    assert PositionManager.is_position_open(position)
+
+
+def test_is_position_open_false():
+    position = create_position()
+
+    closed = PositionManager.close_position(
+        position,
+        Decimal("25100"),
+    )
+
+    assert not PositionManager.is_position_open(closed)

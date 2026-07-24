@@ -44,6 +44,7 @@ def test_reset():
     assert feed.has_next() is True
     assert feed.next_tick()["id"] == 1
 
+
 def test_next_tick_on_empty_feed_raises_stop_iteration():
     feed = ReplayMarketFeed([])
 
