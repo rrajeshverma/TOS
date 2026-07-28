@@ -68,3 +68,62 @@ def test_exit_manager_available_for_failure_exit():
     manager = ExitManager()
 
     assert manager is not None
+
+def test_order_failure_does_not_crash_runtime():
+
+    from execution.execution_engine import ExecutionEngine
+    from execution.execution_request import ExecutionRequest
+
+
+    class FailedOrderService:
+
+        def submit(self, request):
+            raise RuntimeError(
+                "Broker unavailable"
+            )
+
+
+    engine = ExecutionEngine(
+        FailedOrderService()
+    )
+
+    result = engine.execute(
+        ExecutionRequest(
+            symbol="NIFTY",
+            side="BUY",
+            quantity=65,
+        )
+    )
+
+    assert result.success is False
+    assert "Broker unavailable" in result.error
+
+
+def test_market_feed_can_resume_after_failure():
+
+    feed = WebSocketFeed()
+
+    feed.connect()
+
+    assert feed.is_connected() is True
+
+    feed.disconnect()
+
+    assert feed.is_connected() is False
+
+    feed.connect()
+
+    assert feed.is_connected() is True
+
+
+def test_runtime_health_after_recovery():
+
+    status = RuntimeStatus()
+
+    status.start()
+
+    status.stop()
+
+    status.start()
+
+    assert status.is_running is True
