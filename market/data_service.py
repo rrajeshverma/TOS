@@ -7,7 +7,6 @@ a unified interface to the trading system.
 
 from __future__ import annotations
 
-from market.paper_adapter import PaperMarketAdapter
 from market.tick import Tick
 
 
