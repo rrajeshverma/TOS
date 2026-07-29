@@ -20,7 +20,6 @@ Paper Execution
 Journal Update
 """
 
-
 from datetime import datetime
 
 
@@ -36,7 +35,6 @@ class PaperTradingSession:
         executor=None,
         journal=None,
     ) -> None:
-
         self.market_feed = market_feed
         self.strategy = strategy
         self.executor = executor
@@ -46,14 +44,12 @@ class PaperTradingSession:
 
         self.trades = []
 
-
     def start(self) -> None:
         """
         Start paper trading session.
         """
 
         self.running = True
-
 
     def stop(self) -> None:
         """
@@ -62,14 +58,12 @@ class PaperTradingSession:
 
         self.running = False
 
-
     def is_running(self) -> bool:
         """
         Runtime status.
         """
 
         return self.running
-
 
     def process_tick(
         self,
@@ -80,16 +74,12 @@ class PaperTradingSession:
         """
 
         if not self.running:
-            raise RuntimeError(
-                "Paper trading session is not running."
-            )
+            raise RuntimeError("Paper trading session is not running.")
 
         if self.strategy is None:
             return None
 
-        decision = self.strategy.evaluate(
-            tick
-        )
+        decision = self.strategy.evaluate(tick)
 
         if decision is None:
             return None
@@ -97,25 +87,17 @@ class PaperTradingSession:
         if self.executor is None:
             return None
 
-        trade = self.executor.execute(
-            decision
-        )
+        trade = self.executor.execute(decision)
 
         if trade is not None:
-            self.trades.append(
-                trade
-            )
+            self.trades.append(trade)
 
             if self.journal:
-                self.journal.record(
-                    trade
-                )
+                self.journal.record(trade)
 
         return trade
 
-
     def summary(self) -> dict:
-
         return {
             "running": self.running,
             "trades": len(self.trades),

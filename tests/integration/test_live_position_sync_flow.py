@@ -17,7 +17,6 @@ from execution.position_synchronizer import PositionSynchronizer
 
 
 class DummyBroker:
-
     def __init__(self):
         self.positions = [
             {
@@ -32,12 +31,9 @@ class DummyBroker:
 
 
 def test_position_sync_fetches_broker_positions():
-
     broker = DummyBroker()
 
-    synchronizer = PositionSynchronizer(
-        broker
-    )
+    synchronizer = PositionSynchronizer(broker)
 
     positions = synchronizer.sync()
 
@@ -45,12 +41,9 @@ def test_position_sync_fetches_broker_positions():
 
 
 def test_position_sync_contains_symbol():
-
     broker = DummyBroker()
 
-    synchronizer = PositionSynchronizer(
-        broker
-    )
+    synchronizer = PositionSynchronizer(broker)
 
     positions = synchronizer.sync()
 
@@ -58,12 +51,9 @@ def test_position_sync_contains_symbol():
 
 
 def test_position_sync_contains_quantity():
-
     broker = DummyBroker()
 
-    synchronizer = PositionSynchronizer(
-        broker
-    )
+    synchronizer = PositionSynchronizer(broker)
 
     positions = synchronizer.sync()
 
@@ -71,15 +61,11 @@ def test_position_sync_contains_quantity():
 
 
 def test_position_sync_handles_empty_positions():
-
     class EmptyBroker:
-
         def get_positions(self):
             return []
 
-    synchronizer = PositionSynchronizer(
-        EmptyBroker()
-    )
+    synchronizer = PositionSynchronizer(EmptyBroker())
 
     positions = synchronizer.sync()
 

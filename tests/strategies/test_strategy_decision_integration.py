@@ -5,7 +5,6 @@ from strategies.strategy_engine import StrategyEngine
 
 
 def create_engine():
-
     registry = StrategyRegistry()
 
     registry.register(
@@ -13,13 +12,10 @@ def create_engine():
         NiftyORBStrategy(),
     )
 
-    return StrategyEngine(
-        registry
-    )
+    return StrategyEngine(registry)
 
 
 def test_engine_returns_strategy_decision():
-
     engine = create_engine()
 
     decision = engine.execute(
@@ -37,7 +33,6 @@ def test_engine_returns_strategy_decision():
 
 
 def test_decision_contains_strategy_name():
-
     engine = create_engine()
 
     decision = engine.execute(
@@ -48,14 +43,10 @@ def test_decision_contains_strategy_name():
         },
     )
 
-    assert (
-        decision.strategy
-        == "NIFTY_ORB"
-    )
+    assert decision.strategy == "NIFTY_ORB"
 
 
 def test_decision_contains_buy_signal():
-
     engine = create_engine()
 
     decision = engine.execute(
@@ -66,14 +57,10 @@ def test_decision_contains_buy_signal():
         },
     )
 
-    assert (
-        decision.signal
-        == "BUY"
-    )
+    assert decision.signal == "BUY"
 
 
 def test_decision_has_confidence():
-
     engine = create_engine()
 
     decision = engine.execute(
@@ -84,14 +71,10 @@ def test_decision_has_confidence():
         },
     )
 
-    assert (
-        decision.confidence
-        > 0
-    )
+    assert decision.confidence > 0
 
 
 def test_decision_contains_metadata():
-
     engine = create_engine()
 
     decision = engine.execute(
@@ -109,7 +92,6 @@ def test_decision_contains_metadata():
 
 
 def test_unknown_strategy_returns_none():
-
     engine = create_engine()
 
     decision = engine.execute(

@@ -18,7 +18,6 @@ def create_tick():
 
 
 def test_initial_state():
-
     ws = WebSocketClient()
 
     assert ws.is_connected is False
@@ -26,7 +25,6 @@ def test_initial_state():
 
 
 def test_connect():
-
     ws = WebSocketClient()
 
     ws.connect()
@@ -35,7 +33,6 @@ def test_connect():
 
 
 def test_disconnect():
-
     ws = WebSocketClient()
 
     ws.connect()
@@ -45,7 +42,6 @@ def test_disconnect():
 
 
 def test_subscribe_symbol():
-
     ws = WebSocketClient()
 
     ws.subscribe("NIFTY")
@@ -54,7 +50,6 @@ def test_subscribe_symbol():
 
 
 def test_unsubscribe_symbol():
-
     ws = WebSocketClient()
 
     ws.subscribe("NIFTY")
@@ -64,7 +59,6 @@ def test_unsubscribe_symbol():
 
 
 def test_tick_callback():
-
     ws = WebSocketClient()
 
     received = []
@@ -82,14 +76,12 @@ def test_tick_callback():
 
 
 def test_emit_without_callback():
-
     ws = WebSocketClient()
 
     ws.emit_tick(create_tick())
 
 
 def test_reset():
-
     ws = WebSocketClient()
 
     ws.connect()

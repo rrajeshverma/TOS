@@ -26,25 +26,21 @@ class TickAdapter:
         """
 
         if tick is None:
-            raise ValueError(
-                "Tick cannot be None."
-            )
+            raise ValueError("Tick cannot be None.")
 
         market = Market(
-                symbol=tick.symbol,
-                exchange="NSE",
-                timeframe="TICK",
-                open=tick.ltp,
-                high=tick.ltp,
-                low=tick.ltp,
-                close=tick.ltp,
-                volume=tick.volume,
-                timestamp=tick.timestamp,
+            symbol=tick.symbol,
+            exchange="NSE",
+            timeframe="TICK",
+            open=tick.ltp,
+            high=tick.ltp,
+            low=tick.ltp,
+            close=tick.ltp,
+            volume=tick.volume,
+            timestamp=tick.timestamp,
         )
 
-        self._ticks[
-            tick.symbol
-        ] = tick
+        self._ticks[tick.symbol] = tick
 
         return market
 
@@ -56,9 +52,7 @@ class TickAdapter:
         New pipeline alias.
         """
 
-        return self.adapt(
-            tick
-        )
+        return self.adapt(tick)
 
     def last_tick(
         self,
@@ -68,9 +62,7 @@ class TickAdapter:
         Return latest market tick.
         """
 
-        return self._ticks.get(
-            symbol
-        )
+        return self._ticks.get(symbol)
 
     def clear(self) -> None:
         """

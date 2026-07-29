@@ -13,10 +13,8 @@ class LiveMarketAdapter:
     """
 
     def __init__(self) -> None:
-
         self._status = "DISCONNECTED"
         self._subscriptions: set[str] = set()
-
 
     def connect(
         self,
@@ -27,7 +25,6 @@ class LiveMarketAdapter:
 
         self._status = "CONNECTED"
 
-
     def disconnect(
         self,
     ) -> None:
@@ -36,7 +33,6 @@ class LiveMarketAdapter:
         """
 
         self._status = "DISCONNECTED"
-
 
     def status(
         self,
@@ -47,7 +43,6 @@ class LiveMarketAdapter:
 
         return self._status
 
-
     def subscribe(
         self,
         symbol: str,
@@ -57,14 +52,9 @@ class LiveMarketAdapter:
         """
 
         if not symbol:
-            raise ValueError(
-                "Symbol is required"
-            )
+            raise ValueError("Symbol is required")
 
-        self._subscriptions.add(
-            symbol
-        )
-
+        self._subscriptions.add(symbol)
 
     def subscriptions(
         self,
@@ -73,6 +63,4 @@ class LiveMarketAdapter:
         Return subscribed symbols.
         """
 
-        return set(
-            self._subscriptions
-        )
+        return set(self._subscriptions)

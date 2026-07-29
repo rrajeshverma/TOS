@@ -22,20 +22,12 @@ class PortfolioContext:
     available_margin: float
     pnl: float
 
-
     def __post_init__(self) -> None:
-
         if self.cash is None:
-            raise ValueError(
-                "Cash is required"
-            )
+            raise ValueError("Cash is required")
 
         if self.positions is None:
-            raise ValueError(
-                "Positions are required"
-            )
+            raise ValueError("Positions are required")
 
         if self.available_margin < 0:
-            raise ValueError(
-                "Available margin cannot be negative"
-            )
+            raise ValueError("Available margin cannot be negative")

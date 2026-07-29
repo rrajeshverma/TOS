@@ -21,7 +21,6 @@ class DhanClient:
         access_token: str | DhanSession,
         session: DhanSession | None = None,
     ) -> None:
-
         self.client_id = client_id
 
         if isinstance(access_token, DhanSession):
@@ -31,19 +30,13 @@ class DhanClient:
         else:
             self.access_token = access_token
 
-            self.session = (
-                session
-                if session is not None
-                else DhanSession()
-            )
+            self.session = session if session is not None else DhanSession()
 
             # Backward compatibility:
             # Existing code passing access_token
             # is considered authenticated.
             if access_token:
-                self.session.authenticate(
-                    access_token
-                )
+                self.session.authenticate(access_token)
 
         self.connected = False
         self._sdk = None
@@ -60,9 +53,7 @@ class DhanClient:
         Authenticate Dhan session.
         """
 
-        self.session.authenticate(
-            access_token
-        )
+        self.session.authenticate(access_token)
 
         self.access_token = access_token
 
@@ -81,9 +72,7 @@ class DhanClient:
         """
 
         if not self.session.is_authenticated:
-            raise RuntimeError(
-                "Dhan client is not authenticated."
-            )
+            raise RuntimeError("Dhan client is not authenticated.")
 
     # =====================================================
     # Connection
@@ -134,13 +123,9 @@ class DhanClient:
         self._ensure_authenticated()
 
         if self._sdk is None:
-            raise RuntimeError(
-                "Dhan SDK is not configured."
-            )
+            raise RuntimeError("Dhan SDK is not configured.")
 
-        return self._sdk.place_order(
-            **order
-        )
+        return self._sdk.place_order(**order)
 
     def cancel_order(
         self,
@@ -153,13 +138,9 @@ class DhanClient:
         self._ensure_authenticated()
 
         if self._sdk is None:
-            raise RuntimeError(
-                "Dhan SDK is not configured."
-            )
+            raise RuntimeError("Dhan SDK is not configured.")
 
-        return self._sdk.cancel_order(
-            order_id
-        )
+        return self._sdk.cancel_order(order_id)
 
     def modify_order(
         self,
@@ -173,9 +154,7 @@ class DhanClient:
         self._ensure_authenticated()
 
         if self._sdk is None:
-            raise RuntimeError(
-                "Dhan SDK is not configured."
-            )
+            raise RuntimeError("Dhan SDK is not configured.")
 
         return self._sdk.modify_order(
             order_id,
@@ -193,13 +172,9 @@ class DhanClient:
         self._ensure_authenticated()
 
         if self._sdk is None:
-            raise RuntimeError(
-                "Dhan SDK is not configured."
-            )
+            raise RuntimeError("Dhan SDK is not configured.")
 
-        return self._sdk.get_order(
-            order_id
-        )
+        return self._sdk.get_order(order_id)
 
     # =====================================================
     # Portfolio
@@ -213,9 +188,7 @@ class DhanClient:
         self._ensure_authenticated()
 
         if self._sdk is None:
-            raise RuntimeError(
-                "Dhan SDK is not configured."
-            )
+            raise RuntimeError("Dhan SDK is not configured.")
 
         return self._sdk.get_positions()
 
@@ -227,9 +200,7 @@ class DhanClient:
         self._ensure_authenticated()
 
         if self._sdk is None:
-            raise RuntimeError(
-                "Dhan SDK is not configured."
-            )
+            raise RuntimeError("Dhan SDK is not configured.")
 
         return self._sdk.get_holdings()
 
@@ -241,8 +212,6 @@ class DhanClient:
         self._ensure_authenticated()
 
         if self._sdk is None:
-            raise RuntimeError(
-                "Dhan SDK is not configured."
-            )
+            raise RuntimeError("Dhan SDK is not configured.")
 
         return self._sdk.get_funds()

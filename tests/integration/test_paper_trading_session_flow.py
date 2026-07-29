@@ -30,7 +30,6 @@ from datetime import datetime
 
 
 class PaperBroker:
-
     def __init__(self):
         self.orders = []
 
@@ -47,7 +46,6 @@ class PaperBroker:
 
 
 class PaperPositionManager:
-
     def __init__(self):
         self.positions = []
 
@@ -64,7 +62,6 @@ class PaperPositionManager:
 
 
 class PaperJournal:
-
     def __init__(self):
         self.records = []
 
@@ -72,13 +69,10 @@ class PaperJournal:
         self,
         trade,
     ):
-        self.records.append(
-            trade
-        )
+        self.records.append(trade)
 
 
 def create_market_tick():
-
     return {
         "symbol": "NIFTY",
         "price": 25000,
@@ -88,7 +82,6 @@ def create_market_tick():
 
 
 def create_paper_order():
-
     return {
         "symbol": "NIFTY",
         "side": "BUY",
@@ -98,7 +91,6 @@ def create_paper_order():
 
 
 def test_paper_session_receives_market_tick():
-
     tick = create_market_tick()
 
     assert tick["symbol"] == "NIFTY"
@@ -106,37 +98,25 @@ def test_paper_session_receives_market_tick():
 
 
 def test_paper_order_execution():
-
     broker = PaperBroker()
 
-    response = broker.place_order(
-        create_paper_order()
-    )
+    response = broker.place_order(create_paper_order())
 
     assert response["status"] == "FILLED"
     assert response["order_id"] == "PAPER001"
 
 
 def test_paper_trade_updates_position():
-
     manager = PaperPositionManager()
 
-    manager.update(
-        create_paper_order()
-    )
+    manager.update(create_paper_order())
 
-    assert len(
-        manager.positions
-    ) == 1
+    assert len(manager.positions) == 1
 
-    assert (
-        manager.positions[0]["quantity"]
-        == 65
-    )
+    assert manager.positions[0]["quantity"] == 65
 
 
 def test_paper_trade_written_to_journal():
-
     journal = PaperJournal()
 
     journal.record(
@@ -147,33 +127,23 @@ def test_paper_trade_written_to_journal():
         }
     )
 
-    assert len(
-        journal.records
-    ) == 1
+    assert len(journal.records) == 1
 
-    assert (
-        journal.records[0]["pnl"]
-        == 6500
-    )
+    assert journal.records[0]["pnl"] == 6500
 
 
 def test_complete_paper_trading_session():
-
     broker = PaperBroker()
     position = PaperPositionManager()
     journal = PaperJournal()
 
     order = create_paper_order()
 
-    result = broker.place_order(
-        order
-    )
+    result = broker.place_order(order)
 
     assert result["status"] == "FILLED"
 
-    position.update(
-        order
-    )
+    position.update(order)
 
     journal.record(
         {

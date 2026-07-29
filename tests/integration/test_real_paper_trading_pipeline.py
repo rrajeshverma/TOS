@@ -17,7 +17,6 @@ from engines.risk_engine import RiskEngine
 
 
 def create_market():
-
     return Market(
         symbol="NIFTY",
         exchange="NSE",
@@ -32,7 +31,6 @@ def create_market():
 
 
 def create_indicators():
-
     return IndicatorSet(
         ema_high=25000,
         ema_low=24900,
@@ -43,36 +41,25 @@ def create_indicators():
 
 
 class DummyPaperExecutor:
-
     def __init__(self):
-
         self.executed = []
-
 
     def execute(
         self,
         trade,
     ):
-
-        self.executed.append(
-            trade
-        )
+        self.executed.append(trade)
 
         return trade
 
 
 def test_market_object_reaches_strategy():
-
     market = create_market()
 
-    assert (
-        market.symbol
-        == "NIFTY"
-    )
+    assert market.symbol == "NIFTY"
 
 
 def test_decision_engine_generates_trade_signal():
-
     market = create_market()
 
     indicators = create_indicators()
@@ -86,7 +73,6 @@ def test_decision_engine_generates_trade_signal():
 
 
 def test_risk_engine_accepts_trade_decision():
-
     market = create_market()
 
     indicators = create_indicators()
@@ -110,7 +96,6 @@ def test_risk_engine_accepts_trade_decision():
 
 
 def test_trade_pipeline_reaches_executor():
-
     executor = DummyPaperExecutor()
 
     trade = {
@@ -119,19 +104,14 @@ def test_trade_pipeline_reaches_executor():
         "quantity": 65,
     }
 
-    result = executor.execute(
-        trade
-    )
+    result = executor.execute(trade)
 
     assert result["symbol"] == "NIFTY"
 
-    assert len(
-        executor.executed
-    ) == 1
+    assert len(executor.executed) == 1
 
 
 def test_complete_paper_pipeline():
-
     market = create_market()
 
     indicators = create_indicators()
@@ -153,7 +133,4 @@ def test_complete_paper_pipeline():
         }
     )
 
-    assert (
-        trade["quantity"]
-        == 65
-    )
+    assert trade["quantity"] == 65

@@ -6,6 +6,7 @@ Version     : 1.0.0
 Description : Executes position exit lifecycle.
 =========================================================
 """
+
 from __future__ import annotations
 
 from dataclasses import replace
@@ -29,21 +30,11 @@ class ExitService:
         position_manager: PositionManager | None = None,
         trade_journal: TradeJournal | None = None,
     ) -> None:
+        self.exit_manager = exit_manager or ExitManager()
 
-        self.exit_manager = (
-            exit_manager
-            or ExitManager()
-        )
+        self.position_manager = position_manager or PositionManager()
 
-        self.position_manager = (
-            position_manager
-            or PositionManager()
-        )
-
-        self.trade_journal = (
-            trade_journal
-            or TradeJournal()
-        )
+        self.trade_journal = trade_journal or TradeJournal()
 
     def evaluate(
         self,
@@ -68,18 +59,14 @@ class ExitService:
                 "position": position,
             }
 
-        closed_position = (
-            self.position_manager.close_position(
-                position,
-                current_price,
-            )
+        closed_position = self.position_manager.close_position(
+            position,
+            current_price,
         )
 
         trade = position.order.trade
 
-        pnl = (
-            current_price - trade.entry_price
-        ) * trade.quantity
+        pnl = (current_price - trade.entry_price) * trade.quantity
 
         closed_trade = replace(
             trade,

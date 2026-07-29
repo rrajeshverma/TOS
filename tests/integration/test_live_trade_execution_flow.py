@@ -34,7 +34,6 @@ from shared.enums import Signal
 
 
 def create_market():
-
     return Market(
         symbol="NIFTY",
         exchange="NSE",
@@ -49,7 +48,6 @@ def create_market():
 
 
 def create_buy_indicators():
-
     return IndicatorSet(
         ema_high=25000,
         ema_low=24900,
@@ -60,7 +58,6 @@ def create_buy_indicators():
 
 
 def test_live_signal_creates_buy_decision():
-
     market = create_market()
 
     indicators = create_buy_indicators()
@@ -75,7 +72,6 @@ def test_live_signal_creates_buy_decision():
 
 
 def test_risk_engine_accepts_live_trade():
-
     market = create_market()
 
     indicators = create_buy_indicators()
@@ -97,7 +93,6 @@ def test_risk_engine_accepts_live_trade():
 
 
 def test_trade_factory_creates_trade():
-
     market = create_market()
 
     indicators = create_buy_indicators()
@@ -123,7 +118,6 @@ def test_trade_factory_creates_trade():
 
 
 def test_execution_payload_contains_order_details():
-
     market = create_market()
 
     indicators = create_buy_indicators()

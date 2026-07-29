@@ -68,9 +68,7 @@ class MarketRuntime:
         if not self.running:
             return
 
-        self._latest_market = self.tick_adapter.adapt(
-            tick
-        )
+        self._latest_market = self.tick_adapter.adapt(tick)
 
     def get_market(self):
         """

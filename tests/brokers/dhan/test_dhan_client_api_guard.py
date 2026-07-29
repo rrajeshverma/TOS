@@ -10,7 +10,6 @@ from brokers.dhan.session import DhanSession
 
 
 class DummySDK:
-
     def __init__(self):
         self.called = False
 
@@ -20,7 +19,6 @@ class DummySDK:
 
 
 def create_client():
-
     session = DhanSession()
 
     client = DhanClient(
@@ -35,7 +33,6 @@ def create_client():
 
 
 def test_api_call_requires_authentication():
-
     client = create_client()
 
     with pytest.raises(RuntimeError):
@@ -43,12 +40,9 @@ def test_api_call_requires_authentication():
 
 
 def test_authenticated_api_call_reaches_sdk():
-
     client = create_client()
 
-    client.authenticate(
-        "TOKEN001"
-    )
+    client.authenticate("TOKEN001")
 
     result = client.get_positions()
 
@@ -56,12 +50,9 @@ def test_authenticated_api_call_reaches_sdk():
 
 
 def test_logout_blocks_future_api_calls():
-
     client = create_client()
 
-    client.authenticate(
-        "TOKEN001"
-    )
+    client.authenticate("TOKEN001")
 
     client.logout()
 
@@ -70,7 +61,6 @@ def test_logout_blocks_future_api_calls():
 
 
 def test_sdk_missing_raises_error():
-
     session = DhanSession()
 
     client = DhanClient(
@@ -79,9 +69,7 @@ def test_sdk_missing_raises_error():
         session,
     )
 
-    client.authenticate(
-        "TOKEN001"
-    )
+    client.authenticate("TOKEN001")
 
     with pytest.raises(RuntimeError):
         client.get_positions()

@@ -333,3 +333,109 @@ def test_is_position_open_false():
     )
 
     assert not PositionManager.is_position_open(closed)
+
+
+def test_unrealized_pnl_zero():
+    position = create_position()
+
+    assert PositionManager.unrealized_pnl(position) == Decimal("0")
+
+
+def test_unrealized_pnl_loss():
+    position = create_position()
+
+    updated = PositionManager.update_price(
+        position,
+        Decimal("24900"),
+    )
+
+    assert PositionManager.unrealized_pnl(updated) == Decimal("-6500")
+
+
+def test_realized_pnl_zero():
+    pnl = PositionManager.realized_pnl(
+        Decimal("25000"),
+        Decimal("25000"),
+        65,
+    )
+
+    assert pnl == Decimal("0")
+
+
+def test_realized_pnl_loss():
+    pnl = PositionManager.realized_pnl(
+        Decimal("25000"),
+        Decimal("24900"),
+        65,
+    )
+
+    assert pnl == Decimal("-6500")
+
+
+def test_close_position_preserves_quantity():
+    position = create_position()
+
+    closed = PositionManager.close_position(
+        position,
+        Decimal("25100"),
+    )
+
+    assert closed.quantity == position.quantity
+
+
+def test_close_position_preserves_average_price():
+    position = create_position()
+
+    closed = PositionManager.close_position(
+        position,
+        Decimal("25100"),
+    )
+
+    assert closed.average_price == position.average_price
+
+
+def test_close_position_updates_last_traded_price():
+    position = create_position()
+
+    closed = PositionManager.close_position(
+        position,
+        Decimal("25225"),
+    )
+
+    assert closed.last_traded_price == Decimal("25225")
+
+
+def test_update_price_preserves_closed_at():
+    position = create_position()
+
+    closed = PositionManager.close_position(
+        position,
+        Decimal("25100"),
+    )
+
+    updated = PositionManager.update_price(
+        closed,
+        Decimal("25150"),
+    )
+
+    assert updated.closed_at == closed.closed_at
+
+
+def test_open_position_initializes_last_price():
+    position = PositionManager().open_position(
+        order=None,
+        quantity=5,
+        price=Decimal("100"),
+    )
+
+    assert position.last_traded_price == Decimal("100")
+
+
+def test_open_position_initializes_average_price():
+    position = PositionManager().open_position(
+        order=None,
+        quantity=5,
+        price=Decimal("100"),
+    )
+
+    assert position.average_price == Decimal("100")

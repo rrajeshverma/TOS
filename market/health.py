@@ -16,14 +16,10 @@ class MarketDataHealth:
     Market data health tracker.
     """
 
-    STALE_THRESHOLD = timedelta(
-        minutes=5
-    )
+    STALE_THRESHOLD = timedelta(minutes=5)
 
     def __init__(self) -> None:
-
         self._last_tick_time: datetime | None = None
-
 
     def record_tick(
         self,
@@ -34,14 +30,9 @@ class MarketDataHealth:
         """
 
         if tick is None:
-            raise ValueError(
-                "Tick cannot be None"
-            )
+            raise ValueError("Tick cannot be None")
 
-        self._last_tick_time = (
-            tick.timestamp
-        )
-
+        self._last_tick_time = tick.timestamp
 
     def last_tick_time(
         self,
@@ -51,7 +42,6 @@ class MarketDataHealth:
         """
 
         return self._last_tick_time
-
 
     def is_healthy(
         self,
@@ -65,7 +55,6 @@ class MarketDataHealth:
 
         return not self.is_feed_stale()
 
-
     def is_feed_stale(
         self,
     ) -> bool:
@@ -76,12 +65,7 @@ class MarketDataHealth:
         if self._last_tick_time is None:
             return True
 
-        return (
-            datetime.now()
-            - self._last_tick_time
-            > self.STALE_THRESHOLD
-        )
-
+        return datetime.now() - self._last_tick_time > self.STALE_THRESHOLD
 
     def recovery_required(
         self,

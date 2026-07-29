@@ -14,31 +14,19 @@ class ExposureLimitGuard:
         self,
         max_exposure_percentage: float = 100,
     ) -> None:
-
-        self.max_exposure_percentage = (
-            max_exposure_percentage
-        )
-
+        self.max_exposure_percentage = max_exposure_percentage
 
     def check(
         self,
         exposure: float,
         capital: float,
     ) -> dict:
-
         if capital <= 0:
-            raise ValueError(
-                "Capital must be positive"
-            )
+            raise ValueError("Capital must be positive")
 
-        exposure_percentage = (
-            exposure / capital
-        ) * 100
+        exposure_percentage = (exposure / capital) * 100
 
-        approved = (
-            exposure_percentage
-            <= self.max_exposure_percentage
-        )
+        approved = exposure_percentage <= self.max_exposure_percentage
 
         return {
             "approved": approved,

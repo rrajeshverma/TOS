@@ -20,25 +20,17 @@ class DummyAuthClient:
         pin,
         totp_code,
     ):
-        return {
-            "access_token": "ACCESS_TOKEN_123"
-        }
+        return {"access_token": "ACCESS_TOKEN_123"}
 
 
 def test_auth_provider_initialization():
-
-    provider = DhanAuthProvider(
-        DummyAuthClient()
-    )
+    provider = DhanAuthProvider(DummyAuthClient())
 
     assert provider is not None
 
 
 def test_authenticate_with_totp_returns_token():
-
-    provider = DhanAuthProvider(
-        DummyAuthClient()
-    )
+    provider = DhanAuthProvider(DummyAuthClient())
 
     token = provider.authenticate(
         client_id="CLIENT001",
@@ -50,7 +42,6 @@ def test_authenticate_with_totp_returns_token():
 
 
 def test_auth_provider_updates_session():
-
     session = DhanSession()
 
     provider = DhanAuthProvider(
@@ -69,22 +60,16 @@ def test_auth_provider_updates_session():
 
 
 def test_authentication_failure():
-
     class FailedAuthClient:
-
         def authenticate(
             self,
             client_id,
             pin,
             totp_code,
         ):
-            raise RuntimeError(
-                "Authentication failed"
-            )
+            raise RuntimeError("Authentication failed")
 
-    provider = DhanAuthProvider(
-        FailedAuthClient()
-    )
+    provider = DhanAuthProvider(FailedAuthClient())
 
     with pytest.raises(RuntimeError):
         provider.authenticate(

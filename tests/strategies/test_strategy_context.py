@@ -2,7 +2,6 @@ from strategies.context import StrategyContext
 
 
 def test_context_can_be_created():
-
     context = StrategyContext(
         market="MARKET",
         indicators="INDICATORS",
@@ -19,7 +18,6 @@ def test_context_can_be_created():
 
 
 def test_context_is_immutable():
-
     context = StrategyContext(
         market="MARKET",
         indicators="INDICATORS",
@@ -36,7 +34,6 @@ def test_context_is_immutable():
 
 
 def test_context_requires_market():
-
     try:
         StrategyContext(
             market=None,
@@ -52,7 +49,6 @@ def test_context_requires_market():
 
 
 def test_context_requires_indicators():
-
     try:
         StrategyContext(
             market="MARKET",
@@ -68,7 +64,6 @@ def test_context_requires_indicators():
 
 
 def test_context_requires_positions():
-
     try:
         StrategyContext(
             market="MARKET",
@@ -84,7 +79,6 @@ def test_context_requires_positions():
 
 
 def test_context_requires_account():
-
     try:
         StrategyContext(
             market="MARKET",

@@ -12,7 +12,6 @@ class BrokerConfirmationValidator:
     Validates broker order acknowledgement.
     """
 
-
     def is_confirmed(
         self,
         response,
@@ -24,25 +23,14 @@ class BrokerConfirmationValidator:
         if response is None:
             return False
 
-
         if not isinstance(
             response,
             dict,
         ):
             return False
 
+        status = response.get("status")
 
-        status = response.get(
-            "status"
-        )
+        order_id = response.get("orderId")
 
-
-        order_id = response.get(
-            "orderId"
-        )
-
-
-        return (
-            status == "success"
-            and order_id is not None
-        )
+        return status == "success" and order_id is not None

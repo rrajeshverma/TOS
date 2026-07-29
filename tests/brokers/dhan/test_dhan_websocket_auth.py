@@ -39,7 +39,6 @@ class DummyWebSocketTransport:
 
 
 def create_websocket_client():
-
     session = DhanSession()
 
     transport = DummyWebSocketTransport()
@@ -53,7 +52,6 @@ def create_websocket_client():
 
 
 def test_websocket_requires_authentication():
-
     client, _, _ = create_websocket_client()
 
     with pytest.raises(RuntimeError):
@@ -61,12 +59,9 @@ def test_websocket_requires_authentication():
 
 
 def test_websocket_authentication():
-
     client, session, transport = create_websocket_client()
 
-    session.authenticate(
-        "ACCESS_TOKEN"
-    )
+    session.authenticate("ACCESS_TOKEN")
 
     client.connect()
 
@@ -75,12 +70,9 @@ def test_websocket_authentication():
 
 
 def test_websocket_disconnect():
-
     client, session, _ = create_websocket_client()
 
-    session.authenticate(
-        "ACCESS_TOKEN"
-    )
+    session.authenticate("ACCESS_TOKEN")
 
     client.connect()
 
@@ -90,17 +82,12 @@ def test_websocket_disconnect():
 
 
 def test_websocket_subscription_after_authentication():
-
     client, session, transport = create_websocket_client()
 
-    session.authenticate(
-        "ACCESS_TOKEN"
-    )
+    session.authenticate("ACCESS_TOKEN")
 
     client.connect()
 
-    client.subscribe(
-        "NIFTY"
-    )
+    client.subscribe("NIFTY")
 
     assert "NIFTY" in transport.subscriptions

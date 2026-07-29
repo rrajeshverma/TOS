@@ -13,7 +13,6 @@ class MetricsCollector:
     """
 
     def __init__(self) -> None:
-
         self._metrics = {
             "orders": 0,
             "successful_orders": 0,
@@ -21,7 +20,6 @@ class MetricsCollector:
             "risk_blocks": 0,
             "recoveries": 0,
         }
-
 
     def increment(
         self,
@@ -32,14 +30,9 @@ class MetricsCollector:
         """
 
         if metric not in self._metrics:
-            raise ValueError(
-                f"Unknown metric: {metric}"
-            )
+            raise ValueError(f"Unknown metric: {metric}")
 
-        self._metrics[
-            metric
-        ] += 1
-
+        self._metrics[metric] += 1
 
     def get(
         self,
@@ -54,7 +47,6 @@ class MetricsCollector:
             0,
         )
 
-
     def snapshot(
         self,
     ) -> dict:
@@ -62,10 +54,7 @@ class MetricsCollector:
         Return metrics snapshot.
         """
 
-        return dict(
-            self._metrics
-        )
-
+        return dict(self._metrics)
 
     def reset(
         self,
@@ -75,5 +64,4 @@ class MetricsCollector:
         """
 
         for key in self._metrics:
-
             self._metrics[key] = 0

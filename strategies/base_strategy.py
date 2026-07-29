@@ -16,22 +16,16 @@ class BaseStrategy:
     """
 
     def name(self):
-        raise NotImplementedError(
-            "Strategy name must be implemented"
-        )
+        raise NotImplementedError("Strategy name must be implemented")
 
     def analyze(
         self,
         market,
     ):
-        raise NotImplementedError(
-            "Strategy analyze must be implemented"
-        )
+        raise NotImplementedError("Strategy analyze must be implemented")
 
     def generate_signal(
         self,
         market,
     ):
-        raise NotImplementedError(
-            "Strategy signal generation must be implemented"
-        )
+        raise NotImplementedError("Strategy signal generation must be implemented")

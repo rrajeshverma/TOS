@@ -25,7 +25,6 @@ class DummyTransport:
 
 
 def test_client_initial_state():
-
     session = DhanSession()
     transport = DummyTransport()
 
@@ -38,7 +37,6 @@ def test_client_initial_state():
 
 
 def test_client_authentication():
-
     session = DhanSession()
     transport = DummyTransport()
 
@@ -47,16 +45,13 @@ def test_client_authentication():
         session,
     )
 
-    client.authenticate(
-        "TOKEN123"
-    )
+    client.authenticate("TOKEN123")
 
     assert session.is_authenticated is True
     assert session.access_token == "TOKEN123"
 
 
 def test_client_rejects_api_without_authentication():
-
     session = DhanSession()
     transport = DummyTransport()
 
@@ -70,7 +65,6 @@ def test_client_rejects_api_without_authentication():
 
 
 def test_client_logout_clears_session():
-
     session = DhanSession()
     transport = DummyTransport()
 
@@ -79,9 +73,7 @@ def test_client_logout_clears_session():
         session,
     )
 
-    client.authenticate(
-        "TOKEN123"
-    )
+    client.authenticate("TOKEN123")
 
     client.logout()
 

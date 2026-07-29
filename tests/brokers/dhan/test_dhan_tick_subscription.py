@@ -38,12 +38,9 @@ class DummyTickTransport:
 
 
 def create_client():
-
     session = DhanSession()
 
-    session.authenticate(
-        "ACCESS_TOKEN"
-    )
+    session.authenticate("ACCESS_TOKEN")
 
     transport = DummyTickTransport()
 
@@ -56,13 +53,10 @@ def create_client():
 
 
 def test_tick_subscription_requires_connection():
-
     client, _ = create_client()
 
     try:
-        client.subscribe(
-            "NIFTY"
-        )
+        client.subscribe("NIFTY")
     except RuntimeError:
         assert True
     else:
@@ -70,20 +64,16 @@ def test_tick_subscription_requires_connection():
 
 
 def test_subscribe_nifty_after_connection():
-
     client, transport = create_client()
 
     client.connect()
 
-    client.subscribe(
-        "NIFTY"
-    )
+    client.subscribe("NIFTY")
 
     assert "NIFTY" in transport.subscribed
 
 
 def test_multiple_symbol_subscription():
-
     client, transport = create_client()
 
     client.connect()
@@ -96,14 +86,11 @@ def test_multiple_symbol_subscription():
 
 
 def test_tick_callback_receives_market_tick():
-
     client, _ = create_client()
 
     received = []
 
-    client.register_tick_callback(
-        lambda tick: received.append(tick)
-    )
+    client.register_tick_callback(lambda tick: received.append(tick))
 
     tick = BrokerTick(
         symbol="NIFTY",
@@ -112,8 +99,6 @@ def test_tick_callback_receives_market_tick():
         timestamp=None,
     )
 
-    client.emit_tick(
-        tick
-    )
+    client.emit_tick(tick)
 
     assert received[0].symbol == "NIFTY"

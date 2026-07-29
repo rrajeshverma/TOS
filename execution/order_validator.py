@@ -12,7 +12,6 @@ class OrderValidator:
     Validates trading order requests.
     """
 
-
     def validate(
         self,
         order,
@@ -24,13 +23,11 @@ class OrderValidator:
         if order is None:
             return False
 
-
         if not hasattr(
             order,
             "symbol",
         ):
             return False
-
 
         if not hasattr(
             order,
@@ -38,9 +35,7 @@ class OrderValidator:
         ):
             return False
 
-
         if order.quantity <= 0:
             return False
-
 
         return True

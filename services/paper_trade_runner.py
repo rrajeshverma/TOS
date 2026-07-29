@@ -39,7 +39,6 @@ class PaperTradeRunner:
         self.adapter = order_execution_adapter
 
     def run(self):
-
         market = Market(
             symbol="NIFTY",
             exchange="NSE",

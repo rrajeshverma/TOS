@@ -25,7 +25,6 @@ class DummyOrder:
 
 
 def test_order_can_be_registered():
-
     registry = OrderRegistry()
 
     order = DummyOrder()
@@ -35,13 +34,10 @@ def test_order_can_be_registered():
         order,
     )
 
-    assert registry.exists(
-        "ORDER001"
-    )
+    assert registry.exists("ORDER001")
 
 
 def test_registered_order_can_be_retrieved():
-
     registry = OrderRegistry()
 
     order = DummyOrder()
@@ -51,15 +47,12 @@ def test_registered_order_can_be_retrieved():
         order,
     )
 
-    stored = registry.get(
-        "ORDER001"
-    )
+    stored = registry.get("ORDER001")
 
     assert stored == order
 
 
 def test_duplicate_order_is_rejected():
-
     registry = OrderRegistry()
 
     order = DummyOrder()
@@ -83,7 +76,6 @@ def test_duplicate_order_is_rejected():
 
 
 def test_order_can_be_removed():
-
     registry = OrderRegistry()
 
     registry.register(
@@ -91,17 +83,12 @@ def test_order_can_be_removed():
         DummyOrder(),
     )
 
-    registry.remove(
-        "ORDER001"
-    )
+    registry.remove("ORDER001")
 
-    assert not registry.exists(
-        "ORDER001"
-    )
+    assert not registry.exists("ORDER001")
 
 
 def test_registry_clear():
-
     registry = OrderRegistry()
 
     registry.register(

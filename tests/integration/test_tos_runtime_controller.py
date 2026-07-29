@@ -21,9 +21,7 @@ from monitoring.runtime_status import RuntimeStatus
 
 
 class DummyConfig:
-
     def load(self):
-
         return {
             "mode": "PAPER",
             "symbol": "NIFTY",
@@ -31,7 +29,6 @@ class DummyConfig:
 
 
 class DummyMarketFeed:
-
     def __init__(self):
         self.running = False
 
@@ -46,7 +43,6 @@ class DummyMarketFeed:
 
 
 class DummyStrategy:
-
     def __init__(self):
         self.started = False
 
@@ -58,7 +54,6 @@ class DummyStrategy:
 
 
 class TosRuntimeController:
-
     def __init__(
         self,
         config,
@@ -72,7 +67,6 @@ class TosRuntimeController:
         self.status = status
 
     def start(self):
-
         self.config.load()
 
         self.feed.start()
@@ -82,7 +76,6 @@ class TosRuntimeController:
         self.status.start()
 
     def stop(self):
-
         self.feed.stop()
 
         self.strategy.stop()
@@ -91,7 +84,6 @@ class TosRuntimeController:
 
 
 def create_runtime():
-
     return TosRuntimeController(
         DummyConfig(),
         DummyMarketFeed(),
@@ -101,7 +93,6 @@ def create_runtime():
 
 
 def test_runtime_starts_successfully():
-
     runtime = create_runtime()
 
     runtime.start()
@@ -110,7 +101,6 @@ def test_runtime_starts_successfully():
 
 
 def test_market_feed_starts_with_runtime():
-
     runtime = create_runtime()
 
     runtime.start()
@@ -119,7 +109,6 @@ def test_market_feed_starts_with_runtime():
 
 
 def test_strategy_starts_with_runtime():
-
     runtime = create_runtime()
 
     runtime.start()
@@ -128,7 +117,6 @@ def test_strategy_starts_with_runtime():
 
 
 def test_runtime_shutdown():
-
     runtime = create_runtime()
 
     runtime.start()
@@ -139,7 +127,6 @@ def test_runtime_shutdown():
 
 
 def test_runtime_restart_cycle():
-
     runtime = create_runtime()
 
     runtime.start()

@@ -19,15 +19,11 @@ class MarketDataService:
         self,
         adapter,
     ) -> None:
-
         if adapter is None:
-            raise ValueError(
-                "Market adapter is required"
-            )
+            raise ValueError("Market adapter is required")
 
         self._adapter = adapter
         self._status = "STOPPED"
-
 
     def start(
         self,
@@ -38,7 +34,6 @@ class MarketDataService:
 
         self._status = "RUNNING"
 
-
     def stop(
         self,
     ) -> None:
@@ -47,7 +42,6 @@ class MarketDataService:
         """
 
         self._status = "STOPPED"
-
 
     def health(
         self,
@@ -58,7 +52,6 @@ class MarketDataService:
 
         return self._status
 
-
     def publish_tick(
         self,
         tick: Tick,
@@ -67,10 +60,7 @@ class MarketDataService:
         Publish tick through adapter.
         """
 
-        return self._adapter.publish_tick(
-            tick
-        )
-
+        return self._adapter.publish_tick(tick)
 
     def get_latest_tick(
         self,
@@ -82,10 +72,7 @@ class MarketDataService:
 
         last_tick = self._adapter.last_tick()
 
-        if (
-            last_tick
-            and last_tick.symbol == symbol
-        ):
+        if last_tick and last_tick.symbol == symbol:
             return last_tick
 
         return None

@@ -86,3 +86,28 @@ def test_duplicate_status_update_does_not_publish_event():
     service.update_status(order_id, OrderStatus.SUBMITTED)
 
     assert dispatcher.publish.call_count == 1
+
+
+def test_update_status_rejects_invalid_transition():
+    service = OrderService()
+
+    order_id = service.submit(
+        {
+            "symbol": "NIFTY",
+            "quantity": 65,
+        }
+    )
+
+    service.update_status(
+        order_id,
+        OrderStatus.FILLED,
+    )
+
+    with pytest.raises(
+        ValueError,
+        match="Invalid status transition: FILLED -> CANCELLED",
+    ):
+        service.update_status(
+            order_id,
+            OrderStatus.CANCELLED,
+        )

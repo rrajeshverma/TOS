@@ -13,9 +13,7 @@ class DependencyChecker:
     """
 
     def __init__(self) -> None:
-
         self._dependencies: dict[str, bool] = {}
-
 
     def register(
         self,
@@ -28,7 +26,6 @@ class DependencyChecker:
 
         self._dependencies[name] = available
 
-
     def is_ready(
         self,
     ) -> bool:
@@ -39,10 +36,7 @@ class DependencyChecker:
         if not self._dependencies:
             return False
 
-        return all(
-            self._dependencies.values()
-        )
-
+        return all(self._dependencies.values())
 
     def missing(
         self,
@@ -51,13 +45,7 @@ class DependencyChecker:
         Return unavailable dependencies.
         """
 
-        return [
-            name
-            for name, status
-            in self._dependencies.items()
-            if not status
-        ]
-
+        return [name for name, status in self._dependencies.items() if not status]
 
     def reset(
         self,

@@ -38,10 +38,8 @@ class DhanBroker(BaseBroker):
     def connect(self):
         self.client.connect()
 
-
     def disconnect(self):
         self.client.disconnect()
-
 
     def is_connected(self):
         return bool(
@@ -54,15 +52,11 @@ class DhanBroker(BaseBroker):
 
     def place_order(self, order):
         if not self.is_connected():
-            raise RuntimeError(
-                "Dhan broker is not connected."
-            )
+            raise RuntimeError("Dhan broker is not connected.")
         instrument = self.instrument_mapper.get(order.symbol)
 
         if instrument is None:
-            raise ValueError(
-                f"Instrument not found: {order.symbol}"
-            )
+            raise ValueError(f"Instrument not found: {order.symbol}")
 
         response = self.client.place_order(
             security_id=instrument.security_id,

@@ -24,7 +24,6 @@ def create_tick(
 
 
 def test_adapt_tick_to_market():
-
     adapter = TickAdapter()
 
     tick = create_tick()
@@ -38,7 +37,6 @@ def test_adapt_tick_to_market():
 
 
 def test_last_tick_storage():
-
     adapter = TickAdapter()
 
     tick = create_tick()
@@ -51,14 +49,12 @@ def test_last_tick_storage():
 
 
 def test_last_tick_unknown_symbol():
-
     adapter = TickAdapter()
 
     assert adapter.last_tick("BANKNIFTY") is None
 
 
 def test_adapt_none_tick():
-
     adapter = TickAdapter()
 
     with pytest.raises(ValueError):
@@ -66,12 +62,9 @@ def test_adapt_none_tick():
 
 
 def test_clear_ticks():
-
     adapter = TickAdapter()
 
-    adapter.adapt(
-        create_tick()
-    )
+    adapter.adapt(create_tick())
 
     adapter.clear()
 

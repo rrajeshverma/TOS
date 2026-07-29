@@ -8,7 +8,6 @@ from market.tick import Tick
 
 
 def create_tick():
-
     return Tick(
         symbol="NIFTY",
         price=24500.50,
@@ -19,22 +18,15 @@ def create_tick():
 
 
 def test_service_can_start():
-
-    service = MarketDataService(
-        PaperMarketAdapter()
-    )
+    service = MarketDataService(PaperMarketAdapter())
 
     service.start()
 
     assert service.health() == "RUNNING"
 
 
-
 def test_service_can_stop():
-
-    service = MarketDataService(
-        PaperMarketAdapter()
-    )
+    service = MarketDataService(PaperMarketAdapter())
 
     service.start()
     service.stop()
@@ -42,56 +34,30 @@ def test_service_can_stop():
     assert service.health() == "STOPPED"
 
 
-
 def test_service_can_publish_tick():
+    service = MarketDataService(PaperMarketAdapter())
 
-    service = MarketDataService(
-        PaperMarketAdapter()
-    )
+    event = service.publish_tick(create_tick())
 
-    event = service.publish_tick(
-        create_tick()
-    )
-
-    assert (
-        event.tick.symbol
-        == "NIFTY"
-    )
-
+    assert event.tick.symbol == "NIFTY"
 
 
 def test_service_returns_latest_tick():
-
-    service = MarketDataService(
-        PaperMarketAdapter()
-    )
+    service = MarketDataService(PaperMarketAdapter())
 
     tick = create_tick()
 
     service.publish_tick(tick)
 
-    assert (
-        service.get_latest_tick("NIFTY")
-        == tick
-    )
-
+    assert service.get_latest_tick("NIFTY") == tick
 
 
 def test_service_requires_adapter():
-
     with pytest.raises(ValueError):
-
         MarketDataService(None)
 
 
-
 def test_service_initial_health():
+    service = MarketDataService(PaperMarketAdapter())
 
-    service = MarketDataService(
-        PaperMarketAdapter()
-    )
-
-    assert (
-        service.health()
-        == "STOPPED"
-    )
+    assert service.health() == "STOPPED"

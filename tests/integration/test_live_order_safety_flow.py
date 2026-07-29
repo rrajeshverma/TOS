@@ -16,7 +16,6 @@ Execution Permission
 
 
 class OrderSafetyGuard:
-
     def __init__(
         self,
         max_quantity=65,
@@ -26,20 +25,17 @@ class OrderSafetyGuard:
         self.max_daily_loss = max_daily_loss
         self.orders = set()
 
-
     def validate_quantity(
         self,
         quantity,
     ):
         return quantity <= self.max_quantity
 
-
     def validate_daily_loss(
         self,
         loss,
     ):
         return loss <= self.max_daily_loss
-
 
     def check_duplicate(
         self,
@@ -54,18 +50,14 @@ class OrderSafetyGuard:
 
 
 class DummyBroker:
-
     def __init__(self):
         self.submitted = []
-
 
     def submit(
         self,
         order,
     ):
-        self.submitted.append(
-            order
-        )
+        self.submitted.append(order)
 
         return {
             "status": "ACCEPTED",
@@ -74,7 +66,6 @@ class DummyBroker:
 
 
 def create_order():
-
     return {
         "order_id": "LIVE001",
         "symbol": "NIFTY",
@@ -84,90 +75,46 @@ def create_order():
 
 
 def test_valid_quantity_passes():
-
     guard = OrderSafetyGuard()
 
-    assert (
-        guard.validate_quantity(65)
-        is True
-    )
+    assert guard.validate_quantity(65) is True
 
 
 def test_excess_quantity_is_blocked():
-
     guard = OrderSafetyGuard()
 
-    assert (
-        guard.validate_quantity(130)
-        is False
-    )
+    assert guard.validate_quantity(130) is False
 
 
 def test_daily_loss_limit_is_checked():
-
     guard = OrderSafetyGuard()
 
-    assert (
-        guard.validate_daily_loss(4000)
-        is True
-    )
+    assert guard.validate_daily_loss(4000) is True
 
-    assert (
-        guard.validate_daily_loss(6000)
-        is False
-    )
+    assert guard.validate_daily_loss(6000) is False
 
 
 def test_duplicate_order_is_blocked():
-
     guard = OrderSafetyGuard()
 
-    assert (
-        guard.check_duplicate(
-            "ORDER001"
-        )
-        is True
-    )
+    assert guard.check_duplicate("ORDER001") is True
 
-    assert (
-        guard.check_duplicate(
-            "ORDER001"
-        )
-        is False
-    )
+    assert guard.check_duplicate("ORDER001") is False
 
 
 def test_safe_order_reaches_broker():
-
     guard = OrderSafetyGuard()
 
     broker = DummyBroker()
 
     order = create_order()
 
-    assert (
-        guard.validate_quantity(
-            order["quantity"]
-        )
-        is True
-    )
+    assert guard.validate_quantity(order["quantity"]) is True
 
-    assert (
-        guard.check_duplicate(
-            order["order_id"]
-        )
-        is True
-    )
+    assert guard.check_duplicate(order["order_id"]) is True
 
-    result = broker.submit(
-        order
-    )
+    result = broker.submit(order)
 
-    assert (
-        result["status"]
-        == "ACCEPTED"
-    )
+    assert result["status"] == "ACCEPTED"
 
-    assert len(
-        broker.submitted
-    ) == 1
+    assert len(broker.submitted) == 1

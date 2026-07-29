@@ -13,9 +13,7 @@ class PositionRecoveryService:
     """
 
     def __init__(self) -> None:
-
         self._positions: dict[str, dict] = {}
-
 
     def recover(
         self,
@@ -25,21 +23,14 @@ class PositionRecoveryService:
         Recover a broker position.
         """
 
-        symbol = position.get(
-            "symbol"
-        )
+        symbol = position.get("symbol")
 
         if symbol is None:
-            raise ValueError(
-                "Position symbol required"
-            )
+            raise ValueError("Position symbol required")
 
-        self._positions[
-            symbol
-        ] = position
+        self._positions[symbol] = position
 
         return position
-
 
     def get(
         self,
@@ -49,10 +40,7 @@ class PositionRecoveryService:
         Return recovered position.
         """
 
-        return self._positions.get(
-            symbol
-        )
-
+        return self._positions.get(symbol)
 
     def all_positions(
         self,
@@ -61,20 +49,14 @@ class PositionRecoveryService:
         Return all recovered positions.
         """
 
-        return list(
-            self._positions.values()
-        )
-
+        return list(self._positions.values())
 
     def count(self) -> int:
         """
         Return recovered position count.
         """
 
-        return len(
-            self._positions
-        )
-
+        return len(self._positions)
 
     def clear(self) -> None:
         """

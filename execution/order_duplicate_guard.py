@@ -13,9 +13,7 @@ class OrderDuplicateGuard:
     """
 
     def __init__(self) -> None:
-
         self._orders: set[str] = set()
-
 
     def is_duplicate(
         self,
@@ -25,11 +23,7 @@ class OrderDuplicateGuard:
         Check whether order already exists.
         """
 
-        return (
-            order_key
-            in self._orders
-        )
-
+        return order_key in self._orders
 
     def register(
         self,
@@ -39,10 +33,7 @@ class OrderDuplicateGuard:
         Register submitted order.
         """
 
-        self._orders.add(
-            order_key
-        )
-
+        self._orders.add(order_key)
 
     def can_submit(
         self,
@@ -52,10 +43,7 @@ class OrderDuplicateGuard:
         Return True when order is new.
         """
 
-        return not self.is_duplicate(
-            order_key
-        )
-
+        return not self.is_duplicate(order_key)
 
     def clear(self) -> None:
         """

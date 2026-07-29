@@ -2,7 +2,6 @@ from portfolio.portfolio_context import PortfolioContext
 
 
 def test_portfolio_context_can_be_created():
-
     context = PortfolioContext(
         cash=100000,
         positions=[],
@@ -19,7 +18,6 @@ def test_portfolio_context_can_be_created():
 
 
 def test_portfolio_context_is_immutable():
-
     context = PortfolioContext(
         cash=100000,
         positions=[],
@@ -37,7 +35,6 @@ def test_portfolio_context_is_immutable():
 
 
 def test_portfolio_context_requires_cash():
-
     try:
         PortfolioContext(
             cash=None,
@@ -54,7 +51,6 @@ def test_portfolio_context_requires_cash():
 
 
 def test_portfolio_context_requires_positions():
-
     try:
         PortfolioContext(
             cash=100000,
@@ -71,7 +67,6 @@ def test_portfolio_context_requires_positions():
 
 
 def test_portfolio_context_rejects_negative_margin():
-
     try:
         PortfolioContext(
             cash=100000,
@@ -88,7 +83,6 @@ def test_portfolio_context_rejects_negative_margin():
 
 
 def test_portfolio_context_stores_profit_loss():
-
     context = PortfolioContext(
         cash=100000,
         positions=[],

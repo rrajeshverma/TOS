@@ -42,7 +42,6 @@ def create_indicators():
 
 
 def create_trade():
-
     from engines.decision_engine import DecisionEngine
 
     decision = DecisionEngine().evaluate(
@@ -64,7 +63,6 @@ def create_trade():
 
 
 def test_order_execution_creates_position():
-
     trade = create_trade()
 
     order = OrderFactory().create(
@@ -89,25 +87,17 @@ def test_order_execution_creates_position():
 def test_completed_trade_is_written_to_journal(
     tmp_path: Path,
 ):
-
     trade = create_trade()
 
-    journal = TradeJournal(
-        file_path=str(
-            tmp_path / "trade_journal.csv"
-        )
-    )
+    journal = TradeJournal(file_path=str(tmp_path / "trade_journal.csv"))
 
-    journal.record(
-        trade
-    )
+    journal.record(trade)
 
     assert journal.exists() is True
     assert journal.count() == 1
 
 
 def test_position_contains_execution_price():
-
     trade = create_trade()
 
     order = OrderFactory().create(
@@ -130,12 +120,9 @@ def test_position_contains_execution_price():
 def test_journal_header_created(
     tmp_path: Path,
 ):
-
     journal_file = tmp_path / "journal.csv"
 
-    journal = TradeJournal(
-        file_path=str(journal_file)
-    )
+    journal = TradeJournal(file_path=str(journal_file))
 
     assert journal.exists() is True
     assert journal.count() == 0

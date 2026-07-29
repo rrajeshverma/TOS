@@ -2,14 +2,12 @@ from portfolio.allocation import AllocationEngine
 
 
 def test_allocation_engine_can_be_created():
-
     engine = AllocationEngine()
 
     assert engine is not None
 
 
 def test_allocates_capital_to_strategy():
-
     engine = AllocationEngine()
 
     result = engine.allocate(
@@ -19,14 +17,10 @@ def test_allocates_capital_to_strategy():
         },
     )
 
-    assert (
-        result["NIFTY_ORB"]
-        == 50000
-    )
+    assert result["NIFTY_ORB"] == 50000
 
 
 def test_allocates_multiple_strategies():
-
     engine = AllocationEngine()
 
     result = engine.allocate(
@@ -37,19 +31,12 @@ def test_allocates_multiple_strategies():
         },
     )
 
-    assert (
-        result["NIFTY_ORB"]
-        == 50000
-    )
+    assert result["NIFTY_ORB"] == 50000
 
-    assert (
-        result["BANKNIFTY_ORB"]
-        == 30000
-    )
+    assert result["BANKNIFTY_ORB"] == 30000
 
 
 def test_calculates_remaining_cash():
-
     engine = AllocationEngine()
 
     result = engine.allocate(
@@ -59,14 +46,10 @@ def test_calculates_remaining_cash():
         },
     )
 
-    assert (
-        result["cash_reserve"]
-        == 40000
-    )
+    assert result["cash_reserve"] == 40000
 
 
 def test_rejects_allocation_above_100_percent():
-
     engine = AllocationEngine()
 
     try:
@@ -84,7 +67,6 @@ def test_rejects_allocation_above_100_percent():
 
 
 def test_rejects_negative_capital():
-
     engine = AllocationEngine()
 
     try:

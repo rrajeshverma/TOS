@@ -7,7 +7,6 @@ from market.tick import Tick
 
 
 def create_tick():
-
     return Tick(
         symbol="NIFTY",
         price=24500.50,
@@ -18,7 +17,6 @@ def create_tick():
 
 
 def test_market_event_can_be_created():
-
     event = MarketEvent(
         event_type="PRICE_UPDATE",
         tick=create_tick(),
@@ -29,9 +27,7 @@ def test_market_event_can_be_created():
     assert event.source == "DHAN"
 
 
-
 def test_market_event_contains_tick():
-
     tick = create_tick()
 
     event = MarketEvent(
@@ -43,11 +39,8 @@ def test_market_event_contains_tick():
     assert event.tick == tick
 
 
-
 def test_market_event_requires_event_type():
-
     with pytest.raises(ValueError):
-
         MarketEvent(
             event_type="",
             tick=create_tick(),
@@ -55,11 +48,8 @@ def test_market_event_requires_event_type():
         )
 
 
-
 def test_market_event_requires_source():
-
     with pytest.raises(ValueError):
-
         MarketEvent(
             event_type="PRICE_UPDATE",
             tick=create_tick(),
@@ -67,9 +57,7 @@ def test_market_event_requires_source():
         )
 
 
-
 def test_market_event_is_immutable():
-
     event = MarketEvent(
         event_type="PRICE_UPDATE",
         tick=create_tick(),
@@ -80,9 +68,7 @@ def test_market_event_is_immutable():
         event.source = "TEST"
 
 
-
 def test_market_event_has_timestamp():
-
     event = MarketEvent(
         event_type="PRICE_UPDATE",
         tick=create_tick(),

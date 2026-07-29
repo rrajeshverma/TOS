@@ -6,7 +6,6 @@ from market.tick import Tick
 
 
 def test_tick_can_be_created():
-
     tick = Tick(
         symbol="NIFTY",
         price=24500.50,
@@ -22,9 +21,7 @@ def test_tick_can_be_created():
 
 
 def test_tick_requires_symbol():
-
     with pytest.raises(ValueError):
-
         Tick(
             symbol="",
             price=24500.50,
@@ -35,9 +32,7 @@ def test_tick_requires_symbol():
 
 
 def test_tick_requires_positive_price():
-
     with pytest.raises(ValueError):
-
         Tick(
             symbol="NIFTY",
             price=0,
@@ -48,9 +43,7 @@ def test_tick_requires_positive_price():
 
 
 def test_tick_requires_positive_volume():
-
     with pytest.raises(ValueError):
-
         Tick(
             symbol="NIFTY",
             price=24500.50,
@@ -61,7 +54,6 @@ def test_tick_requires_positive_volume():
 
 
 def test_tick_is_immutable():
-
     tick = Tick(
         symbol="NIFTY",
         price=24500.50,
@@ -70,14 +62,11 @@ def test_tick_is_immutable():
         exchange="NSE",
     )
 
-    with pytest.raises(
-        Exception
-    ):
+    with pytest.raises(Exception):
         tick.price = 25000
 
 
 def test_tick_representation():
-
     tick = Tick(
         symbol="NIFTY",
         price=24500.50,

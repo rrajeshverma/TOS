@@ -22,7 +22,6 @@ def create_tick(
 
 
 def test_runtime_start_stop_lifecycle():
-
     runtime = MarketRuntime()
 
     assert runtime.is_running() is False
@@ -37,14 +36,11 @@ def test_runtime_start_stop_lifecycle():
 
 
 def test_runtime_receives_tick():
-
     runtime = MarketRuntime()
 
     runtime.start()
 
-    runtime.on_tick(
-        create_tick()
-    )
+    runtime.on_tick(create_tick())
 
     market = runtime.get_market()
 
@@ -54,18 +50,14 @@ def test_runtime_receives_tick():
 
 
 def test_runtime_ignores_tick_when_stopped():
-
     runtime = MarketRuntime()
 
-    runtime.on_tick(
-        create_tick()
-    )
+    runtime.on_tick(create_tick())
 
     assert runtime.get_market() is None
 
 
 def test_runtime_returns_latest_market():
-
     runtime = MarketRuntime()
 
     runtime.start()

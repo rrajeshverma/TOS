@@ -22,23 +22,11 @@ class RiskEngine:
         max_exposure_percentage: float = 100,
         max_loss: float = 10000,
     ) -> None:
+        self.position_risk = PositionRiskCalculator()
 
-        self.position_risk = (
-            PositionRiskCalculator()
-        )
+        self.exposure_guard = ExposureLimitGuard(max_exposure_percentage)
 
-        self.exposure_guard = (
-            ExposureLimitGuard(
-                max_exposure_percentage
-            )
-        )
-
-        self.loss_guard = (
-            LossGuard(
-                max_loss
-            )
-        )
-
+        self.loss_guard = LossGuard(max_loss)
 
     def evaluate(
         self,
@@ -51,32 +39,21 @@ class RiskEngine:
         Evaluate complete risk.
         """
 
-        position_result = (
-            self.position_risk.calculate(
-                position,
-                capital,
-            )
+        position_result = self.position_risk.calculate(
+            position,
+            capital,
         )
 
-        exposure_result = (
-            self.exposure_guard.check(
-                exposure,
-                capital,
-            )
+        exposure_result = self.exposure_guard.check(
+            exposure,
+            capital,
         )
 
-        loss_result = (
-            self.loss_guard.check(
-                current_loss,
-            )
+        loss_result = self.loss_guard.check(
+            current_loss,
         )
 
-
-        approved = (
-            exposure_result["approved"]
-            and loss_result["approved"]
-        )
-
+        approved = exposure_result["approved"] and loss_result["approved"]
 
         reason = "Approved"
 
@@ -86,15 +63,10 @@ class RiskEngine:
         elif not loss_result["approved"]:
             reason = "Loss limit exceeded"
 
-
         return RiskDecision(
             approved=approved,
             reason=reason,
-            risk_score=int(
-                position_result[
-                    "risk_percentage"
-                ]
-            ),
+            risk_score=int(position_result["risk_percentage"]),
             metadata={
                 "position": position_result,
                 "exposure": exposure_result,

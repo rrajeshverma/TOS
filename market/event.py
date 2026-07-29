@@ -21,26 +21,17 @@ class MarketEvent:
     event_type: str
     tick: Tick
     source: str
-    created_at: datetime = field(
-        default_factory=datetime.now
-    )
+    created_at: datetime = field(default_factory=datetime.now)
 
     def __post_init__(self) -> None:
-
         if not self.event_type:
-            raise ValueError(
-                "Event type is required"
-            )
+            raise ValueError("Event type is required")
 
         if not self.source:
-            raise ValueError(
-                "Source is required"
-            )
+            raise ValueError("Source is required")
 
         if not isinstance(
             self.tick,
             Tick,
         ):
-            raise ValueError(
-                "Valid Tick is required"
-            )
+            raise ValueError("Valid Tick is required")

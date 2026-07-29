@@ -13,9 +13,7 @@ class StrategyRegistry:
     """
 
     def __init__(self) -> None:
-
         self._strategies: dict[str, object] = {}
-
 
     def register(
         self,
@@ -27,17 +25,12 @@ class StrategyRegistry:
         """
 
         if not name:
-            raise ValueError(
-                "Strategy name is required"
-            )
+            raise ValueError("Strategy name is required")
 
         if strategy is None:
-            raise ValueError(
-                "Strategy object is required"
-            )
+            raise ValueError("Strategy object is required")
 
         self._strategies[name] = strategy
-
 
     def get(
         self,
@@ -47,10 +40,7 @@ class StrategyRegistry:
         Retrieve strategy by name.
         """
 
-        return self._strategies.get(
-            name
-        )
-
+        return self._strategies.get(name)
 
     def list(
         self,
@@ -59,10 +49,7 @@ class StrategyRegistry:
         List registered strategies.
         """
 
-        return list(
-            self._strategies.keys()
-        )
-
+        return list(self._strategies.keys())
 
     def remove(
         self,

@@ -34,21 +34,17 @@ def create_tick(
 
 
 def test_tick_can_create_candle():
-
     builder = CandleBuilder()
 
     tick = create_tick()
 
-    candle = builder.update(
-        tick
-    )
+    candle = builder.update(tick)
 
     assert candle is not None
     assert candle.symbol == "NIFTY"
 
 
 def test_multiple_ticks_update_candle():
-
     builder = CandleBuilder()
 
     ticks = [
@@ -60,10 +56,7 @@ def test_multiple_ticks_update_candle():
     candle = None
 
     for tick in ticks:
-
-        candle = builder.update(
-            tick
-        )
+        candle = builder.update(tick)
 
     assert candle.open == 25000.0
     assert candle.high == 25010.0
@@ -72,30 +65,20 @@ def test_multiple_ticks_update_candle():
 
 
 def test_candle_volume_accumulates():
-
     builder = CandleBuilder()
 
-    tick1 = create_tick(
-        25000.0
-    )
+    tick1 = create_tick(25000.0)
 
-    tick2 = create_tick(
-        25005.0
-    )
+    tick2 = create_tick(25005.0)
 
-    builder.update(
-        tick1
-    )
+    builder.update(tick1)
 
-    candle = builder.update(
-        tick2
-    )
+    candle = builder.update(tick2)
 
     assert candle.volume > 0
 
 
 def test_candle_generation_requires_tick():
-
     builder = CandleBuilder()
 
     try:

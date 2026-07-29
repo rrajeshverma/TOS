@@ -4,7 +4,6 @@ from strategies.strategy_engine import StrategyEngine
 
 
 def create_engine():
-
     registry = StrategyRegistry()
 
     registry.register(
@@ -12,13 +11,10 @@ def create_engine():
         NiftyORBStrategy(),
     )
 
-    return StrategyEngine(
-        registry
-    )
+    return StrategyEngine(registry)
 
 
 def test_engine_can_execute_strategy():
-
     engine = create_engine()
 
     result = engine.execute(
@@ -33,7 +29,6 @@ def test_engine_can_execute_strategy():
 
 
 def test_engine_returns_sell_signal():
-
     engine = create_engine()
 
     result = engine.execute(
@@ -48,7 +43,6 @@ def test_engine_returns_sell_signal():
 
 
 def test_engine_returns_wait_signal():
-
     engine = create_engine()
 
     result = engine.execute(
@@ -64,7 +58,6 @@ def test_engine_returns_wait_signal():
 
 
 def test_engine_rejects_unknown_strategy():
-
     engine = create_engine()
 
     assert (
@@ -77,7 +70,6 @@ def test_engine_rejects_unknown_strategy():
 
 
 def test_engine_requires_registry():
-
     try:
         StrategyEngine(None)
         assert False
@@ -87,7 +79,6 @@ def test_engine_requires_registry():
 
 
 def test_engine_can_analyze_strategy():
-
     engine = create_engine()
 
     result = engine.analyze(

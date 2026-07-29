@@ -27,9 +27,7 @@ from brokers.dhan.session import DhanSession
 from brokers.dhan.websocket import WebSocketClient
 
 
-
 class DummyWebSocketTransport:
-
     def __init__(self):
         self.connected = False
         self.authenticated = False
@@ -53,25 +51,19 @@ class DummyWebSocketTransport:
         self,
         symbol,
     ):
-        self.subscriptions.append(
-            symbol
-        )
+        self.subscriptions.append(symbol)
 
     def send(
         self,
         message,
     ):
-        self.messages.append(
-            message
-        )
+        self.messages.append(message)
+
 
 def create_websocket():
-
     session = DhanSession()
 
-    session.authenticate(
-        "TEST_TOKEN"
-    )
+    session.authenticate("TEST_TOKEN")
 
     transport = DummyWebSocketTransport()
 
@@ -84,7 +76,6 @@ def create_websocket():
 
 
 def test_websocket_authentication():
-
     client, transport = create_websocket()
 
     client.connect()
@@ -93,7 +84,6 @@ def test_websocket_authentication():
 
 
 def test_websocket_connects_with_authenticated_session():
-
     client, transport = create_websocket()
 
     client.connect()
@@ -102,32 +92,21 @@ def test_websocket_connects_with_authenticated_session():
 
 
 def test_websocket_subscribes_symbol():
-
     client, _ = create_websocket()
 
     client.connect()
 
-    client.subscribe(
-        "NIFTY"
-    )
+    client.subscribe("NIFTY")
 
-    assert (
-        "NIFTY"
-        in client.subscriptions
-    )
+    assert "NIFTY" in client.subscriptions
 
 
 def test_websocket_receives_tick():
-
     received = []
 
     client, _ = create_websocket()
 
-    client.register_tick_callback(
-        lambda tick: received.append(
-            tick
-        )
-    )
+    client.register_tick_callback(lambda tick: received.append(tick))
 
     client.emit_tick(
         {
@@ -142,7 +121,6 @@ def test_websocket_receives_tick():
 
 
 def test_websocket_disconnect_flow():
-
     client, transport = create_websocket()
 
     client.connect()

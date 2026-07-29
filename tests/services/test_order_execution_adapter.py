@@ -8,6 +8,8 @@ Version     : 1.1.0
 
 import pytest
 
+from unittest.mock import Mock
+
 from services.order_execution_adapter import OrderExecutionAdapter
 
 
@@ -124,3 +126,94 @@ def test_execute_records_idempotency():
     key = str(sorted(order.items()))
 
     assert idem.is_duplicate(key)
+
+
+def test_execute_duplicate_does_not_call_order_service():
+    idem = DummyIdempotency()
+
+    order = {"symbol": "NIFTY"}
+    key = str(sorted(order.items()))
+
+    idem.record(key, {"cached": True})
+
+    service = Mock()
+
+    adapter = OrderExecutionAdapter(
+        order_service=service,
+        idempotency=idem,
+    )
+
+    result = adapter.execute(order)
+
+    assert result == {"cached": True}
+    service.place_order.assert_not_called()
+
+
+def test_execute_duplicate_does_not_call_broker():
+    idem = DummyIdempotency()
+
+    order = {"symbol": "NIFTY"}
+    key = str(sorted(order.items()))
+
+    idem.record(key, {"cached": True})
+
+    broker = Mock()
+
+    adapter = OrderExecutionAdapter(
+        broker=broker,
+        idempotency=idem,
+    )
+
+    result = adapter.execute(order)
+
+    assert result == {"cached": True}
+    broker.place_order.assert_not_called()
+
+
+def test_execute_with_broker_without_is_connected():
+    class Broker:
+        def place_order(self, order):
+            return {"status": "placed"}
+
+    adapter = OrderExecutionAdapter(
+        broker=Broker(),
+        idempotency=DummyIdempotency(),
+    )
+
+    result = adapter.execute({"symbol": "NIFTY"})
+
+    assert result["status"] == "placed"
+
+
+def test_order_service_result_cached():
+    idem = DummyIdempotency()
+
+    adapter = OrderExecutionAdapter(
+        order_service=DummyOrderService(),
+        idempotency=idem,
+    )
+
+    order = {"symbol": "NIFTY"}
+
+    result = adapter.execute(order)
+
+    key = str(sorted(order.items()))
+
+    assert idem.get(key) == result
+
+
+def test_broker_result_cached():
+    idem = DummyIdempotency()
+
+    adapter = OrderExecutionAdapter(
+        broker=DummyBroker(True),
+        idempotency=idem,
+    )
+
+    order = {"symbol": "NIFTY"}
+
+    result = adapter.execute(order)
+
+    key = str(sorted(order.items()))
+
+    assert idem.get(key) == result

@@ -27,16 +27,12 @@ class ExecutionModeGuard:
         self,
         mode: ExecutionMode = ExecutionMode.PAPER,
     ) -> None:
-
         self._mode = mode
         self._live_enabled = False
 
-
     @property
     def mode(self) -> ExecutionMode:
-
         return self._mode
-
 
     def enable_live_trading(self) -> None:
         """
@@ -45,14 +41,12 @@ class ExecutionModeGuard:
 
         self._live_enabled = True
 
-
     def disable_live_trading(self) -> None:
         """
         Emergency disable.
         """
 
         self._live_enabled = False
-
 
     def can_execute(self) -> bool:
         """
@@ -64,10 +58,8 @@ class ExecutionModeGuard:
 
         return self._live_enabled
 
-
     def set_mode(
         self,
         mode: ExecutionMode,
     ) -> None:
-
         self._mode = mode

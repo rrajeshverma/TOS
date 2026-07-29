@@ -24,16 +24,13 @@ def create_tick(
 
 
 def test_market_feed_dispatches_tick_to_runtime():
-
     dispatcher = TickDispatcher()
 
     runtime = MarketRuntime()
 
     runtime.start()
 
-    dispatcher.register(
-        runtime.on_tick
-    )
+    dispatcher.register(runtime.on_tick)
 
     feed = WebSocketFeed(
         dispatcher=dispatcher.dispatch,
@@ -41,9 +38,7 @@ def test_market_feed_dispatches_tick_to_runtime():
 
     feed.connect()
 
-    feed.receive_tick(
-        create_tick()
-    )
+    feed.receive_tick(create_tick())
 
     market = runtime.get_market()
 
@@ -53,37 +48,29 @@ def test_market_feed_dispatches_tick_to_runtime():
 
 
 def test_runtime_does_not_process_tick_when_stopped():
-
     dispatcher = TickDispatcher()
 
     runtime = MarketRuntime()
 
-    dispatcher.register(
-        runtime.on_tick
-    )
+    dispatcher.register(runtime.on_tick)
 
     feed = WebSocketFeed(
         dispatcher=dispatcher.dispatch,
     )
 
-    feed.receive_tick(
-        create_tick()
-    )
+    feed.receive_tick(create_tick())
 
     assert runtime.get_market() is None
 
 
 def test_multiple_ticks_update_market_state():
-
     dispatcher = TickDispatcher()
 
     runtime = MarketRuntime()
 
     runtime.start()
 
-    dispatcher.register(
-        runtime.on_tick
-    )
+    dispatcher.register(runtime.on_tick)
 
     feed = WebSocketFeed(
         dispatcher=dispatcher.dispatch,
@@ -107,7 +94,6 @@ def test_multiple_ticks_update_market_state():
 
 
 def test_feed_rejects_empty_tick():
-
     feed = WebSocketFeed()
 
     try:

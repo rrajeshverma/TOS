@@ -1,6 +1,7 @@
 """
 Application startup manager.
 """
+
 import logging
 
 from brokers.paper_broker import PaperBroker
@@ -12,6 +13,7 @@ from engines.strategy_engine import StrategyEngine
 from services.paper_trading_service import PaperTradingService
 
 LOGGER = logging.getLogger("tos")
+
 
 class Startup:
     """Handles application startup."""
@@ -72,9 +74,7 @@ class Startup:
 
         LOGGER.info(
             "Broker              : %s",
-            "CONNECTED"
-            if broker and broker.is_connected()
-            else "NOT CONNECTED",
+            "CONNECTED" if broker and broker.is_connected() else "NOT CONNECTED",
         )
 
         LOGGER.info("Order Repository    : READY")

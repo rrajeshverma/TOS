@@ -17,7 +17,6 @@ class EnvironmentValidator:
         "BROKER",
     )
 
-
     def validate(
         self,
         environment: dict,
@@ -29,15 +28,11 @@ class EnvironmentValidator:
         if not environment:
             return False
 
-
         for key in self.REQUIRED_KEYS:
-
             if not environment.get(key):
                 return False
 
-
         return True
-
 
     def has_credentials(
         self,
@@ -47,12 +42,7 @@ class EnvironmentValidator:
         Check broker credentials exist.
         """
 
-        return bool(
-            environment.get(
-                "ACCESS_TOKEN"
-            )
-        )
-
+        return bool(environment.get("ACCESS_TOKEN"))
 
     def is_production_safe(
         self,
@@ -62,17 +52,11 @@ class EnvironmentValidator:
         Validate production safety.
         """
 
-        if environment.get(
-            "TOS_MODE"
-        ) != "LIVE":
-
+        if environment.get("TOS_MODE") != "LIVE":
             return True
 
-
         return (
-            self.has_credentials(
-                environment
-            )
+            self.has_credentials(environment)
             and environment.get(
                 "LIVE_APPROVED",
                 False,

@@ -2,14 +2,12 @@ from risk.exposure_limit import ExposureLimitGuard
 
 
 def test_guard_can_be_created():
-
     guard = ExposureLimitGuard()
 
     assert guard is not None
 
 
 def test_allows_exposure_within_limit():
-
     guard = ExposureLimitGuard(60)
 
     result = guard.check(
@@ -21,7 +19,6 @@ def test_allows_exposure_within_limit():
 
 
 def test_rejects_exposure_above_limit():
-
     guard = ExposureLimitGuard(60)
 
     result = guard.check(
@@ -33,7 +30,6 @@ def test_rejects_exposure_above_limit():
 
 
 def test_calculates_exposure_percentage():
-
     guard = ExposureLimitGuard(50)
 
     result = guard.check(
@@ -41,14 +37,10 @@ def test_calculates_exposure_percentage():
         capital=500000,
     )
 
-    assert (
-        result["exposure_percentage"]
-        == 50
-    )
+    assert result["exposure_percentage"] == 50
 
 
 def test_rejects_invalid_capital():
-
     guard = ExposureLimitGuard()
 
     try:
@@ -64,7 +56,6 @@ def test_rejects_invalid_capital():
 
 
 def test_custom_limit_is_used():
-
     guard = ExposureLimitGuard(30)
 
     result = guard.check(

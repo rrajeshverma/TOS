@@ -29,14 +29,9 @@ class DhanAuthProvider:
         auth_client,
         session: DhanSession | None = None,
     ) -> None:
-
         self.auth_client = auth_client
 
-        self.session = (
-            session
-            if session is not None
-            else DhanSession()
-        )
+        self.session = session if session is not None else DhanSession()
 
     def authenticate(
         self,
@@ -57,8 +52,6 @@ class DhanAuthProvider:
 
         access_token = response["access_token"]
 
-        self.session.authenticate(
-            access_token
-        )
+        self.session.authenticate(access_token)
 
         return access_token

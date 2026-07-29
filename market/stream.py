@@ -15,10 +15,8 @@ class MarketStream:
     """
 
     def __init__(self) -> None:
-
         self._subscriptions: set[str] = set()
         self._ticks: dict[str, object] = {}
-
 
     def subscribe(
         self,
@@ -29,14 +27,9 @@ class MarketStream:
         """
 
         if not symbol:
-            raise ValueError(
-                "Symbol is required"
-            )
+            raise ValueError("Symbol is required")
 
-        self._subscriptions.add(
-            symbol
-        )
-
+        self._subscriptions.add(symbol)
 
     def unsubscribe(
         self,
@@ -46,10 +39,7 @@ class MarketStream:
         Remove symbol subscription.
         """
 
-        self._subscriptions.discard(
-            symbol
-        )
-
+        self._subscriptions.discard(symbol)
 
     def subscriptions(
         self,
@@ -58,10 +48,7 @@ class MarketStream:
         Return active subscriptions.
         """
 
-        return set(
-            self._subscriptions
-        )
-
+        return set(self._subscriptions)
 
     def publish(
         self,
@@ -72,14 +59,9 @@ class MarketStream:
         """
 
         if event is None:
-            raise ValueError(
-                "Market event cannot be None"
-            )
+            raise ValueError("Market event cannot be None")
 
-        self._ticks[
-            event.tick.symbol
-        ] = event.tick
-
+        self._ticks[event.tick.symbol] = event.tick
 
     def latest_tick(
         self,
@@ -89,6 +71,4 @@ class MarketStream:
         Return latest tick for symbol.
         """
 
-        return self._ticks.get(
-            symbol
-        )
+        return self._ticks.get(symbol)

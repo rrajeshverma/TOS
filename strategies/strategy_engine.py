@@ -4,9 +4,9 @@ TOS Strategy Engine
 Executes registered strategy plugins.
 """
 
-
 from __future__ import annotations
 from strategies.decision import StrategyDecision
+
 
 class StrategyEngine:
     """
@@ -17,14 +17,10 @@ class StrategyEngine:
         self,
         registry,
     ) -> None:
-
         if registry is None:
-            raise ValueError(
-                "Strategy registry is required"
-            )
+            raise ValueError("Strategy registry is required")
 
         self._registry = registry
-
 
     def execute(
         self,
@@ -35,16 +31,12 @@ class StrategyEngine:
         Execute selected strategy and return decision.
         """
 
-        strategy = self._registry.get(
-            strategy_name
-        )
+        strategy = self._registry.get(strategy_name)
 
         if strategy is None:
             return None
 
-        signal = strategy.generate_signal(
-            context
-        )
+        signal = strategy.generate_signal(context)
 
         if signal is None:
             return None
@@ -58,7 +50,6 @@ class StrategyEngine:
             },
         )
 
-
     def analyze(
         self,
         strategy_name: str,
@@ -68,13 +59,9 @@ class StrategyEngine:
         Analyze using selected strategy.
         """
 
-        strategy = self._registry.get(
-            strategy_name
-        )
+        strategy = self._registry.get(strategy_name)
 
         if strategy is None:
             return None
 
-        return strategy.analyze(
-            context
-        )
+        return strategy.analyze(context)

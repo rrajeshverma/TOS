@@ -50,12 +50,9 @@ class DummyTransport:
 
 
 def create_pipeline():
-
     session = DhanSession()
 
-    session.authenticate(
-        "ACCESS_TOKEN"
-    )
+    session.authenticate("ACCESS_TOKEN")
 
     transport = DummyTransport()
 
@@ -70,14 +67,11 @@ def create_pipeline():
 
 
 def test_tick_stream_requires_connection():
-
     websocket, _, _ = create_pipeline()
 
     tick_received = []
 
-    websocket.register_tick_callback(
-        lambda tick: tick_received.append(tick)
-    )
+    websocket.register_tick_callback(lambda tick: tick_received.append(tick))
 
     tick = BrokerTick(
         symbol="NIFTY",
@@ -86,28 +80,22 @@ def test_tick_stream_requires_connection():
         timestamp=datetime.now(),
     )
 
-    websocket.emit_tick(
-        tick
-    )
+    websocket.emit_tick(tick)
 
     assert tick_received[0].symbol == "NIFTY"
 
 
 def test_tick_subscription_flow():
-
     websocket, transport, _ = create_pipeline()
 
     websocket.connect()
 
-    websocket.subscribe(
-        "NIFTY"
-    )
+    websocket.subscribe("NIFTY")
 
     assert "NIFTY" in transport.subscribed
 
 
 def test_tick_adapter_converts_broker_tick():
-
     _, _, adapter = create_pipeline()
 
     tick = BrokerTick(
@@ -117,24 +105,19 @@ def test_tick_adapter_converts_broker_tick():
         timestamp=datetime.now(),
     )
 
-    market_tick = adapter.convert(
-        tick
-    )
+    market_tick = adapter.convert(tick)
 
     assert market_tick.symbol == "NIFTY"
     assert market_tick.close == 25000.0
 
 
 def test_tick_pipeline_end_to_end():
-
     websocket, _, adapter = create_pipeline()
 
     received = []
 
     websocket.register_tick_callback(
-        lambda tick: received.append(
-            adapter.convert(tick)
-        )
+        lambda tick: received.append(adapter.convert(tick))
     )
 
     websocket.connect()
@@ -146,9 +129,7 @@ def test_tick_pipeline_end_to_end():
         timestamp=datetime.now(),
     )
 
-    websocket.emit_tick(
-        tick
-    )
+    websocket.emit_tick(tick)
 
     assert len(received) == 1
     assert received[0].symbol == "NIFTY"

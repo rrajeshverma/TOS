@@ -13,10 +13,8 @@ class ShutdownManager:
     """
 
     def __init__(self) -> None:
-
         self._shutdown = False
         self._steps: list[str] = []
-
 
     def execute(
         self,
@@ -27,7 +25,6 @@ class ShutdownManager:
 
         if self._shutdown:
             return self._steps
-
 
         self._steps = [
             "stop_orders",
@@ -41,7 +38,6 @@ class ShutdownManager:
 
         return self._steps
 
-
     def is_shutdown(
         self,
     ) -> bool:
@@ -51,7 +47,6 @@ class ShutdownManager:
 
         return self._shutdown
 
-
     def completed_steps(
         self,
     ) -> list[str]:
@@ -59,10 +54,7 @@ class ShutdownManager:
         Return completed shutdown steps.
         """
 
-        return list(
-            self._steps
-        )
-
+        return list(self._steps)
 
     def reset(
         self,

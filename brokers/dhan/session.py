@@ -18,12 +18,9 @@ class DhanSession:
     Maintains Dhan broker authentication state.
     """
 
-    DEFAULT_TOKEN_VALIDITY = timedelta(
-        hours=24
-    )
+    DEFAULT_TOKEN_VALIDITY = timedelta(hours=24)
 
     def __init__(self) -> None:
-
         self.access_token: str | None = None
 
         self.created_at: datetime | None = None
@@ -36,10 +33,7 @@ class DhanSession:
         Returns True when a valid token exists.
         """
 
-        return (
-            self.access_token is not None
-            and not self.is_expired
-        )
+        return self.access_token is not None and not self.is_expired
 
     @property
     def is_expired(self) -> bool:
@@ -64,10 +58,7 @@ class DhanSession:
 
         self.created_at = datetime.now()
 
-        self.expires_at = (
-            self.created_at
-            + self.DEFAULT_TOKEN_VALIDITY
-        )
+        self.expires_at = self.created_at + self.DEFAULT_TOKEN_VALIDITY
 
     def refresh(
         self,
@@ -77,9 +68,7 @@ class DhanSession:
         Replace existing token.
         """
 
-        self.authenticate(
-            access_token
-        )
+        self.authenticate(access_token)
 
     def revoke(self) -> None:
         """

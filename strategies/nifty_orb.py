@@ -14,10 +14,8 @@ class NiftyORBStrategy(BaseStrategy):
     NIFTY Opening Range Breakout strategy.
     """
 
-
     def name(self) -> str:
         return "NIFTY_ORB"
-
 
     def analyze(
         self,
@@ -32,7 +30,6 @@ class NiftyORBStrategy(BaseStrategy):
             "analyzed": True,
             "context_available": context is not None,
         }
-
 
     def generate_signal(
         self,
@@ -50,24 +47,12 @@ class NiftyORBStrategy(BaseStrategy):
         if context is None:
             return None
 
+        current_price = context.get("current_price")
 
-        current_price = context.get(
-            "current_price"
-        )
-
-
-        if (
-            "opening_high" in context
-            and current_price > context["opening_high"]
-        ):
+        if "opening_high" in context and current_price > context["opening_high"]:
             return "BUY"
 
-
-        if (
-            "opening_low" in context
-            and current_price < context["opening_low"]
-        ):
+        if "opening_low" in context and current_price < context["opening_low"]:
             return "SELL"
-
 
         return "WAIT"

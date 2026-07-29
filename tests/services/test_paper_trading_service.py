@@ -265,3 +265,90 @@ def test_close_preserves_average_price():
     assert closed.quantity == position.quantity
     assert closed.position_id == position.position_id
     assert closed.status == TradeStatus.CLOSED
+
+
+def test_execute_generates_position_id():
+    service = PaperTradingService()
+
+    trade = create_trade()
+
+    position = service.execute(trade)
+
+    assert position.position_id is not None
+    assert position.position_id != ""
+
+
+def test_execute_initializes_closed_at_none():
+    service = PaperTradingService()
+
+    trade = create_trade()
+
+    position = service.execute(trade)
+
+    assert position.closed_at is None
+
+
+def test_update_price_returns_new_instance():
+    service = PaperTradingService()
+
+    position = service.execute(create_trade())
+
+    updated = service.update_price(position, Decimal("25100"))
+
+    assert updated is not position
+
+
+def test_close_returns_new_instance():
+    service = PaperTradingService()
+
+    position = service.execute(create_trade())
+
+    closed = service.close(position, Decimal("25200"))
+
+    assert closed is not position
+
+
+def test_update_price_preserves_order_reference():
+    service = PaperTradingService()
+
+    position = service.execute(create_trade())
+
+    updated = service.update_price(position, Decimal("25125"))
+
+    assert updated.order is position.order
+
+
+def test_close_preserves_order_reference():
+    service = PaperTradingService()
+
+    position = service.execute(create_trade())
+
+    closed = service.close(position, Decimal("25250"))
+
+    assert closed.order is position.order
+
+
+def test_update_price_does_not_modify_original():
+    service = PaperTradingService()
+
+    position = service.execute(create_trade())
+
+    original = position.last_traded_price
+
+    updated = service.update_price(position, Decimal("25175"))
+
+    assert position.last_traded_price == original
+    assert updated.last_traded_price == Decimal("25175")
+
+
+def test_close_does_not_modify_original():
+    service = PaperTradingService()
+
+    position = service.execute(create_trade())
+
+    closed = service.close(position, Decimal("25300"))
+
+    assert position.status == TradeStatus.OPEN
+    assert position.closed_at is None
+
+    assert closed.status == TradeStatus.CLOSED

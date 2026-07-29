@@ -22,30 +22,18 @@ class StrategyContext:
     risk_state: object
     account: object
 
-
     def __post_init__(self) -> None:
-
         if self.market is None:
-            raise ValueError(
-                "Market context is required"
-            )
+            raise ValueError("Market context is required")
 
         if self.indicators is None:
-            raise ValueError(
-                "Indicators context is required"
-            )
+            raise ValueError("Indicators context is required")
 
         if self.positions is None:
-            raise ValueError(
-                "Positions context is required"
-            )
+            raise ValueError("Positions context is required")
 
         if self.risk_state is None:
-            raise ValueError(
-                "Risk state is required"
-            )
+            raise ValueError("Risk state is required")
 
         if self.account is None:
-            raise ValueError(
-                "Account context is required"
-            )
+            raise ValueError("Account context is required")

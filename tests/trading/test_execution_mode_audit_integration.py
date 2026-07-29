@@ -26,7 +26,6 @@ def enable_live_with_audit(
     operator,
     reason,
 ):
-
     record = audit.record_enable(
         operator,
         reason,
@@ -37,28 +36,16 @@ def enable_live_with_audit(
     return record
 
 
-
 def test_live_mode_disabled_before_approval():
+    guard = ExecutionModeGuard(ExecutionMode.LIVE)
 
-    guard = ExecutionModeGuard(
-        ExecutionMode.LIVE
-    )
-
-    assert (
-        guard.can_execute()
-        is False
-    )
-
+    assert guard.can_execute() is False
 
 
 def test_live_enable_creates_audit_and_unlocks():
-
-    guard = ExecutionModeGuard(
-        ExecutionMode.LIVE
-    )
+    guard = ExecutionModeGuard(ExecutionMode.LIVE)
 
     audit = LiveAuditLogger()
-
 
     record = enable_live_with_audit(
         guard,
@@ -67,32 +54,17 @@ def test_live_enable_creates_audit_and_unlocks():
         "Production validation",
     )
 
+    assert record.operator == "RAJESH"
 
-    assert (
-        record.operator
-        == "RAJESH"
-    )
+    assert audit.count() == 1
 
-    assert (
-        audit.count()
-        == 1
-    )
-
-    assert (
-        guard.can_execute()
-        is True
-    )
-
+    assert guard.can_execute() is True
 
 
 def test_live_audit_reason_is_preserved():
-
-    guard = ExecutionModeGuard(
-        ExecutionMode.LIVE
-    )
+    guard = ExecutionModeGuard(ExecutionMode.LIVE)
 
     audit = LiveAuditLogger()
-
 
     enable_live_with_audit(
         guard,
@@ -101,25 +73,15 @@ def test_live_audit_reason_is_preserved():
         "Morning trading session",
     )
 
-
     record = audit.records[0]
 
-
-    assert (
-        record.reason
-        == "Morning trading session"
-    )
-
+    assert record.reason == "Morning trading session"
 
 
 def test_multiple_live_sessions_are_audited():
-
-    guard = ExecutionModeGuard(
-        ExecutionMode.LIVE
-    )
+    guard = ExecutionModeGuard(ExecutionMode.LIVE)
 
     audit = LiveAuditLogger()
-
 
     enable_live_with_audit(
         guard,
@@ -135,22 +97,13 @@ def test_multiple_live_sessions_are_audited():
         "Session 2",
     )
 
-
-    assert (
-        audit.count()
-        == 2
-    )
-
+    assert audit.count() == 2
 
 
 def test_emergency_disable_after_live_enable():
-
-    guard = ExecutionModeGuard(
-        ExecutionMode.LIVE
-    )
+    guard = ExecutionModeGuard(ExecutionMode.LIVE)
 
     audit = LiveAuditLogger()
-
 
     enable_live_with_audit(
         guard,
@@ -159,17 +112,8 @@ def test_emergency_disable_after_live_enable():
         "Live execution",
     )
 
-
-    assert (
-        guard.can_execute()
-        is True
-    )
-
+    assert guard.can_execute() is True
 
     guard.disable_live_trading()
 
-
-    assert (
-        guard.can_execute()
-        is False
-    )
+    assert guard.can_execute() is False

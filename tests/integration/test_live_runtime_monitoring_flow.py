@@ -8,14 +8,12 @@ from monitoring.system_monitor import SystemMonitor
 
 
 def test_runtime_status_initial_state():
-
     status = RuntimeStatus()
 
     assert status is not None
 
 
 def test_runtime_status_can_start_and_stop():
-
     status = RuntimeStatus()
 
     status.start()
@@ -28,14 +26,12 @@ def test_runtime_status_can_start_and_stop():
 
 
 def test_system_monitor_initialization():
-
     monitor = SystemMonitor()
 
     assert monitor is not None
 
 
 def test_runtime_health_components():
-
     status = RuntimeStatus()
 
     status.start()

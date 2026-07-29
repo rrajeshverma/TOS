@@ -65,9 +65,7 @@ class OrderExecutionAdapter:
             return self.idempotency.get(order_key)
 
         if self.order_service is not None:
-            result = self.order_service.place_order(
-                self._execution_order
-            )
+            result = self.order_service.place_order(self._execution_order)
 
             self.idempotency.record(
                 order_key,

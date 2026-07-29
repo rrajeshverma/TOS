@@ -12,7 +12,6 @@ class PositionSyncValidator:
     Checks position consistency.
     """
 
-
     def validate(
         self,
         internal_position,
@@ -22,17 +21,10 @@ class PositionSyncValidator:
         Return True when positions match.
         """
 
-        if (
-            internal_position is None
-            or broker_position is None
-        ):
+        if internal_position is None or broker_position is None:
             return False
 
-
         return (
-            internal_position.symbol
-            == broker_position.symbol
-            and
-            internal_position.quantity
-            == broker_position.quantity
+            internal_position.symbol == broker_position.symbol
+            and internal_position.quantity == broker_position.quantity
         )

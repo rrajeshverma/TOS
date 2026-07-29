@@ -41,7 +41,6 @@ def create_indicators():
 
 
 def test_live_decision_to_trade_flow():
-
     decision_engine = DecisionEngine()
     risk_engine = RiskEngine()
     trade_factory = TradeFactory()
@@ -70,7 +69,6 @@ def test_live_decision_to_trade_flow():
 
 
 def test_trade_to_order_flow():
-
     decision_engine = DecisionEngine()
     risk_engine = RiskEngine()
     trade_factory = TradeFactory()
@@ -106,7 +104,6 @@ def test_trade_to_order_flow():
 
 
 def test_strategy_signal_is_buy():
-
     decision_engine = DecisionEngine()
 
     decision = decision_engine.evaluate(
@@ -118,7 +115,6 @@ def test_strategy_signal_is_buy():
 
 
 def test_risk_rejects_invalid_loss():
-
     risk_engine = RiskEngine()
     decision_engine = DecisionEngine()
 

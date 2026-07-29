@@ -3,11 +3,8 @@ from recovery.order_recovery import (
 )
 
 
-
 def test_order_recovery_stores_order_state():
-
     recovery = OrderRecoveryService()
-
 
     state = recovery.recover(
         "ORDER001",
@@ -17,23 +14,13 @@ def test_order_recovery_stores_order_state():
         },
     )
 
+    assert state["order_id"] == "ORDER001"
 
-    assert (
-        state["order_id"]
-        == "ORDER001"
-    )
-
-    assert (
-        state["broker_order_id"]
-        == "DHAN001"
-    )
-
+    assert state["broker_order_id"] == "DHAN001"
 
 
 def test_recovered_order_can_be_loaded():
-
     recovery = OrderRecoveryService()
-
 
     recovery.recover(
         "ORDER001",
@@ -43,34 +30,19 @@ def test_recovered_order_can_be_loaded():
         },
     )
 
-
-    result = recovery.get(
-        "ORDER001"
-    )
-
+    result = recovery.get("ORDER001")
 
     assert result is not None
 
 
-
 def test_missing_order_returns_none():
-
     recovery = OrderRecoveryService()
 
-
-    assert (
-        recovery.get(
-            "UNKNOWN"
-        )
-        is None
-    )
-
+    assert recovery.get("UNKNOWN") is None
 
 
 def test_multiple_orders_are_recovered():
-
     recovery = OrderRecoveryService()
-
 
     recovery.recover(
         "ORDER001",
@@ -82,39 +54,24 @@ def test_multiple_orders_are_recovered():
         {"status": "pending"},
     )
 
-
-    assert (
-        recovery.count()
-        == 2
-    )
-
+    assert recovery.count() == 2
 
 
 def test_clear_removes_recovery_state():
-
     recovery = OrderRecoveryService()
-
 
     recovery.recover(
         "ORDER001",
         {"status": "success"},
     )
 
-
     recovery.clear()
 
-
-    assert (
-        recovery.count()
-        == 0
-    )
-
+    assert recovery.count() == 0
 
 
 def test_failed_broker_order_state_is_recovered():
-
     recovery = OrderRecoveryService()
-
 
     state = recovery.recover(
         "ORDER003",
@@ -124,8 +81,4 @@ def test_failed_broker_order_state_is_recovered():
         },
     )
 
-
-    assert (
-        state["status"]
-        == "failed"
-    )
+    assert state["status"] == "failed"

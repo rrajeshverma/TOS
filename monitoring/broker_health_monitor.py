@@ -12,13 +12,10 @@ class BrokerHealthMonitor:
     Monitors broker runtime health.
     """
 
-
     def __init__(self) -> None:
-
         self._connected = False
         self._latency = None
         self._failures = 0
-
 
     def mark_connected(
         self,
@@ -31,7 +28,6 @@ class BrokerHealthMonitor:
         self._connected = True
         self._latency = latency_ms
 
-
     def mark_disconnected(
         self,
     ) -> None:
@@ -40,7 +36,6 @@ class BrokerHealthMonitor:
         """
 
         self._connected = False
-
 
     def record_failure(
         self,
@@ -51,7 +46,6 @@ class BrokerHealthMonitor:
 
         self._failures += 1
 
-
     @property
     def is_healthy(
         self,
@@ -60,11 +54,7 @@ class BrokerHealthMonitor:
         Return broker health state.
         """
 
-        return (
-            self._connected
-            and self._failures == 0
-        )
-
+        return self._connected and self._failures == 0
 
     def latency(
         self,
@@ -75,7 +65,6 @@ class BrokerHealthMonitor:
 
         return self._latency
 
-
     def failures(
         self,
     ) -> int:
@@ -84,7 +73,6 @@ class BrokerHealthMonitor:
         """
 
         return self._failures
-
 
     def reset(
         self,

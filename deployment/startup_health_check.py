@@ -13,9 +13,7 @@ class StartupHealthCheck:
     """
 
     def __init__(self) -> None:
-
         self._checks: dict[str, bool] = {}
-
 
     def register_check(
         self,
@@ -28,7 +26,6 @@ class StartupHealthCheck:
 
         self._checks[name] = status
 
-
     def is_ready(
         self,
     ) -> bool:
@@ -39,10 +36,7 @@ class StartupHealthCheck:
         if not self._checks:
             return False
 
-        return all(
-            self._checks.values()
-        )
-
+        return all(self._checks.values())
 
     def failed_checks(
         self,
@@ -51,13 +45,7 @@ class StartupHealthCheck:
         Return failed health checks.
         """
 
-        return [
-            name
-            for name, status
-            in self._checks.items()
-            if not status
-        ]
-
+        return [name for name, status in self._checks.items() if not status]
 
     def reset(
         self,

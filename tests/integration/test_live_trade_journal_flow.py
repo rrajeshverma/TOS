@@ -13,12 +13,10 @@ Trade Journal
 P&L Record
 """
 
-
 from datetime import datetime
 
 
 class DummyTradeJournal:
-
     def __init__(self):
         self.records = []
 
@@ -26,16 +24,13 @@ class DummyTradeJournal:
         self,
         trade,
     ):
-        self.records.append(
-            trade
-        )
+        self.records.append(trade)
 
     def all(self):
         return self.records
 
 
 def create_trade():
-
     return {
         "trade_id": "TRADE001",
         "symbol": "NIFTY",
@@ -49,29 +44,21 @@ def create_trade():
 
 
 def test_closed_trade_can_be_recorded():
-
     journal = DummyTradeJournal()
 
     trade = create_trade()
 
-    journal.record(
-        trade
-    )
+    journal.record(trade)
 
-    assert len(
-        journal.all()
-    ) == 1
+    assert len(journal.all()) == 1
 
 
 def test_journal_stores_symbol():
-
     journal = DummyTradeJournal()
 
     trade = create_trade()
 
-    journal.record(
-        trade
-    )
+    journal.record(trade)
 
     stored = journal.all()[0]
 
@@ -79,14 +66,11 @@ def test_journal_stores_symbol():
 
 
 def test_journal_stores_pnl():
-
     journal = DummyTradeJournal()
 
     trade = create_trade()
 
-    journal.record(
-        trade
-    )
+    journal.record(trade)
 
     stored = journal.all()[0]
 
@@ -94,31 +78,21 @@ def test_journal_stores_pnl():
 
 
 def test_multiple_trades_are_tracked():
-
     journal = DummyTradeJournal()
 
-    journal.record(
-        create_trade()
-    )
+    journal.record(create_trade())
 
-    journal.record(
-        create_trade()
-    )
+    journal.record(create_trade())
 
-    assert len(
-        journal.all()
-    ) == 2
+    assert len(journal.all()) == 2
 
 
 def test_trade_contains_execution_details():
-
     journal = DummyTradeJournal()
 
     trade = create_trade()
 
-    journal.record(
-        trade
-    )
+    journal.record(trade)
 
     stored = journal.all()[0]
 

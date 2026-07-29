@@ -26,7 +26,6 @@ class ExitManager:
         current_price: Decimal,
         current_time: time,
     ) -> ExitReason:
-
         trade = position.order.trade
 
         if current_price >= trade.target:

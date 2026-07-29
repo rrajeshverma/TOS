@@ -97,7 +97,6 @@ def test_place_order_requires_connection():
 
 
 def test_is_connected_without_client_state():
-
     client = Mock(spec=[])
 
     broker = DhanBroker(

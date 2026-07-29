@@ -37,7 +37,6 @@ class DummyOrderService:
 
 
 def create_request():
-
     return ExecutionRequest(
         symbol="NIFTY",
         quantity=65,
@@ -46,36 +45,26 @@ def create_request():
 
 
 def test_execution_engine_submits_live_order():
-
     service = DummyOrderService()
 
-    engine = ExecutionEngine(
-        service
-    )
+    engine = ExecutionEngine(service)
 
     request = create_request()
 
-    result = engine.execute(
-        request
-    )
+    result = engine.execute(request)
 
     assert result.success is True
     assert result.order_id == "ORDER001"
 
 
 def test_execution_engine_sends_correct_request():
-
     service = DummyOrderService()
 
-    engine = ExecutionEngine(
-        service
-    )
+    engine = ExecutionEngine(service)
 
     request = create_request()
 
-    engine.execute(
-        request
-    )
+    engine.execute(request)
 
     submitted = service.orders[0]
 
@@ -84,36 +73,25 @@ def test_execution_engine_sends_correct_request():
 
 
 def test_execution_engine_handles_order_failure():
-
     class FailedOrderService:
-
         def submit(
             self,
             request,
         ):
-            raise RuntimeError(
-                "Order rejected"
-            )
+            raise RuntimeError("Order rejected")
 
-    engine = ExecutionEngine(
-        FailedOrderService()
-    )
+    engine = ExecutionEngine(FailedOrderService())
 
-    result = engine.execute(
-        create_request()
-    )
+    result = engine.execute(create_request())
 
     assert result.success is False
     assert result.error == "Order rejected"
 
 
 def test_execution_engine_rejects_empty_request():
-
     service = DummyOrderService()
 
-    engine = ExecutionEngine(
-        service
-    )
+    engine = ExecutionEngine(service)
 
     try:
         engine.execute(None)

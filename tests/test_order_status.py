@@ -1,4 +1,36 @@
+import pytest
+
 from execution.order_status import OrderStatus
+
+
+@pytest.mark.parametrize(
+    "terminal_state",
+    [
+        "FILLED",
+        "CANCELLED",
+        "REJECTED",
+    ],
+)
+@pytest.mark.parametrize(
+    "transition",
+    [
+        "mark_submitted",
+        "mark_filled",
+        "mark_cancelled",
+        "mark_rejected",
+    ],
+)
+def test_terminal_states_reject_all_transitions(
+    terminal_state,
+    transition,
+):
+    status = OrderStatus(state=terminal_state)
+
+    with pytest.raises(
+        ValueError,
+        match=f"Invalid transition from {terminal_state}",
+    ):
+        getattr(status, transition)()
 
 
 def test_create_order_status():
@@ -69,6 +101,12 @@ def test_is_closed():
     assert status.is_closed() is True
 
 
+def test_is_closed_false_for_new():
+    status = OrderStatus()
+
+    assert status.is_closed() is False
+
+
 def test_is_cancelled():
     status = OrderStatus()
 
@@ -77,12 +115,24 @@ def test_is_cancelled():
     assert status.is_cancelled() is True
 
 
+def test_is_cancelled_false_for_new():
+    status = OrderStatus()
+
+    assert status.is_cancelled() is False
+
+
 def test_is_rejected():
     status = OrderStatus()
 
     status.mark_rejected()
 
     assert status.is_rejected() is True
+
+
+def test_is_rejected_false_for_new():
+    status = OrderStatus()
+
+    assert status.is_rejected() is False
 
 
 def test_to_dict():
@@ -102,7 +152,7 @@ def test_string():
 def test_repr():
     status = OrderStatus()
 
-    assert "NEW" in repr(status)
+    assert repr(status) == "OrderStatus(state='NEW')"
 
 
 def test_reset():

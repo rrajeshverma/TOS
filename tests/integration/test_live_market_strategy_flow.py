@@ -14,6 +14,7 @@ from market.tick_dispatcher import TickDispatcher
 from market.websocket_feed import WebSocketFeed
 from domain.indicator_set import IndicatorSet
 
+
 def create_indicators():
     return IndicatorSet(
         ema_high=22400,
@@ -22,6 +23,7 @@ def create_indicators():
         rsi=60,
         volume_average=90000,
     )
+
 
 def create_tick():
     return BrokerTick(
@@ -33,16 +35,13 @@ def create_tick():
 
 
 def test_live_market_tick_reaches_runtime():
-
     dispatcher = TickDispatcher()
 
     runtime = MarketRuntime()
 
     runtime.start()
 
-    dispatcher.register(
-        runtime.on_tick
-    )
+    dispatcher.register(runtime.on_tick)
 
     feed = WebSocketFeed(
         dispatcher=dispatcher.dispatch,
@@ -50,9 +49,7 @@ def test_live_market_tick_reaches_runtime():
 
     feed.connect()
 
-    feed.receive_tick(
-        create_tick()
-    )
+    feed.receive_tick(create_tick())
 
     market = runtime.get_market()
 
@@ -62,24 +59,19 @@ def test_live_market_tick_reaches_runtime():
 
 
 def test_market_data_can_trigger_strategy_flow():
-
     dispatcher = TickDispatcher()
 
     runtime = MarketRuntime()
 
     runtime.start()
 
-    dispatcher.register(
-        runtime.on_tick
-    )
+    dispatcher.register(runtime.on_tick)
 
     feed = WebSocketFeed(
         dispatcher=dispatcher.dispatch,
     )
 
-    feed.receive_tick(
-        create_tick()
-    )
+    feed.receive_tick(create_tick())
 
     market = runtime.get_market()
 
@@ -96,7 +88,6 @@ def test_market_data_can_trigger_strategy_flow():
 
 
 def test_risk_engine_receives_decision():
-
     risk_engine = RiskEngine()
 
     decision_engine = DecisionEngine()
@@ -105,9 +96,7 @@ def test_risk_engine_receives_decision():
 
     market.start()
 
-    market.on_tick(
-        create_tick()
-    )
+    market.on_tick(create_tick())
 
     decision = decision_engine.evaluate(
         market.get_market(),
@@ -124,7 +113,6 @@ def test_risk_engine_receives_decision():
 
 
 def test_live_pipeline_components_exist():
-
     runtime = MarketRuntime()
 
     assert runtime is not None

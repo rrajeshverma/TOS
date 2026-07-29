@@ -26,17 +26,19 @@ class WebSocketClient:
         transport=None,
         session: DhanSession | None = None,
     ) -> None:
-
         self.transport = transport
 
         self.session = session
 
         self._connected = False
         self._subscriptions: set[str] = set()
-        self._tick_callback: Callable[
-            [BrokerTick],
-            None,
-        ] | None = None
+        self._tick_callback: (
+            Callable[
+                [BrokerTick],
+                None,
+            ]
+            | None
+        ) = None
 
     @property
     def is_connected(self) -> bool:
@@ -71,16 +73,11 @@ class WebSocketClient:
         """
 
         if self.session is not None:
-
             if not self.session.is_authenticated:
-                raise RuntimeError(
-                    "WebSocket requires authentication."
-                )
+                raise RuntimeError("WebSocket requires authentication.")
 
             if self.transport is not None:
-                self.transport.authenticate(
-                    self.session.access_token
-                )
+                self.transport.authenticate(self.session.access_token)
 
         if self.transport is not None:
             self.transport.connect()
@@ -109,9 +106,7 @@ class WebSocketClient:
         """
 
         if self.session is not None and not self._connected:
-            raise RuntimeError(
-                "WebSocket is not connected."
-            )
+            raise RuntimeError("WebSocket is not connected.")
 
         if not self._connected:
             self._connected = True
@@ -119,9 +114,7 @@ class WebSocketClient:
         self._subscriptions.add(symbol)
 
         if self.transport is not None:
-            self.transport.subscribe(
-                symbol
-            )
+            self.transport.subscribe(symbol)
 
     def unsubscribe(
         self,

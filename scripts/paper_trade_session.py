@@ -22,7 +22,6 @@ from services.paper_trade_runner import PaperTradeRunner
 
 
 def main() -> int:
-
     print("=" * 45)
     print("TOS PAPER TRADING SESSION")
     print("=" * 45)
@@ -38,9 +37,7 @@ def main() -> int:
 
     print(
         "Broker        :",
-        "PAPER CONNECTED"
-        if broker.is_connected()
-        else "NOT CONNECTED",
+        "PAPER CONNECTED" if broker.is_connected() else "NOT CONNECTED",
     )
 
     session_manager = SessionManager()
@@ -52,16 +49,12 @@ def main() -> int:
 
     print(
         "Market        :",
-        "OPEN"
-        if trading_session.is_market_open(current_time)
-        else "CLOSED",
+        "OPEN" if trading_session.is_market_open(current_time) else "CLOSED",
     )
 
     print(
         "Entry Window  :",
-        "ACTIVE"
-        if trading_session.is_entry_allowed(current_time)
-        else "INACTIVE",
+        "ACTIVE" if trading_session.is_entry_allowed(current_time) else "INACTIVE",
     )
 
     adapter = OrderExecutionAdapter(

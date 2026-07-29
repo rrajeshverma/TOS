@@ -18,20 +18,13 @@ class FakeTrade:
 
 def create_trades():
     return [
-        FakeTrade(
-            pnl=Decimal("1000")
-        ),
-        FakeTrade(
-            pnl=Decimal("-200")
-        ),
-        FakeTrade(
-            pnl=Decimal("500")
-        ),
+        FakeTrade(pnl=Decimal("1000")),
+        FakeTrade(pnl=Decimal("-200")),
+        FakeTrade(pnl=Decimal("500")),
     ]
 
 
 def test_trade_statistics_calculation():
-
     trades = create_trades()
 
     statistics = TradeStatistics()
@@ -42,7 +35,6 @@ def test_trade_statistics_calculation():
 
 
 def test_trade_statistics_profit_metrics():
-
     trades = create_trades()
 
     statistics = TradeStatistics()
@@ -52,14 +44,11 @@ def test_trade_statistics_profit_metrics():
 
 
 def test_performance_service_generates_metrics():
-
     trades = create_trades()
 
     service = PerformanceService()
 
-    result = service.calculate(
-        trades
-    )
+    result = service.calculate(trades)
 
     assert result.total_trades == 3
     assert result.winning_trades == 2
@@ -68,7 +57,6 @@ def test_performance_service_generates_metrics():
 
 
 def test_performance_summary_structure():
-
     summary = PerformanceSummary()
 
     assert summary.trade_metrics is None

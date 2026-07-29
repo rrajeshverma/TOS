@@ -2,14 +2,12 @@ from risk.risk_engine import RiskEngine
 
 
 def test_risk_engine_can_be_created():
-
     engine = RiskEngine()
 
     assert engine is not None
 
 
 def test_risk_engine_approves_safe_trade():
-
     engine = RiskEngine(
         max_exposure_percentage=60,
         max_loss=10000,
@@ -31,7 +29,6 @@ def test_risk_engine_approves_safe_trade():
 
 
 def test_risk_engine_rejects_high_exposure():
-
     engine = RiskEngine(
         max_exposure_percentage=50,
         max_loss=10000,
@@ -52,7 +49,6 @@ def test_risk_engine_rejects_high_exposure():
 
 
 def test_risk_engine_rejects_high_loss():
-
     engine = RiskEngine(
         max_loss=5000,
     )
@@ -72,7 +68,6 @@ def test_risk_engine_rejects_high_loss():
 
 
 def test_risk_engine_contains_metadata():
-
     engine = RiskEngine()
 
     decision = engine.evaluate(
@@ -93,7 +88,6 @@ def test_risk_engine_contains_metadata():
 
 
 def test_risk_engine_returns_risk_score():
-
     engine = RiskEngine()
 
     decision = engine.evaluate(

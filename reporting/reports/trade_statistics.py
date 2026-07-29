@@ -73,7 +73,4 @@ class TradeStatistics:
         win_probability = win_rate / 100.0
         loss_probability = 1.0 - win_probability
 
-        return (
-            (average_win * win_probability)
-            - (average_loss * loss_probability)
-        )
+        return (average_win * win_probability) - (average_loss * loss_probability)

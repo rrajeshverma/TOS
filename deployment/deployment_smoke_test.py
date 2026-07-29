@@ -13,9 +13,7 @@ class DeploymentSmokeTest:
     """
 
     def __init__(self) -> None:
-
         self._steps: dict[str, bool] = {}
-
 
     def register(
         self,
@@ -28,7 +26,6 @@ class DeploymentSmokeTest:
 
         self._steps[step] = passed
 
-
     def is_successful(
         self,
     ) -> bool:
@@ -39,10 +36,7 @@ class DeploymentSmokeTest:
         if not self._steps:
             return False
 
-        return all(
-            self._steps.values()
-        )
-
+        return all(self._steps.values())
 
     def failed_steps(
         self,
@@ -51,13 +45,7 @@ class DeploymentSmokeTest:
         Return failed deployment steps.
         """
 
-        return [
-            step
-            for step, status
-            in self._steps.items()
-            if not status
-        ]
-
+        return [step for step, status in self._steps.items() if not status]
 
     def reset(
         self,

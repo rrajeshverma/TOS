@@ -17,9 +17,7 @@ class PaperMarketAdapter:
     """
 
     def __init__(self) -> None:
-
         self._last_tick: Tick | None = None
-
 
     def publish_tick(
         self,
@@ -30,17 +28,13 @@ class PaperMarketAdapter:
         """
 
         if tick is None:
-            raise ValueError(
-                "Tick cannot be None"
-            )
+            raise ValueError("Tick cannot be None")
 
         if not isinstance(
             tick,
             Tick,
         ):
-            raise ValueError(
-                "Invalid tick"
-            )
+            raise ValueError("Invalid tick")
 
         self._last_tick = tick
 
@@ -49,7 +43,6 @@ class PaperMarketAdapter:
             tick=tick,
             source="PAPER",
         )
-
 
     def last_tick(
         self,

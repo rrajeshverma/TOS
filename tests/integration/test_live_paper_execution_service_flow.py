@@ -17,21 +17,15 @@ from engines.risk_engine import RiskEngine
 
 
 class PaperTradingService:
-
     def __init__(self):
-
         self.orders = []
         self.positions = {}
-
 
     def execute(
         self,
         trade,
     ):
-
-        self.orders.append(
-            trade
-        )
+        self.orders.append(trade)
 
         symbol = trade["symbol"]
 
@@ -50,24 +44,17 @@ class PaperTradingService:
 
 
 class TradeJournal:
-
     def __init__(self):
-
         self.records = []
-
 
     def record(
         self,
         execution,
     ):
-
-        self.records.append(
-            execution
-        )
+        self.records.append(execution)
 
 
 def create_market():
-
     return Market(
         symbol="NIFTY",
         exchange="NSE",
@@ -82,7 +69,6 @@ def create_market():
 
 
 def create_indicators():
-
     return IndicatorSet(
         ema_high=25000,
         ema_low=24900,
@@ -93,7 +79,6 @@ def create_indicators():
 
 
 def create_trade_decision():
-
     market = create_market()
 
     indicators = create_indicators()
@@ -105,7 +90,6 @@ def create_trade_decision():
 
 
 def test_decision_passes_risk_validation():
-
     decision = create_trade_decision()
 
     risk = RiskEngine().evaluate(
@@ -114,14 +98,10 @@ def test_decision_passes_risk_validation():
         daily_loss=Decimal("0"),
     )
 
-    assert (
-        risk.approved
-        is True
-    )
+    assert risk.approved is True
 
 
 def test_paper_service_executes_buy_order():
-
     service = PaperTradingService()
 
     trade = {
@@ -130,18 +110,12 @@ def test_paper_service_executes_buy_order():
         "quantity": 65,
     }
 
-    result = service.execute(
-        trade
-    )
+    result = service.execute(trade)
 
-    assert (
-        result["status"]
-        == "EXECUTED"
-    )
+    assert result["status"] == "EXECUTED"
 
 
 def test_position_updates_after_execution():
-
     service = PaperTradingService()
 
     service.execute(
@@ -152,14 +126,10 @@ def test_position_updates_after_execution():
         }
     )
 
-    assert (
-        service.positions["NIFTY"]
-        == 65
-    )
+    assert service.positions["NIFTY"] == 65
 
 
 def test_trade_journal_records_execution():
-
     journal = TradeJournal()
 
     execution = {
@@ -167,17 +137,12 @@ def test_trade_journal_records_execution():
         "symbol": "NIFTY",
     }
 
-    journal.record(
-        execution
-    )
+    journal.record(execution)
 
-    assert len(
-        journal.records
-    ) == 1
+    assert len(journal.records) == 1
 
 
 def test_complete_live_paper_execution_flow():
-
     decision = create_trade_decision()
 
     risk = RiskEngine().evaluate(
@@ -186,10 +151,7 @@ def test_complete_live_paper_execution_flow():
         daily_loss=Decimal("0"),
     )
 
-    assert (
-        risk.approved
-        is True
-    )
+    assert risk.approved is True
 
     service = PaperTradingService()
 
@@ -203,14 +165,8 @@ def test_complete_live_paper_execution_flow():
         }
     )
 
-    journal.record(
-        execution
-    )
+    journal.record(execution)
 
-    assert len(
-        service.orders
-    ) == 1
+    assert len(service.orders) == 1
 
-    assert len(
-        journal.records
-    ) == 1
+    assert len(journal.records) == 1

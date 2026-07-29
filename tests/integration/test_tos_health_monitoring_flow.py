@@ -16,7 +16,6 @@ Trading System Availability
 
 
 class HealthMonitor:
-
     def __init__(self):
         self.components = {}
 
@@ -28,39 +27,28 @@ class HealthMonitor:
         self.components[component] = status
 
     def is_healthy(self):
-
-        return all(
-            self.components.values()
-        )
+        return all(self.components.values())
 
     def status(self):
-
         return self.components
 
 
 class DummyRuntime:
-
     def __init__(self):
-
         self.running = True
 
 
 class DummyBroker:
-
     def __init__(self):
-
         self.connected = True
 
 
 class DummyMarketFeed:
-
     def __init__(self):
-
         self.active = True
 
 
 def create_health():
-
     monitor = HealthMonitor()
 
     monitor.update(
@@ -82,47 +70,30 @@ def create_health():
 
 
 def test_runtime_health_is_available():
-
     monitor = create_health()
 
-    assert (
-        monitor.status()["runtime"]
-        is True
-    )
+    assert monitor.status()["runtime"] is True
 
 
 def test_broker_connection_health():
-
     monitor = create_health()
 
-    assert (
-        monitor.status()["broker"]
-        is True
-    )
+    assert monitor.status()["broker"] is True
 
 
 def test_market_feed_health():
-
     monitor = create_health()
 
-    assert (
-        monitor.status()["market_feed"]
-        is True
-    )
+    assert monitor.status()["market_feed"] is True
 
 
 def test_system_health_is_green():
-
     monitor = create_health()
 
-    assert (
-        monitor.is_healthy()
-        is True
-    )
+    assert monitor.is_healthy() is True
 
 
 def test_system_health_detects_failure():
-
     monitor = create_health()
 
     monitor.update(
@@ -130,7 +101,4 @@ def test_system_health_detects_failure():
         False,
     )
 
-    assert (
-        monitor.is_healthy()
-        is False
-    )
+    assert monitor.is_healthy() is False

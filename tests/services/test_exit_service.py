@@ -5,6 +5,8 @@ Tests for Exit Service.
 from datetime import datetime, time
 from decimal import Decimal
 
+from unittest.mock import Mock
+
 from domain.decision import Decision
 from domain.indicator_set import IndicatorSet
 from domain.market import Market
@@ -162,3 +164,203 @@ def test_exit_service_keeps_position_open_when_no_exit():
     assert result["closed"] is False
     assert result["reason"] == ExitReason.NONE
     assert result["position"].is_open
+
+
+def test_no_exit_does_not_return_trade():
+    service = ExitService()
+
+    position = create_position()
+
+    result = service.evaluate(
+        position,
+        Decimal("110"),
+        time(10, 0),
+    )
+
+    assert "trade" not in result
+
+
+def test_closed_trade_status_is_closed():
+    service = ExitService()
+
+    position = create_position()
+
+    result = service.evaluate(
+        position,
+        Decimal("121"),
+        time(10, 0),
+    )
+
+    assert result["trade"].status == TradeStatus.CLOSED
+
+
+def test_closed_trade_exit_price_set():
+    service = ExitService()
+
+    position = create_position()
+
+    result = service.evaluate(
+        position,
+        Decimal("121"),
+        time(10, 0),
+    )
+
+    assert result["trade"].exit_price == Decimal("121")
+
+
+def test_closed_trade_exit_reason_set():
+    service = ExitService()
+
+    position = create_position()
+
+    result = service.evaluate(
+        position,
+        Decimal("89"),
+        time(10, 0),
+    )
+
+    assert result["trade"].exit_reason == ExitReason.STOP_LOSS
+
+
+def test_profit_pnl_calculated():
+    service = ExitService()
+
+    position = create_position()
+
+    result = service.evaluate(
+        position,
+        Decimal("120"),
+        time(10, 0),
+    )
+
+    assert result["trade"].pnl == Decimal("1300")
+
+
+def test_loss_pnl_calculated():
+    service = ExitService()
+
+    position = create_position()
+
+    result = service.evaluate(
+        position,
+        Decimal("90"),
+        time(10, 0),
+    )
+
+    assert result["trade"].pnl == Decimal("-650")
+
+
+def test_trade_journal_called_once():
+    journal = Mock()
+
+    service = ExitService(
+        trade_journal=journal,
+    )
+
+    position = create_position()
+
+    service.evaluate(
+        position,
+        Decimal("121"),
+        time(10, 0),
+    )
+
+    journal.record.assert_called_once()
+
+
+def test_trade_journal_not_called_when_no_exit():
+    journal = Mock()
+
+    service = ExitService(
+        trade_journal=journal,
+    )
+
+    position = create_position()
+
+    service.evaluate(
+        position,
+        Decimal("110"),
+        time(10, 0),
+    )
+
+    journal.record.assert_not_called()
+
+
+def test_position_manager_called_once():
+    manager = Mock()
+
+    closed_position = create_position()
+
+    manager.close_position.return_value = closed_position
+
+    service = ExitService(
+        position_manager=manager,
+    )
+
+    position = create_position()
+
+    service.evaluate(
+        position,
+        Decimal("121"),
+        time(10, 0),
+    )
+
+    manager.close_position.assert_called_once_with(
+        position,
+        Decimal("121"),
+    )
+
+
+def test_position_manager_not_called_when_no_exit():
+    manager = Mock()
+
+    service = ExitService(
+        position_manager=manager,
+    )
+
+    position = create_position()
+
+    service.evaluate(
+        position,
+        Decimal("110"),
+        time(10, 0),
+    )
+
+    manager.close_position.assert_not_called()
+
+
+def test_exit_manager_called_once():
+    exit_manager = Mock()
+    exit_manager.check_exit.return_value = ExitReason.NONE
+
+    service = ExitService(
+        exit_manager=exit_manager,
+    )
+
+    position = create_position()
+
+    service.evaluate(
+        position,
+        Decimal("110"),
+        time(10, 0),
+    )
+
+    exit_manager.check_exit.assert_called_once_with(
+        position,
+        Decimal("110"),
+        time(10, 0),
+    )
+
+
+def test_closed_result_contains_trade():
+    service = ExitService()
+
+    position = create_position()
+
+    result = service.evaluate(
+        position,
+        Decimal("121"),
+        time(10, 0),
+    )
+
+    assert "trade" in result

@@ -20,9 +20,7 @@ class PositionRiskCalculator:
         """
 
         if capital <= 0:
-            raise ValueError(
-                "Capital must be positive"
-            )
+            raise ValueError("Capital must be positive")
 
         quantity = position.get(
             "quantity",
@@ -39,18 +37,11 @@ class PositionRiskCalculator:
             price,
         )
 
-        position_value = (
-            quantity * price
-        )
+        position_value = quantity * price
 
-        risk_amount = (
-            quantity
-            * abs(price - stop_loss)
-        )
+        risk_amount = quantity * abs(price - stop_loss)
 
-        risk_percentage = (
-            risk_amount / capital
-        ) * 100
+        risk_percentage = (risk_amount / capital) * 100
 
         return {
             "position_value": position_value,

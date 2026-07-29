@@ -2,7 +2,6 @@ from strategies.decision import StrategyDecision
 
 
 def test_decision_can_be_created():
-
     decision = StrategyDecision(
         strategy="NIFTY_ORB",
         signal="BUY",
@@ -15,9 +14,7 @@ def test_decision_can_be_created():
     assert decision.confidence == 85
 
 
-
 def test_decision_contains_metadata():
-
     decision = StrategyDecision(
         strategy="NIFTY_ORB",
         signal="BUY",
@@ -27,15 +24,10 @@ def test_decision_contains_metadata():
         },
     )
 
-    assert (
-        decision.metadata["price"]
-        == 24510
-    )
-
+    assert decision.metadata["price"] == 24510
 
 
 def test_decision_is_immutable():
-
     decision = StrategyDecision(
         strategy="NIFTY_ORB",
         signal="BUY",
@@ -51,9 +43,7 @@ def test_decision_is_immutable():
         assert True
 
 
-
 def test_decision_requires_strategy():
-
     try:
         StrategyDecision(
             strategy=None,
@@ -68,9 +58,7 @@ def test_decision_requires_strategy():
         assert True
 
 
-
 def test_decision_requires_signal():
-
     try:
         StrategyDecision(
             strategy="NIFTY_ORB",
@@ -85,9 +73,7 @@ def test_decision_requires_signal():
         assert True
 
 
-
 def test_decision_confidence_range():
-
     try:
         StrategyDecision(
             strategy="NIFTY_ORB",

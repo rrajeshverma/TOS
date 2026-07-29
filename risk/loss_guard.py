@@ -16,14 +16,10 @@ class LossGuard:
         self,
         max_loss: float,
     ) -> None:
-
         if max_loss < 0:
-            raise ValueError(
-                "Loss limit cannot be negative"
-            )
+            raise ValueError("Loss limit cannot be negative")
 
         self.max_loss = max_loss
-
 
     def check(
         self,
@@ -34,14 +30,9 @@ class LossGuard:
         """
 
         if current_loss < 0:
-            raise ValueError(
-                "Loss cannot be negative"
-            )
+            raise ValueError("Loss cannot be negative")
 
-        approved = (
-            current_loss
-            <= self.max_loss
-        )
+        approved = current_loss <= self.max_loss
 
         return {
             "approved": approved,

@@ -34,7 +34,6 @@ class ConfigValidator:
 
         return True
 
-
     def is_live_safe(
         self,
         config: dict,
@@ -43,9 +42,7 @@ class ConfigValidator:
         Validate LIVE trading safety.
         """
 
-        if config.get(
-            "mode"
-        ) != "LIVE":
+        if config.get("mode") != "LIVE":
             return True
 
         return bool(

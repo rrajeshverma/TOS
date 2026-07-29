@@ -13,9 +13,7 @@ class AlertManager:
     """
 
     def __init__(self) -> None:
-
         self._alerts: list[dict] = []
-
 
     def raise_alert(
         self,
@@ -31,12 +29,9 @@ class AlertManager:
             "message": message,
         }
 
-        self._alerts.append(
-            alert
-        )
+        self._alerts.append(alert)
 
         return alert
-
 
     def alerts(
         self,
@@ -45,10 +40,7 @@ class AlertManager:
         Return alerts snapshot.
         """
 
-        return list(
-            self._alerts
-        )
-
+        return list(self._alerts)
 
     def count(
         self,
@@ -57,10 +49,7 @@ class AlertManager:
         Return alert count.
         """
 
-        return len(
-            self._alerts
-        )
-
+        return len(self._alerts)
 
     def has_alert(
         self,
@@ -70,11 +59,7 @@ class AlertManager:
         Check alert type exists.
         """
 
-        return any(
-            alert["type"] == alert_type
-            for alert in self._alerts
-        )
-
+        return any(alert["type"] == alert_type for alert in self._alerts)
 
     def clear(
         self,

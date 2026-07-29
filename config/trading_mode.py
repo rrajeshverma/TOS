@@ -30,9 +30,7 @@ def get_trading_mode() -> ExecutionMode:
         DEFAULT_MODE,
     ).upper()
 
-
     if mode == ExecutionMode.LIVE.value:
         return ExecutionMode.LIVE
-
 
     return ExecutionMode.PAPER

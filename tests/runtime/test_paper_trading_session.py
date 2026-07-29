@@ -12,7 +12,6 @@ from runtime.paper_trading_session import (
 
 
 class DummyStrategy:
-
     def evaluate(
         self,
         tick,
@@ -25,7 +24,6 @@ class DummyStrategy:
 
 
 class DummyExecutor:
-
     def execute(
         self,
         decision,
@@ -38,22 +36,17 @@ class DummyExecutor:
 
 
 class DummyJournal:
-
     def __init__(self):
-
         self.records = []
 
     def record(
         self,
         trade,
     ):
-        self.records.append(
-            trade
-        )
+        self.records.append(trade)
 
 
 def create_session():
-
     return PaperTradingSession(
         strategy=DummyStrategy(),
         executor=DummyExecutor(),
@@ -62,7 +55,6 @@ def create_session():
 
 
 def create_tick():
-
     return {
         "symbol": "NIFTY",
         "price": 25000,
@@ -70,95 +62,61 @@ def create_tick():
 
 
 def test_session_starts():
-
     session = create_session()
 
     session.start()
 
-    assert (
-        session.is_running()
-        is True
-    )
+    assert session.is_running() is True
 
 
 def test_session_stops():
-
     session = create_session()
 
     session.start()
 
     session.stop()
 
-    assert (
-        session.is_running()
-        is False
-    )
+    assert session.is_running() is False
 
 
 def test_tick_before_start_is_rejected():
-
     session = create_session()
 
-    with pytest.raises(
-        RuntimeError
-    ):
-
-        session.process_tick(
-            create_tick()
-        )
+    with pytest.raises(RuntimeError):
+        session.process_tick(create_tick())
 
 
 def test_tick_creates_paper_trade():
-
     session = create_session()
 
     session.start()
 
-    trade = session.process_tick(
-        create_tick()
-    )
+    trade = session.process_tick(create_tick())
 
     assert trade is not None
 
-    assert (
-        trade["symbol"]
-        == "NIFTY"
-    )
+    assert trade["symbol"] == "NIFTY"
 
 
 def test_trade_is_recorded_in_journal():
-
     session = create_session()
 
     session.start()
 
-    session.process_tick(
-        create_tick()
-    )
+    session.process_tick(create_tick())
 
-    assert len(
-        session.journal.records
-    ) == 1
+    assert len(session.journal.records) == 1
 
 
 def test_session_summary():
-
     session = create_session()
 
     session.start()
 
-    session.process_tick(
-        create_tick()
-    )
+    session.process_tick(create_tick())
 
     summary = session.summary()
 
-    assert (
-        summary["running"]
-        is True
-    )
+    assert summary["running"] is True
 
-    assert (
-        summary["trades"]
-        == 1
-    )
+    assert summary["trades"] == 1

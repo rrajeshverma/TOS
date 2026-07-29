@@ -135,7 +135,6 @@ class DummyMapper:
 
 
 class DummySellClient:
-
     def __init__(self):
         self.connected = False
 
@@ -159,7 +158,7 @@ def test_place_sell_order():
     )
 
     broker.connect()
-    
+
     order = Order(
         symbol="NIFTY",
         side=OrderSide.SELL,

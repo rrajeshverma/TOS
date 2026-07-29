@@ -4,7 +4,6 @@ from trading.live_audit import (
 
 
 def test_live_enable_creates_audit_record():
-
     audit = LiveAuditLogger()
 
     record = audit.record_enable(
@@ -12,19 +11,12 @@ def test_live_enable_creates_audit_record():
         reason="Production validation",
     )
 
-    assert (
-        record.operator
-        == "RAJESH"
-    )
+    assert record.operator == "RAJESH"
 
-    assert (
-        record.reason
-        == "Production validation"
-    )
+    assert record.reason == "Production validation"
 
 
 def test_audit_count_increases():
-
     audit = LiveAuditLogger()
 
     audit.record_enable(
@@ -32,14 +24,10 @@ def test_audit_count_increases():
         reason="Manual approval",
     )
 
-    assert (
-        audit.count()
-        == 1
-    )
+    assert audit.count() == 1
 
 
 def test_multiple_live_enable_events_are_saved():
-
     audit = LiveAuditLogger()
 
     audit.record_enable(
@@ -52,14 +40,10 @@ def test_multiple_live_enable_events_are_saved():
         "Release",
     )
 
-    assert (
-        audit.count()
-        == 2
-    )
+    assert audit.count() == 2
 
 
 def test_audit_records_are_read_only_copy():
-
     audit = LiveAuditLogger()
 
     audit.record_enable(
@@ -71,14 +55,10 @@ def test_audit_records_are_read_only_copy():
 
     records.clear()
 
-    assert (
-        audit.count()
-        == 1
-    )
+    assert audit.count() == 1
 
 
 def test_timestamp_exists():
-
     audit = LiveAuditLogger()
 
     record = audit.record_enable(
@@ -86,7 +66,4 @@ def test_timestamp_exists():
         "Enable live",
     )
 
-    assert (
-        record.timestamp
-        is not None
-    )
+    assert record.timestamp is not None

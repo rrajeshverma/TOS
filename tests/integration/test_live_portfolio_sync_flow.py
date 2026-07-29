@@ -15,7 +15,6 @@ Local Portfolio State
 
 
 class DummyPosition:
-
     def __init__(
         self,
         symbol,
@@ -28,9 +27,7 @@ class DummyPosition:
 
 
 class DummyBroker:
-
     def get_positions(self):
-
         return [
             DummyPosition(
                 symbol="NIFTY",
@@ -41,7 +38,6 @@ class DummyBroker:
 
 
 def test_portfolio_sync_reads_positions():
-
     broker = DummyBroker()
 
     positions = broker.get_positions()
@@ -50,7 +46,6 @@ def test_portfolio_sync_reads_positions():
 
 
 def test_portfolio_contains_symbol():
-
     broker = DummyBroker()
 
     positions = broker.get_positions()
@@ -59,7 +54,6 @@ def test_portfolio_contains_symbol():
 
 
 def test_portfolio_contains_quantity():
-
     broker = DummyBroker()
 
     positions = broker.get_positions()
@@ -68,7 +62,6 @@ def test_portfolio_contains_quantity():
 
 
 def test_portfolio_contains_average_price():
-
     broker = DummyBroker()
 
     positions = broker.get_positions()

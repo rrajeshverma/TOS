@@ -30,7 +30,6 @@ from market.candle_builder import CandleBuilder
 
 
 def create_tick(price: float):
-
     return BrokerTick(
         symbol="NIFTY",
         ltp=price,
@@ -40,22 +39,14 @@ def create_tick(price: float):
 
 
 def create_live_market():
-
     builder = CandleBuilder()
 
     candles = []
 
-    prices = [
-        25000 + (index * 10)
-        for index in range(40)
-    ]
+    prices = [25000 + (index * 10) for index in range(40)]
 
     for price in prices:
-        candles.append(
-            builder.update(
-                create_tick(price)
-            )
-        )
+        candles.append(builder.update(create_tick(price)))
 
     latest = candles[-1]
 
@@ -73,14 +64,11 @@ def create_live_market():
 
 
 def test_live_market_generates_indicators():
-
     _, candles = create_live_market()
 
     engine = IndicatorEngine()
 
-    indicators = engine.calculate(
-        candles
-    )
+    indicators = engine.calculate(candles)
 
     assert indicators is not None
     assert indicators.ema_high is not None
@@ -88,14 +76,11 @@ def test_live_market_generates_indicators():
 
 
 def test_decision_engine_accepts_live_signal():
-
     market, candles = create_live_market()
 
     indicator_engine = IndicatorEngine()
 
-    indicators = indicator_engine.calculate(
-        candles
-    )
+    indicators = indicator_engine.calculate(candles)
 
     decision_engine = DecisionEngine()
 
@@ -108,12 +93,9 @@ def test_decision_engine_accepts_live_signal():
 
 
 def test_live_signal_flow_returns_valid_status():
-
     market, candles = create_live_market()
 
-    indicators = IndicatorEngine().calculate(
-        candles
-    )
+    indicators = IndicatorEngine().calculate(candles)
 
     decision = DecisionEngine().evaluate(
         market,
@@ -124,7 +106,6 @@ def test_live_signal_flow_returns_valid_status():
 
 
 def test_no_signal_is_valid_market_state():
-
     market = Market(
         symbol="NIFTY",
         exchange="NSE",

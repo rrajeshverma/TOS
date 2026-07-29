@@ -2,7 +2,6 @@ from risk.loss_guard import LossGuard
 
 
 def test_loss_guard_can_be_created():
-
     guard = LossGuard(
         max_loss=10000,
     )
@@ -11,7 +10,6 @@ def test_loss_guard_can_be_created():
 
 
 def test_allows_loss_within_limit():
-
     guard = LossGuard(
         max_loss=10000,
     )
@@ -24,7 +22,6 @@ def test_allows_loss_within_limit():
 
 
 def test_rejects_loss_above_limit():
-
     guard = LossGuard(
         max_loss=10000,
     )
@@ -37,7 +34,6 @@ def test_rejects_loss_above_limit():
 
 
 def test_accepts_exact_loss_limit():
-
     guard = LossGuard(
         max_loss=10000,
     )
@@ -50,7 +46,6 @@ def test_accepts_exact_loss_limit():
 
 
 def test_rejects_negative_loss_limit():
-
     try:
         LossGuard(
             max_loss=-1,
@@ -63,7 +58,6 @@ def test_rejects_negative_loss_limit():
 
 
 def test_rejects_negative_current_loss():
-
     guard = LossGuard(
         max_loss=10000,
     )

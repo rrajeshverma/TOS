@@ -16,11 +16,7 @@ class PortfolioEngine:
     """
 
     def __init__(self) -> None:
-
-        self.exposure_calculator = (
-            ExposureCalculator()
-        )
-
+        self.exposure_calculator = ExposureCalculator()
 
     def evaluate(
         self,
@@ -33,7 +29,6 @@ class PortfolioEngine:
         if context is None:
             return None
 
-
         positions = context.get(
             "positions",
             [],
@@ -44,39 +39,25 @@ class PortfolioEngine:
             0,
         )
 
-
-        exposure_result = (
-            self.exposure_calculator.calculate(
-                positions=positions,
-                capital=capital,
-            )
+        exposure_result = self.exposure_calculator.calculate(
+            positions=positions,
+            capital=capital,
         )
-
 
         allocation_result = {}
 
-        allocation = context.get(
-            "allocation"
-        )
+        allocation = context.get("allocation")
 
         if allocation:
+            allocation_engine = AllocationEngine()
 
-            allocation_engine = (
-                AllocationEngine()
+            allocation_result = allocation_engine.allocate(
+                capital=capital,
+                allocations=allocation,
             )
-
-            allocation_result = (
-                allocation_engine.allocate(
-                    capital=capital,
-                    allocations=allocation,
-                )
-            )
-
 
         return {
-            "exposure": (
-                exposure_result["total_exposure"]
-            ),
+            "exposure": (exposure_result["total_exposure"]),
             "allocation": allocation_result,
             "status": "READY",
         }

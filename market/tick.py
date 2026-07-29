@@ -23,23 +23,14 @@ class Tick:
     exchange: str
 
     def __post_init__(self) -> None:
-
         if not self.symbol:
-            raise ValueError(
-                "Symbol is required"
-            )
+            raise ValueError("Symbol is required")
 
         if self.price <= 0:
-            raise ValueError(
-                "Price must be positive"
-            )
+            raise ValueError("Price must be positive")
 
         if self.volume <= 0:
-            raise ValueError(
-                "Volume must be positive"
-            )
+            raise ValueError("Volume must be positive")
 
         if not self.exchange:
-            raise ValueError(
-                "Exchange is required"
-            )
+            raise ValueError("Exchange is required")

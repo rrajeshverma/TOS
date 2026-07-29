@@ -21,39 +21,26 @@ class LiveAuditLogger:
     """
 
     def __init__(self) -> None:
-
         self._records: list[LiveAuditRecord] = []
-
 
     def record_enable(
         self,
         operator: str,
         reason: str,
     ) -> LiveAuditRecord:
-
         record = LiveAuditRecord(
             operator=operator,
             reason=reason,
             timestamp=datetime.now(),
         )
 
-        self._records.append(
-            record
-        )
+        self._records.append(record)
 
         return record
 
-
     @property
     def records(self) -> list[LiveAuditRecord]:
-
-        return list(
-            self._records
-        )
-
+        return list(self._records)
 
     def count(self) -> int:
-
-        return len(
-            self._records
-        )
+        return len(self._records)

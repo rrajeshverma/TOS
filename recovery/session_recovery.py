@@ -13,9 +13,7 @@ class SessionRecoveryService:
     """
 
     def __init__(self) -> None:
-
         self._session: dict | None = None
-
 
     def recover(
         self,
@@ -26,24 +24,17 @@ class SessionRecoveryService:
         """
 
         if not session_state:
-            raise ValueError(
-                "Session state required"
-            )
+            raise ValueError("Session state required")
 
         if "access_token" not in session_state:
-            raise ValueError(
-                "Access token required"
-            )
+            raise ValueError("Access token required")
 
         self._session = {
-            "access_token": session_state[
-                "access_token"
-            ],
+            "access_token": session_state["access_token"],
             "authenticated": True,
         }
 
         return self._session
-
 
     def get_session(
         self,
@@ -54,7 +45,6 @@ class SessionRecoveryService:
 
         return self._session
 
-
     def is_authenticated(
         self,
     ) -> bool:
@@ -62,14 +52,10 @@ class SessionRecoveryService:
         Check recovered authentication.
         """
 
-        return (
-            self._session is not None
-            and self._session.get(
-                "authenticated",
-                False,
-            )
+        return self._session is not None and self._session.get(
+            "authenticated",
+            False,
         )
-
 
     def clear(
         self,

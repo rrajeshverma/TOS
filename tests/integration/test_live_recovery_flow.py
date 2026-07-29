@@ -9,7 +9,6 @@ from services.exit_manager import ExitManager
 
 
 def test_runtime_can_recover_after_stop():
-
     status = RuntimeStatus()
 
     status.start()
@@ -26,7 +25,6 @@ def test_runtime_can_recover_after_stop():
 
 
 def test_market_feed_reconnect_flow():
-
     feed = WebSocketFeed()
 
     assert feed.is_connected() is False
@@ -45,7 +43,6 @@ def test_market_feed_reconnect_flow():
 
 
 def test_recovery_keeps_runtime_safe_state():
-
     status = RuntimeStatus()
 
     status.start()
@@ -64,28 +61,20 @@ def test_recovery_keeps_runtime_safe_state():
 
 
 def test_exit_manager_available_for_failure_exit():
-
     manager = ExitManager()
 
     assert manager is not None
 
-def test_order_failure_does_not_crash_runtime():
 
+def test_order_failure_does_not_crash_runtime():
     from execution.execution_engine import ExecutionEngine
     from execution.execution_request import ExecutionRequest
 
-
     class FailedOrderService:
-
         def submit(self, request):
-            raise RuntimeError(
-                "Broker unavailable"
-            )
+            raise RuntimeError("Broker unavailable")
 
-
-    engine = ExecutionEngine(
-        FailedOrderService()
-    )
+    engine = ExecutionEngine(FailedOrderService())
 
     result = engine.execute(
         ExecutionRequest(
@@ -100,7 +89,6 @@ def test_order_failure_does_not_crash_runtime():
 
 
 def test_market_feed_can_resume_after_failure():
-
     feed = WebSocketFeed()
 
     feed.connect()
@@ -117,7 +105,6 @@ def test_market_feed_can_resume_after_failure():
 
 
 def test_runtime_health_after_recovery():
-
     status = RuntimeStatus()
 
     status.start()
