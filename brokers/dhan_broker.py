@@ -5,13 +5,7 @@ from brokers.base_broker import BaseBroker
 from brokers.dhan_mapper import DhanMapper
 from brokers.models import (
     Funds,
-    Holding,
-    Order,
-    OrderSide,
     OrderStatus,
-    OrderType,
-    Position,
-    ProductType,
 )
 
 
@@ -89,67 +83,28 @@ class DhanBroker(BaseBroker):
 
     def get_order(self, order_id):
         item = self.client.get_order(order_id)
-
-        return Order(
-            symbol=item["tradingSymbol"],
-            side=OrderSide(item["transactionType"]),
-            quantity=item["quantity"],
-            order_type=OrderType(item["orderType"]),
-            product=ProductType(item["productType"]),
-            broker_order_id=item["orderId"],
-            status=OrderStatus(item["orderStatus"]),
-        )
+        return DhanMapper.to_order(item)
 
     def get_orders(self):
         response = self.client.get_order_list()
 
-        orders = []
-
-        for item in response["data"]:
-            orders.append(
-                Order(
-                    symbol=item["tradingSymbol"],
-                    side=OrderSide(item["transactionType"]),
-                    quantity=item["quantity"],
-                    order_type=OrderType(item["orderType"]),
-                    product=ProductType(item["productType"]),
-                    broker_order_id=item["orderId"],
-                    status=OrderStatus(item["orderStatus"]),
-                )
-            )
-
-        return orders
+        return [
+            DhanMapper.to_order(item)
+            for item in response["data"]
+        ]
 
     def get_positions(self):
         response = self.client.get_positions()
 
-        positions = []
-
-        for item in response["data"]:
-            positions.append(
-                Position(
-                    symbol=item["tradingSymbol"],
-                    quantity=item["netQty"],
-                    average_price=Decimal(str(item["costPrice"])),
-                    last_price=Decimal(str(item["lastTradedPrice"])),
-                    pnl=Decimal("0"),
-                )
-            )
-
-        return positions
+        return [
+            DhanMapper.to_position(item)
+            for item in response["data"]
+        ]
 
     def get_holdings(self):
         response = self.client.get_holdings()
 
-        holdings = []
-
-        for item in response["data"]:
-            holdings.append(
-                Holding(
-                    symbol=item["tradingSymbol"],
-                    quantity=item["totalQty"],
-                    average_price=Decimal(str(item["avgCostPrice"])),
-                )
-            )
-
-        return holdings
+        return [
+            DhanMapper.to_holding(item)
+            for item in response["data"]
+        ]

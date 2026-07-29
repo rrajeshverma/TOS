@@ -6,6 +6,7 @@ from __future__ import annotations
 
 from decimal import Decimal
 
+from engines.trade_planner import TradePlanner
 from domain.indicator_set import IndicatorSet
 from domain.market import Market
 from engines.order_factory import OrderFactory
@@ -31,6 +32,7 @@ class PaperTradeRunner:
     ) -> None:
         self.strategy_engine = strategy_engine
         self.risk_engine = RiskEngine()
+        self.trade_planner = TradePlanner()
         self.trade_factory = TradeFactory()
         self.order_factory = OrderFactory()
         self.position_manager = PositionManager()
@@ -59,10 +61,15 @@ class PaperTradeRunner:
                 "reason": risk.reasons,
             }
 
+        plan = self.trade_planner.plan(
+            market,
+            risk,
+        )
+
         trade = self.trade_factory.create(
             risk,
-            entry_price=Decimal(str(market.close)),
-            stop_loss=Decimal(str(market.low)),
+            entry_price=plan.entry_price,
+            stop_loss=plan.stop_loss,
         )
 
         order = self.order_factory.create(

@@ -21,10 +21,22 @@ class TradingRuntime:
 
     def start(self) -> None:
         self.running = True
+
+        market_data = self.services.get("market_data_service")
+
+        if market_data is not None:
+            market_data.connect()
+
         LOGGER.info("Trading runtime started")
 
     def stop(self) -> None:
+        market_data = self.services.get("market_data_service")
+
+        if market_data is not None:
+            market_data.disconnect()
+
         self.running = False
+
         LOGGER.info("Trading runtime stopped")
 
     def health(self) -> dict:
@@ -53,3 +65,20 @@ class TradingRuntime:
         )
 
         return risk
+
+    def on_market_tick(
+        self,
+        market,
+        history,
+    ):
+        """
+        Process a market update.
+
+        This is the entry point used by the live
+        market data service.
+        """
+
+        return self.run_cycle(
+            market,
+            history,
+        )

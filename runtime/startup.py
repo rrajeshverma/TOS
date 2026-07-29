@@ -4,15 +4,17 @@ Application startup manager.
 
 import logging
 
+from brokers.clients.dhan_client import DhanClient
+from brokers.dhan_broker import DhanBroker
 from brokers.paper_broker import PaperBroker
 from execution.execution_engine import ExecutionEngine
 from execution.order_repository import OrderRepository
 from execution.order_service import OrderService
 from engines.risk_engine import RiskEngine
 from engines.strategy_engine import StrategyEngine
-from services.paper_trading_service import PaperTradingService
-from services.paper_trade_runner import PaperTradeRunner
 from services.order_execution_adapter import OrderExecutionAdapter
+from services.paper_trade_runner import PaperTradeRunner
+from services.paper_trading_service import PaperTradingService
 
 LOGGER = logging.getLogger("tos")
 
@@ -35,8 +37,19 @@ class Startup:
     def initialize_services(self) -> None:
         """Initialize trading services."""
 
-        broker = PaperBroker()
-        broker.connect()
+        if self.broker == "dhan":
+            client = DhanClient()
+
+            broker = DhanBroker(
+                client=client,
+                instrument_mapper={},
+            )
+
+            broker.connect()
+
+        else:
+            broker = PaperBroker()
+            broker.connect()
 
         repository = OrderRepository()
 
@@ -45,23 +58,41 @@ class Startup:
             repository=repository,
         )
 
+        execution_adapter = OrderExecutionAdapter(
+            broker=broker,
+            order_service=order_service,
+        )
+
         execution_engine = ExecutionEngine(
             order_service,
         )
 
         strategy_engine = StrategyEngine()
+
         risk_engine = RiskEngine()
+
         paper_service = PaperTradingService()
+
+        paper_trade_runner = PaperTradeRunner(
+            strategy_engine=strategy_engine,
+            broker=broker,
+            order_execution_adapter=execution_adapter,
+        )
 
         self.services = {
             "broker": broker,
             "order_repository": repository,
             "order_service": order_service,
+            "order_execution_adapter": execution_adapter,
             "execution_engine": execution_engine,
             "strategy_engine": strategy_engine,
             "risk_engine": risk_engine,
             "paper_trading_service": paper_service,
+            "paper_trade_runner": paper_trade_runner,
         }
+
+        if self.broker == "dhan":
+            self.services["dhan_client"] = client
 
         self.services_initialized = True
 
@@ -81,10 +112,12 @@ class Startup:
 
         LOGGER.info("Order Repository    : READY")
         LOGGER.info("Order Service       : READY")
+        LOGGER.info("Execution Adapter   : READY")
         LOGGER.info("Execution Engine    : READY")
         LOGGER.info("Strategy Engine     : READY")
         LOGGER.info("Risk Engine         : READY")
         LOGGER.info("Paper Trading       : READY")
+        LOGGER.info("Paper Trade Runner  : READY")
 
         LOGGER.info("Trading Runtime READY")
         LOGGER.info("========================================")
