@@ -11,6 +11,8 @@ from execution.order_service import OrderService
 from engines.risk_engine import RiskEngine
 from engines.strategy_engine import StrategyEngine
 from services.paper_trading_service import PaperTradingService
+from services.paper_trade_runner import PaperTradeRunner
+from services.order_execution_adapter import OrderExecutionAdapter
 
 LOGGER = logging.getLogger("tos")
 

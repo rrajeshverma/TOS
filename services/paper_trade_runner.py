@@ -4,7 +4,6 @@ Paper trade orchestration service.
 
 from __future__ import annotations
 
-from datetime import datetime
 from decimal import Decimal
 
 from domain.indicator_set import IndicatorSet
@@ -38,27 +37,11 @@ class PaperTradeRunner:
         self.broker = broker
         self.adapter = order_execution_adapter
 
-    def run(self):
-        market = Market(
-            symbol="NIFTY",
-            exchange="NSE",
-            timeframe="5m",
-            timestamp=datetime.now(),
-            open=22500,
-            high=22550,
-            low=22490,
-            close=22540,
-            volume=100000,
-        )
-
-        indicators = IndicatorSet(
-            ema_high=22520,
-            ema_low=22480,
-            vwap=22510,
-            rsi=60,
-            volume_average=90000,
-        )
-
+    def run(
+        self,
+        market: Market,
+        indicators: IndicatorSet,
+    ):
         decision = self.strategy_engine.decide(
             market,
             indicators,
@@ -78,15 +61,15 @@ class PaperTradeRunner:
 
         trade = self.trade_factory.create(
             risk,
-            entry_price=Decimal("100"),
-            stop_loss=Decimal("90"),
+            entry_price=Decimal(str(market.close)),
+            stop_loss=Decimal(str(market.low)),
         )
 
         order = self.order_factory.create(
             trade,
             Broker.DHAN,
             OrderSide.BUY,
-            Decimal("100"),
+            trade.entry_price,
         )
 
         execution = self.adapter.to_execution_order(order)
@@ -98,7 +81,7 @@ class PaperTradeRunner:
         position = self.position_manager.open_position(
             order,
             order.quantity,
-            Decimal("100"),
+            trade.entry_price,
         )
 
         return {
