@@ -1,6 +1,7 @@
 """
 Strategy loader.
 """
+
 from __future__ import annotations
 
 import importlib
@@ -11,6 +12,7 @@ import strategies.plugins
 import inspect
 
 from strategies.base_strategy import BaseStrategy
+
 
 class StrategyLoader:
     """Maintains a collection of strategy plugins."""
@@ -70,7 +72,4 @@ class StrategyLoader:
         Instantiate all discovered strategy classes.
         """
 
-        return [
-            strategy_class()
-            for strategy_class in self.strategy_classes()
-        ]
+        return [strategy_class() for strategy_class in self.strategy_classes()]

@@ -29,18 +29,12 @@ class StrategyPluginValidator:
 
         for field_name, value in required_fields.items():
             if not isinstance(value, str):
-                raise TypeError(
-                    f"Strategy {field_name} must be a string"
-                )
+                raise TypeError(f"Strategy {field_name} must be a string")
 
             if not value.strip():
-                raise ValueError(
-                    f"Strategy {field_name} is required"
-                )
+                raise ValueError(f"Strategy {field_name} is required")
 
         if not isinstance(metadata.enabled, bool):
-            raise TypeError(
-                "Strategy enabled must be a boolean"
-            )
+            raise TypeError("Strategy enabled must be a boolean")
 
         return True

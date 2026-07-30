@@ -41,9 +41,8 @@ def test_valid_strategy_passes():
 
 def test_missing_metadata_fails():
     with pytest.raises(ValueError, match="metadata"):
-        StrategyPluginValidator().validate(
-            MissingMetadataStrategy()
-        )
+        StrategyPluginValidator().validate(MissingMetadataStrategy())
+
 
 class EmptyAuthorStrategy(BaseStrategy):
     metadata = StrategyMetadata(
@@ -86,13 +85,9 @@ class InvalidEnabledStrategy(BaseStrategy):
 
 def test_empty_author_fails():
     with pytest.raises(ValueError, match="author"):
-        StrategyPluginValidator().validate(
-            EmptyAuthorStrategy()
-        )
+        StrategyPluginValidator().validate(EmptyAuthorStrategy())
 
 
 def test_invalid_enabled_type_fails():
     with pytest.raises(TypeError, match="enabled"):
-        StrategyPluginValidator().validate(
-            InvalidEnabledStrategy()
-        )
+        StrategyPluginValidator().validate(InvalidEnabledStrategy())
