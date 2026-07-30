@@ -32,6 +32,7 @@ class PaperTradeRunner:
         trade_factory=None,
         order_factory=None,
         position_manager=None,
+        execution_manager=None,
     ) -> None:
         self.strategy_engine = strategy_engine
         self.risk_engine = risk_engine
@@ -40,6 +41,7 @@ class PaperTradeRunner:
         self.order_factory = order_factory or OrderFactory()
         self.position_manager = position_manager or PositionManager()
         self.adapter = order_execution_adapter
+        self.execution_manager = execution_manager
 
     def run(
         self,
@@ -62,6 +64,13 @@ class PaperTradeRunner:
                 "status": "REJECTED",
                 "reason": risk.reasons,
             }
+
+        if self.execution_manager is not None:
+            return self.execution_manager.execute(
+                market=market,
+                decision=decision,
+                risk=risk,
+            )
 
         plan = self.trade_planner.plan(
             market,

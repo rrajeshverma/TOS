@@ -225,3 +225,40 @@ def test_position_manager_called_once():
         order.quantity,
         100,
     )
+
+def test_execution_manager_called_when_available():
+    strategy = Mock()
+    risk_engine = Mock()
+    adapter = Mock()
+    execution_manager = Mock()
+
+    runner = PaperTradeRunner(
+        strategy_engine=strategy,
+        risk_engine=risk_engine,
+        order_execution_adapter=adapter,
+        execution_manager=execution_manager,
+    )
+
+    strategy.decide.return_value = FakeDecision()
+    risk_engine.evaluate.return_value = FakeRisk()
+
+    execution_manager.execute.return_value = {
+        "status": "EXECUTED",
+    }
+
+    market, indicators = create_market_and_indicators()
+
+    result = runner.run(
+        market,
+        indicators,
+    )
+
+    execution_manager.execute.assert_called_once_with(
+        market=market,
+        decision=strategy.decide.return_value,
+        risk=risk_engine.evaluate.return_value,
+    )
+
+    assert result == {
+        "status": "EXECUTED",
+    }
