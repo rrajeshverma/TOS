@@ -1,36 +1,67 @@
-from execution.order_service import OrderService
+from unittest.mock import Mock
+
+from execution.order_sync import OrderSync
 
 
-def test_broker_order_mapping():
-    service = OrderService()
+class DummyOrder:
+    def __init__(self):
+        self.order_id = 101
+        self.status = "FILLED"
+        self.broker_order_id = "DH123"
 
-    internal_id = service.submit(
-        {
-            "symbol": "NIFTY",
-            "quantity": 65,
-        }
+
+def test_synchronize_orders():
+    broker = Mock()
+    broker.get_orders.return_value = [DummyOrder()]
+
+    execution_sync = Mock()
+    position_sync = Mock()
+
+    sync = OrderSync(
+        broker,
+        execution_sync,
+        position_sync,
     )
 
-    service.register_broker_order(
-        internal_id,
-        "DHAN12345",
+    sync.synchronize_orders()
+
+    execution_sync.process.assert_called_once_with(
+        order_id=101,
+        status="FILLED",
+        broker_order_id="DH123",
     )
 
-    assert service.broker_order_id(internal_id) == "DHAN12345"
+
+def test_synchronize_positions():
+    broker = Mock()
+    execution_sync = Mock()
+    position_sync = Mock()
+
+    sync = OrderSync(
+        broker,
+        execution_sync,
+        position_sync,
+    )
+
+    sync.synchronize_positions()
+
+    position_sync.synchronize.assert_called_once()
 
 
-def test_unknown_mapping_returns_none():
-    service = OrderService()
+def test_synchronize():
+    broker = Mock()
+    broker.get_orders.return_value = [DummyOrder()]
 
-    assert service.broker_order_id(999) is None
+    execution_sync = Mock()
+    position_sync = Mock()
 
+    sync = OrderSync(
+        broker,
+        execution_sync,
+        position_sync,
+    )
 
-def test_register_unknown_internal_order():
-    service = OrderService()
+    sync.synchronize()
 
-    try:
-        service.register_broker_order(999, "DHAN1")
-    except KeyError:
-        pass
-    else:
-        assert False
+    execution_sync.process.assert_called_once()
+    position_sync.synchronize.assert_called_once()
