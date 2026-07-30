@@ -18,6 +18,10 @@ from services.order_execution_adapter import OrderExecutionAdapter
 from services.paper_trade_runner import PaperTradeRunner
 from services.paper_trading_service import PaperTradingService
 from engines.market_engine import MarketEngine
+from engines.indicator_engine import IndicatorEngine
+from market.candle_builder import CandleBuilder
+from integration.pipeline import TradingPipeline
+from runtime.trading_runtime import TradingRuntime
 
 LOGGER = logging.getLogger("tos")
 
@@ -72,9 +76,15 @@ class Startup:
 
         market_engine = MarketEngine()
 
+        indicator_engine = IndicatorEngine()
+
+        candle_builder = CandleBuilder()
+
         strategy_engine = StrategyEngine()
 
         risk_engine = RiskEngine()
+
+        runtime = TradingRuntime({})
 
         paper_service = PaperTradingService()
 
@@ -82,6 +92,13 @@ class Startup:
                 strategy_engine=strategy_engine,
                 risk_engine=risk_engine,
                 order_execution_adapter=execution_adapter,
+            )
+
+        trading_pipeline = TradingPipeline(
+                candle_builder=candle_builder,
+                market_engine=market_engine,
+                indicator_engine=indicator_engine,
+                runtime=runtime,
             )
 
         market_data_service = MarketDataService(
@@ -96,13 +113,18 @@ class Startup:
             "order_execution_adapter": execution_adapter,
             "execution_engine": execution_engine,
             "market_engine": market_engine,
+            "indicator_engine": indicator_engine,
+            "candle_builder": candle_builder,
             "strategy_engine": strategy_engine,
             "risk_engine": risk_engine,
             "paper_trading_service": paper_service,
             "paper_trade_runner": paper_trade_runner,
             "market_data_service": market_data_service,
+            "trading_runtime": runtime,
+            "trading_pipeline": trading_pipeline,
         }
 
+        runtime.services = self.services
         
         if self.broker == "dhan":
             self.services["dhan_client"] = client
