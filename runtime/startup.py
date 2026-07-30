@@ -4,6 +4,8 @@ Application startup manager.
 
 import logging
 
+from brokers.dhan.websocket import WebSocketClient
+from services.market_data_service import MarketDataService
 from brokers.clients.dhan_client import DhanClient
 from brokers.dhan_broker import DhanBroker
 from brokers.paper_broker import PaperBroker
@@ -79,6 +81,11 @@ class Startup:
                 order_execution_adapter=execution_adapter,
             )
 
+        market_data_service = MarketDataService(
+            websocket=WebSocketClient(),
+
+        )
+
         self.services = {
             "broker": broker,
             "order_repository": repository,
@@ -89,8 +96,10 @@ class Startup:
             "risk_engine": risk_engine,
             "paper_trading_service": paper_service,
             "paper_trade_runner": paper_trade_runner,
+            "market_data_service": market_data_service,
         }
 
+        
         if self.broker == "dhan":
             self.services["dhan_client"] = client
 
