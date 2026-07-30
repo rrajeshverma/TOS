@@ -28,13 +28,17 @@ class PaperTradeRunner:
         strategy_engine,
         risk_engine,
         order_execution_adapter,
+        trade_planner=None,
+        trade_factory=None,
+        order_factory=None,
+        position_manager=None,
     ) -> None:
         self.strategy_engine = strategy_engine
         self.risk_engine = risk_engine
-        self.trade_planner = TradePlanner()
-        self.trade_factory = TradeFactory()
-        self.order_factory = OrderFactory()
-        self.position_manager = PositionManager()
+        self.trade_planner = trade_planner or TradePlanner()
+        self.trade_factory = trade_factory or TradeFactory()
+        self.order_factory = order_factory or OrderFactory()
+        self.position_manager = position_manager or PositionManager()
         self.adapter = order_execution_adapter
 
     def run(
