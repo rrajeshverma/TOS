@@ -23,8 +23,14 @@ class TradingRuntime:
         self.running = True
 
         market_data = self.services.get("market_data_service")
+        trading_pipeline = self.services.get("trading_pipeline")
 
         if market_data is not None:
+            if trading_pipeline is not None:
+                market_data.register_tick_callback(
+                    trading_pipeline.on_tick,
+                )
+
             market_data.connect()
 
         LOGGER.info("Trading runtime started")
