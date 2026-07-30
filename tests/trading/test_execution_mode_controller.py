@@ -106,7 +106,6 @@ def test_stop_calls_live_runtime():
     live_runtime.start.assert_called_once_with()
     live_runtime.stop.assert_called_once_with()
 
-
 def test_status_is_stopped_initially():
     controller = ExecutionModeController(
         ExecutionMode.PAPER,
