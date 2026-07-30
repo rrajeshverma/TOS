@@ -26,3 +26,9 @@ class ExecutionModeController:
             raise RuntimeError("No runtime configured")
 
         self.runtime.start()
+
+    def stop(self):
+        if self.runtime is None:
+            raise RuntimeError("No runtime configured")
+
+        self.runtime.stop()
