@@ -1,47 +1,48 @@
 from datetime import datetime
+from decimal import Decimal
 
-from brokers.dhan.models import BrokerTick
+from domain.market_tick import MarketTick
 from market.candle_builder import CandleBuilder
 
 
 def test_create_first_candle():
     builder = CandleBuilder(timeframe="5m")
 
-    tick = BrokerTick(
+    tick = MarketTick(
         symbol="NIFTY",
-        ltp=25000,
+        ltp=Decimal("25000"),
         volume=100,
         timestamp=datetime.now(),
     )
 
     candle = builder.update(tick)
 
-    assert candle.open == 25000
-    assert candle.high == 25000
-    assert candle.low == 25000
-    assert candle.close == 25000
+    assert candle.open == Decimal("25000")
+    assert candle.high == Decimal("25000")
+    assert candle.low == Decimal("25000")
+    assert candle.close == Decimal("25000")
 
 
 def test_update_high_low_close():
     builder = CandleBuilder(timeframe="5m")
 
-    t1 = BrokerTick(
-        "NIFTY",
-        25000,
-        100,
-        datetime.now(),
+    t1 = MarketTick(
+        symbol="NIFTY",
+        ltp=Decimal("25000"),
+        volume=100,
+        timestamp=datetime.now(),
     )
 
-    t2 = BrokerTick(
-        "NIFTY",
-        25050,
-        200,
-        datetime.now(),
+    t2 = MarketTick(
+        symbol="NIFTY",
+        ltp=Decimal("25050"),
+        volume=200,
+        timestamp=datetime.now(),
     )
 
     builder.update(t1)
 
     candle = builder.update(t2)
 
-    assert candle.high == 25050
-    assert candle.close == 25050
+    assert candle.high == Decimal("25050")
+    assert candle.close == Decimal("25050")

@@ -1,4 +1,4 @@
-from brokers.dhan.models import BrokerTick
+from domain.market_tick import MarketTick
 from domain.candle import Candle
 
 
@@ -16,7 +16,7 @@ class CandleBuilder:
 
     def update(
         self,
-        tick: BrokerTick,
+        tick: MarketTick,
     ) -> Candle:
         if tick is None:
             raise ValueError("Tick cannot be None.")
