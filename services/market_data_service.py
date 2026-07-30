@@ -15,6 +15,7 @@ from domain.market_tick import MarketTick
 
 from decimal import Decimal
 
+
 class MarketDataService:
     """
     High-level market data service.
@@ -62,12 +63,12 @@ class MarketDataService:
         """
         self.websocket.clear_subscriptions()
 
-    def register_tick_handler(
+    def register_tick_callback(
         self,
-        handler: Callable[[BrokerTick], None],
+        handler: Callable[[MarketTick], None],
     ) -> None:
         """
-        Register tick callback.
+        Register market tick callback.
         """
         self.websocket.register_tick_callback(handler)
 
