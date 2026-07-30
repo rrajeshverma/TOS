@@ -20,3 +20,9 @@ class ExecutionModeController:
             self.runtime = live_runtime
         else:
             raise ValueError(f"Unsupported execution mode: {mode}")
+
+    def start(self):
+        if self.runtime is None:
+            raise RuntimeError("No runtime configured")
+
+        self.runtime.start()
