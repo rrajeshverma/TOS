@@ -74,10 +74,10 @@ class Startup:
         paper_service = PaperTradingService()
 
         paper_trade_runner = PaperTradeRunner(
-            strategy_engine=strategy_engine,
-            broker=broker,
-            order_execution_adapter=execution_adapter,
-        )
+                strategy_engine=strategy_engine,
+                risk_engine=risk_engine,
+                order_execution_adapter=execution_adapter,
+            )
 
         self.services = {
             "broker": broker,

@@ -10,6 +10,7 @@ from shared.enums import Signal
 
 from decimal import Decimal
 
+
 class FakeDecision:
     def __init__(self):
         self.signal = Signal.BUY_CE
@@ -40,16 +41,17 @@ class FakePosition:
 
 def create_runner():
     strategy = Mock()
-    broker = Mock()
+    risk_engine = Mock()
     adapter = Mock()
 
     runner = PaperTradeRunner(
-        strategy,
-        broker,
-        adapter,
+        strategy_engine=strategy,
+        risk_engine=risk_engine,
+        order_execution_adapter=adapter,
     )
 
-    return runner, strategy, adapter
+    return runner, strategy, risk_engine, adapter
+
 
 def create_market_and_indicators():
     market = Market(
@@ -76,7 +78,7 @@ def create_market_and_indicators():
 
 
 def test_run_returns_rejected_when_risk_not_approved():
-    runner, strategy, adapter = create_runner()
+    runner, strategy, _, adapter = create_runner()
 
     strategy.decide.return_value = FakeDecision()
 
@@ -95,7 +97,7 @@ def test_run_returns_rejected_when_risk_not_approved():
 
 
 def test_strategy_engine_called_once():
-    runner, strategy, adapter = create_runner()
+    runner, strategy, _, adapter = create_runner()
 
     strategy.decide.return_value = FakeDecision()
 
@@ -125,7 +127,7 @@ def test_strategy_engine_called_once():
 
 
 def test_adapter_execute_called_once():
-    runner, strategy, adapter = create_runner()
+    runner, strategy, _, adapter = create_runner()
 
     strategy.decide.return_value = FakeDecision()
 
@@ -155,7 +157,7 @@ def test_adapter_execute_called_once():
 
 
 def test_run_returns_expected_fields():
-    runner, strategy, adapter = create_runner()
+    runner, strategy, _, adapter = create_runner()
 
     strategy.decide.return_value = FakeDecision()
 
@@ -189,7 +191,7 @@ def test_run_returns_expected_fields():
 
 
 def test_position_manager_called_once():
-    runner, strategy, adapter = create_runner()
+    runner, strategy, _, adapter = create_runner()
 
     strategy.decide.return_value = FakeDecision()
 

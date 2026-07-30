@@ -10,7 +10,6 @@ from engines.trade_planner import TradePlanner
 from domain.indicator_set import IndicatorSet
 from domain.market import Market
 from engines.order_factory import OrderFactory
-from engines.risk_engine import RiskEngine
 from engines.trade_factory import TradeFactory
 from services.position_manager import PositionManager
 from shared.enums import (
@@ -27,21 +26,20 @@ class PaperTradeRunner:
     def __init__(
         self,
         strategy_engine,
-        broker,
+        risk_engine,
         order_execution_adapter,
     ) -> None:
         self.strategy_engine = strategy_engine
-        self.risk_engine = RiskEngine()
+        self.risk_engine = risk_engine
         self.trade_planner = TradePlanner()
         self.trade_factory = TradeFactory()
         self.order_factory = OrderFactory()
         self.position_manager = PositionManager()
-        self.broker = broker
         self.adapter = order_execution_adapter
 
     def run(
         self,
-        market: Market,
+        market: Market, 
         indicators: IndicatorSet,
     ):
         decision = self.strategy_engine.decide(
