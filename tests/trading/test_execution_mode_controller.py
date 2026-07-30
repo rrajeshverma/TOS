@@ -83,8 +83,10 @@ def test_stop_calls_paper_runner():
         live_runtime=live_runtime,
     )
 
+    controller.start()
     controller.stop()
 
+    paper_runner.start.assert_called_once_with()
     paper_runner.stop.assert_called_once_with()
 
 
@@ -98,6 +100,66 @@ def test_stop_calls_live_runtime():
         live_runtime=live_runtime,
     )
 
+    controller.start()
     controller.stop()
 
+    live_runtime.start.assert_called_once_with()
     live_runtime.stop.assert_called_once_with()
+
+
+def test_status_is_stopped_initially():
+    controller = ExecutionModeController(
+        ExecutionMode.PAPER,
+        paper_runner=MagicMock(),
+    )
+
+    assert controller.status() == "stopped"
+
+
+def test_status_is_running_after_start():
+    paper_runner = MagicMock()
+
+    controller = ExecutionModeController(
+        ExecutionMode.PAPER,
+        paper_runner=paper_runner,
+    )
+
+    controller.start()
+
+    assert controller.status() == "running"
+
+
+def test_status_returns_stopped_after_stop():
+    paper_runner = MagicMock()
+
+    controller = ExecutionModeController(
+        ExecutionMode.PAPER,
+        paper_runner=paper_runner,
+    )
+
+    controller.start()
+    controller.stop()
+
+    assert controller.status() == "stopped"
+
+
+def test_cannot_start_twice():
+    controller = ExecutionModeController(
+        ExecutionMode.PAPER,
+        paper_runner=MagicMock(),
+    )
+
+    controller.start()
+
+    with pytest.raises(RuntimeError):
+        controller.start()
+
+
+def test_cannot_stop_before_start():
+    controller = ExecutionModeController(
+        ExecutionMode.PAPER,
+        paper_runner=MagicMock(),
+    )
+
+    with pytest.raises(RuntimeError):
+        controller.stop()

@@ -13,6 +13,7 @@ class ExecutionModeController:
             raise ValueError(f"Unsupported execution mode: {mode}")
 
         self.mode = mode
+        self._running = False
 
         if mode is ExecutionMode.PAPER:
             self.runtime = paper_runner
@@ -25,10 +26,22 @@ class ExecutionModeController:
         if self.runtime is None:
             raise RuntimeError("No runtime configured")
 
+        if self._running:
+            raise RuntimeError("Runtime already started")
+
         self.runtime.start()
+        self._running = True
 
     def stop(self):
-        if self.runtime is None:
-            raise RuntimeError("No runtime configured")
+        if not self._running:
+            raise RuntimeError("Runtime not running")
 
         self.runtime.stop()
+        self._running = False
+
+    def status(self):
+        return "running" if self._running else "stopped"
+
+    @property
+    def is_running(self):
+        return self._running
