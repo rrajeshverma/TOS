@@ -1,4 +1,4 @@
-from unittest.mock import Mock
+from unittest.mock import MagicMock, Mock
 
 from runtime.engine_runner import EngineRunner
 
@@ -199,3 +199,45 @@ def test_engine_runner_shutdown():
 
     assert runner.running is False
     broker.disconnect.assert_called_once()
+
+def test_restart_stops_and_starts():
+    runner = EngineRunner()
+
+    runner.start()
+    assert runner.is_running()
+
+    runner.restart()
+
+    assert runner.is_running()
+
+
+def test_shutdown_disconnects_broker():
+    broker = MagicMock()
+
+    runner = EngineRunner()
+    runner.set_broker(broker)
+
+    runner.start()
+    runner.shutdown()
+
+    broker.disconnect.assert_called_once_with()
+    assert not runner.is_running()
+
+
+def test_shutdown_without_broker():
+    runner = EngineRunner()
+
+    runner.shutdown()
+
+    assert not runner.is_running()
+
+
+def test_cycles_increment():
+    runner = EngineRunner()
+
+    assert runner.cycles == 0
+
+    runner.run_cycle()
+    runner.run_cycle()
+
+    assert runner.cycles == 2
