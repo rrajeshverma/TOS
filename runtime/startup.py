@@ -17,6 +17,7 @@ from engines.strategy_engine import StrategyEngine
 from services.order_execution_adapter import OrderExecutionAdapter
 from services.paper_trade_runner import PaperTradeRunner
 from services.paper_trading_service import PaperTradingService
+from engines.market_engine import MarketEngine
 
 LOGGER = logging.getLogger("tos")
 
@@ -69,6 +70,8 @@ class Startup:
             order_service,
         )
 
+        market_engine = MarketEngine()
+
         strategy_engine = StrategyEngine()
 
         risk_engine = RiskEngine()
@@ -92,6 +95,7 @@ class Startup:
             "order_service": order_service,
             "order_execution_adapter": execution_adapter,
             "execution_engine": execution_engine,
+            "market_engine": market_engine,
             "strategy_engine": strategy_engine,
             "risk_engine": risk_engine,
             "paper_trading_service": paper_service,

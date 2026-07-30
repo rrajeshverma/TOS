@@ -24,3 +24,10 @@ def test_initialize_services_creates_market_data_service():
     startup.initialize_services()
 
     assert "market_data_service" in startup.services
+
+def test_initialize_services_creates_market_engine():
+    startup = Startup()
+
+    startup.initialize_services()
+
+    assert "market_engine" in startup.services
