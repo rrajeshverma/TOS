@@ -56,12 +56,16 @@ class TradingRuntime:
         market,
         history,
     ):
+        indicator_engine = self.services["indicator_engine"]
         strategy_engine = self.services["strategy_engine"]
         risk_engine = self.services["risk_engine"]
+
+        indicators = indicator_engine.calculate(history)
 
         decision = strategy_engine.evaluate(
             market,
             history,
+            indicators,
         )
 
         risk = risk_engine.evaluate(
