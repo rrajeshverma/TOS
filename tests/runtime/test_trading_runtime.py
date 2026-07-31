@@ -103,3 +103,73 @@ def test_run_cycle_uses_strategy_decide():
         market,
         "INDICATORS",
     )
+
+def test_run_cycle_uses_risk_engine():
+    indicator_engine = Mock()
+    indicator_engine.calculate.return_value = "INDICATORS"
+
+    strategy_engine = Mock()
+    strategy_engine.decide.return_value = "DECISION"
+
+    risk_engine = Mock()
+    risk_engine.evaluate.return_value = "RISK"
+
+    runtime = TradingRuntime(
+        {
+            "indicator_engine": indicator_engine,
+            "strategy_engine": strategy_engine,
+            "risk_engine": risk_engine,
+        }
+    )
+
+    market = Mock()
+    history = [market]
+
+    result = runtime.run_cycle(
+        market,
+        history,
+    )
+
+    risk_engine.evaluate.assert_called_once_with(
+        "DECISION",
+        trades_today=0,
+        daily_loss=0,
+    )
+
+    assert result == "RISK"
+
+def test_run_cycle_uses_execution_manager():
+    indicator_engine = Mock()
+    indicator_engine.calculate.return_value = "INDICATORS"
+
+    strategy_engine = Mock()
+    strategy_engine.decide.return_value = "DECISION"
+
+    risk = Mock()
+    risk_engine = Mock()
+    risk_engine.evaluate.return_value = risk
+
+    execution_result = Mock()
+
+    execution_manager = Mock()
+    execution_manager.execute.return_value = execution_result
+
+    runtime = TradingRuntime(
+        {
+            "indicator_engine": indicator_engine,
+            "strategy_engine": strategy_engine,
+            "risk_engine": risk_engine,
+            "execution_manager": execution_manager,
+        }
+    )
+
+    market = Mock()
+    history = [market]
+
+    result = runtime.run_cycle(
+        market,
+        history,
+    )
+
+    execution_manager.execute.assert_called_once_with(risk)
+    assert result is execution_result

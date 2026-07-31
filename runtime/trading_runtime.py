@@ -73,7 +73,12 @@ class TradingRuntime:
             daily_loss=0,
         )
 
-        return risk
+        execution_manager = self.services.get("execution_manager")
+
+        if execution_manager is None:
+            return risk
+
+        return execution_manager.execute(risk)
 
     def on_market_tick(
         self,
