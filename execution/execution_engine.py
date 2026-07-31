@@ -1,10 +1,12 @@
 from execution.execution_result import ExecutionResult
-
+from execution.order_service_protocol import (
+    OrderServiceProtocol,
+)
 
 class ExecutionEngine:
     def __init__(
         self,
-        order_service,
+        order_service: OrderServiceProtocol,
         execution_guard=None,
     ) -> None:
         self.order_service = order_service
@@ -33,7 +35,7 @@ class ExecutionEngine:
                 self.order_service,
                 "place_order",
             ):
-                response = self.order_service.place_order(request)
+                response = self._place_order(request)
 
                 broker_order_id = response.get("orderId")
 
@@ -67,3 +69,9 @@ class ExecutionEngine:
                 success=False,
                 error=str(exc),
             )
+
+    def _place_order(
+        self,
+        request,
+    ):
+        return self.order_service.place_order(request)
