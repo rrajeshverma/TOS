@@ -16,9 +16,8 @@ def test_start_registers_market_data_callback():
 
     runtime.start()
 
-    market_data.register_tick_callback.assert_called_once_with(
-        trading_pipeline.on_tick
-    )
+    market_data.register_tick_callback.assert_called_once_with(trading_pipeline.on_tick)
+
 
 def test_start_connects_market_data():
     market_data = Mock()
@@ -32,6 +31,7 @@ def test_start_connects_market_data():
     runtime.start()
 
     market_data.connect.assert_called_once_with()
+
 
 def test_stop_disconnects_market_data():
     market_data = Mock()
@@ -74,6 +74,7 @@ def test_run_cycle_uses_indicator_engine():
     )
 
     indicator_engine.calculate.assert_called_once_with(history)
+
 
 def test_run_cycle_uses_strategy_decide():
     indicator_engine = Mock()
