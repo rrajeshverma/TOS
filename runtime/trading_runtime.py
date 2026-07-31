@@ -28,10 +28,24 @@ class TradingRuntime:
         self.services = services
         self.running = False
 
-        self.indicator_engine = services.get("indicator_engine")
-        self.strategy_engine = services.get("strategy_engine")
-        self.risk_engine = services.get("risk_engine")
-        self.execution_manager = services.get("execution_manager")
+    @property
+    def indicator_engine(self):
+        return self.services.get("indicator_engine")
+
+
+    @property
+    def strategy_engine(self):
+        return self.services.get("strategy_engine")
+
+
+    @property
+    def risk_engine(self):
+        return self.services.get("risk_engine")
+
+
+    @property
+    def execution_manager(self):
+        return self.services.get("execution_manager")
 
     def validate(self) -> list[str]:
         """

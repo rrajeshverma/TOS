@@ -196,3 +196,68 @@ def test_constructor_exposes_runtime_services():
     assert runtime.strategy_engine is strategy_engine
     assert runtime.risk_engine is risk_engine
     assert runtime.execution_manager is execution_manager
+
+
+def test_health_reports_runtime_status():
+    runtime = TradingRuntime(
+        {
+            "indicator_engine": Mock(),
+            "strategy_engine": Mock(),
+            "risk_engine": Mock(),
+            "execution_manager": Mock(),
+            "market_data_service": Mock(),
+            "trading_pipeline": Mock(),
+        }
+    )
+
+    runtime.running = True
+
+    health = runtime.health()
+
+    assert health["running"] is True
+    assert health["services"] == [
+        "indicator_engine",
+        "strategy_engine",
+        "risk_engine",
+        "execution_manager",
+        "market_data_service",
+        "trading_pipeline",
+    ]
+
+
+def test_on_market_tick_delegates_to_run_cycle():
+    runtime = TradingRuntime({})
+
+    runtime.run_cycle = Mock(return_value="RESULT")
+
+    market = Mock()
+    history = [market]
+
+    result = runtime.on_market_tick(
+        market,
+        history,
+    )
+
+    runtime.run_cycle.assert_called_once_with(
+        market,
+        history,
+    )
+
+    assert result == "RESULT"
+
+def test_runtime_resolves_services_dynamically():
+    runtime = TradingRuntime({})
+
+    services = {
+        "indicator_engine": Mock(),
+        "strategy_engine": Mock(),
+        "risk_engine": Mock(),
+        "execution_manager": Mock(),
+    }
+
+    runtime.services = services
+
+    assert runtime.indicator_engine is services["indicator_engine"]
+    assert runtime.strategy_engine is services["strategy_engine"]
+    assert runtime.risk_engine is services["risk_engine"]
+    assert runtime.execution_manager is services["execution_manager"]
