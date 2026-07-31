@@ -11,11 +11,9 @@ Description : Strategy decision domain object.
 from dataclasses import dataclass
 from datetime import datetime
 
-from domain.market import Market
 from domain.indicator_set import IndicatorSet
-
-from shared.enums import Signal
-from shared.enums import DecisionStatus
+from domain.market import Market
+from shared.enums import DecisionStatus, Signal
 
 
 @dataclass(frozen=True, slots=True)

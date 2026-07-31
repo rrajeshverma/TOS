@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta
 
+from domain.market import Market
 from engines.strategy_engine import StrategyEngine
 from shared.enums import Signal
 
@@ -18,16 +19,12 @@ def create_raw_market(price: float):
     }
 
 
-from domain.market import Market
-
-
 def create_history():
     history = []
 
     start = datetime(2026, 1, 1, 9, 15)
 
     for i in range(40):
-
         history.append(
             Market(
                 symbol="NIFTY",
@@ -46,7 +43,6 @@ def create_history():
 
 
 def test_strategy_engine_pipeline():
-
     engine = StrategyEngine()
 
     raw_market = create_raw_market(24050)

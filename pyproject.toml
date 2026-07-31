@@ -1,0 +1,30 @@
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "trading-operating-system"
+version = "2.0.1"
+description = "A modular algorithmic trading platform built using Clean Architecture, SOLID principles, DDD, and TDD."
+readme = "README.md"
+requires-python = ">=3.12"
+authors = [
+    { name = "Rajesh Varma" }
+]
+license = { text = "Proprietary" }
+
+[tool.black]
+line-length = 88
+target-version = ["py312"]
+
+[tool.isort]
+profile = "black"
+
+[tool.ruff]
+line-length = 88
+target-version = "py312"
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
+addopts = "-ra --strict-config --strict-markers"

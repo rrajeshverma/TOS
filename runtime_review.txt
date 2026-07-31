@@ -1,0 +1,457 @@
+==================================================
+runtime/application.py
+==================================================
+"""
+Application runtime entry point.
+"""
+
+
+class Application:
+    """Main application runtime."""
+
+    def __init__(self) -> None:
+        self.services: dict = {}
+        self.config: dict = {}
+        self.running: bool = False
+
+    def load_configuration(self, config: dict) -> None:
+        self.config.update(config)
+
+    def start(self) -> None:
+        self.running = True
+
+    def shutdown(self) -> None:
+        self.running = False
+
+==================================================
+runtime/broker_connection_manager.py
+==================================================
+
+==================================================
+runtime/connection_state.py
+==================================================
+
+==================================================
+runtime/engine_runner.py
+==================================================
+class EngineRunner:
+    """
+    Coordinates the core runtime components of the Trading Operating System.
+    """
+
+    def __init__(self):
+        self.running = False
+        self.cycles = 0
+
+        self.broker = None
+        self.execution_engine = None
+        self.trading_service = None
+        self.runtime_state = None
+        self.health_monitor = None
+
+    # ---------------------------------------------------------
+    # Dependency Injection
+    # ---------------------------------------------------------
+
+    def set_broker(self, broker):
+        self.broker = broker
+
+    def set_execution_engine(self, execution_engine):
+        self.execution_engine = execution_engine
+
+    def set_trading_service(self, trading_service):
+        self.trading_service = trading_service
+
+    def set_runtime_state(self, runtime_state):
+        self.runtime_state = runtime_state
+
+    def set_health_monitor(self, health_monitor):
+        self.health_monitor = health_monitor
+
+    # ---------------------------------------------------------
+    # Broker Lifecycle
+    # ---------------------------------------------------------
+
+    def connect_broker(self):
+        if self.broker:
+            self.broker.connect()
+
+    def disconnect_broker(self):
+        if self.broker:
+            self.broker.disconnect()
+
+    def reconnect_broker(self):
+        self.disconnect_broker()
+        self.connect_broker()
+
+    def broker_connected(self):
+        if self.broker is None:
+            return False
+
+        return self.broker.is_connected()
+
+    # ---------------------------------------------------------
+    # Runtime Readiness
+    # ---------------------------------------------------------
+
+    def is_ready(self):
+        return all(
+            [
+                self.broker is not None,
+                self.execution_engine is not None,
+                self.trading_service is not None,
+            ]
+        )
+
+    def can_start(self):
+        return self.is_ready()
+
+    # ---------------------------------------------------------
+    # Runtime Control
+    # ---------------------------------------------------------
+
+    def start(self):
+        self.running = True
+
+    def stop(self):
+        self.running = False
+
+    def restart(self):
+        self.stop()
+        self.start()
+
+    def shutdown(self):
+        self.stop()
+        self.disconnect_broker()
+
+    def run_cycle(self):
+        self.cycles += 1
+
+    def is_running(self):
+        return self.running
+
+==================================================
+runtime/event_loop.py
+==================================================
+"""
+Runtime event loop.
+"""
+
+
+class EventLoop:
+    """Simple execution loop."""
+
+    def __init__(self) -> None:
+        self.running = False
+        self.iterations = 0
+
+    def start(self) -> None:
+        self.running = True
+
+    def stop(self) -> None:
+        self.running = False
+
+    def run_iteration(self) -> None:
+        self.iterations += 1
+
+==================================================
+runtime/exception_handler.py
+==================================================
+"""
+Exception handling utilities.
+"""
+
+
+class ExceptionHandler:
+    """Collects runtime exceptions."""
+
+    def __init__(self) -> None:
+        self._exceptions = []
+
+    @property
+    def count(self) -> int:
+        return len(self._exceptions)
+
+    def record(self, exception: Exception) -> None:
+        self._exceptions.append(exception)
+
+    def last_exception(self):
+        if not self._exceptions:
+            return None
+        return self._exceptions[-1]
+
+    def clear(self) -> None:
+        self._exceptions.clear()
+
+==================================================
+runtime/health_monitor.py
+==================================================
+"""
+Runtime health monitor.
+"""
+
+from datetime import datetime
+
+
+class HealthMonitor:
+    """Tracks runtime health."""
+
+    def __init__(self) -> None:
+        self.healthy = True
+        self.last_check = None
+
+    def mark_healthy(self) -> None:
+        self.healthy = True
+
+    def mark_unhealthy(self) -> None:
+        self.healthy = False
+
+    def update(self) -> None:
+        self.last_check = datetime.now()
+
+    def reset(self) -> None:
+        self.healthy = True
+        self.last_check = None
+
+==================================================
+runtime/heartbeat.py
+==================================================
+"""
+Heartbeat monitor.
+"""
+
+from datetime import datetime
+
+
+class Heartbeat:
+    """Tracks application heartbeat."""
+
+    def __init__(self, timeout: int = 60) -> None:
+        self.timeout = timeout
+        self.last_heartbeat = None
+
+    def beat(self) -> None:
+        self.last_heartbeat = datetime.now()
+
+==================================================
+runtime/__init__.py
+==================================================
+
+==================================================
+runtime/lifecycle.py
+==================================================
+"""
+Application lifecycle manager.
+"""
+
+
+class Lifecycle:
+    """Controls runtime lifecycle."""
+
+    def __init__(self) -> None:
+        self.state = "created"
+
+    def start(self) -> None:
+        self.state = "running"
+
+    def stop(self) -> None:
+        self.state = "stopped"
+
+    def restart(self) -> None:
+        self.stop()
+        self.start()
+
+==================================================
+runtime/reconnect_policy.py
+==================================================
+
+==================================================
+runtime/recovery_manager.py
+==================================================
+"""
+Runtime recovery manager.
+"""
+
+
+class RecoveryManager:
+    """Coordinates runtime recovery after failures."""
+
+    def __init__(self, broker):
+        self._broker = broker
+
+    def recover(self):
+        """Recover runtime state."""
+        return {
+            "orders": self._broker.get_orders(),
+            "positions": self._broker.get_positions(),
+            "holdings": self._broker.get_holdings(),
+            "funds": self._broker.get_funds(),
+        }
+
+==================================================
+runtime/replay_runner.py
+==================================================
+class ReplayRunner:
+    def __init__(self):
+        self.engine_runner = None
+        self.cycles = 0
+        self.completed = False
+
+    def set_engine_runner(self, engine_runner):
+        self.engine_runner = engine_runner
+
+    def run(self, replay_feed):
+        while replay_feed.has_next():
+            replay_feed.next_tick()
+            self.engine_runner.run_cycle()
+            self.cycles += 1
+
+        self.completed = True
+
+==================================================
+runtime/runtime_state.py
+==================================================
+"""
+Runtime state manager.
+"""
+
+
+class RuntimeState:
+    """Represents the runtime state."""
+
+    def __init__(self) -> None:
+        self.status = "created"
+
+    def running(self) -> None:
+        self.status = "running"
+
+    def stopped(self) -> None:
+        self.status = "stopped"
+
+    def restart(self) -> None:
+        self.running()
+
+    def reset(self) -> None:
+        self.status = "created"
+
+==================================================
+runtime/scheduler.py
+==================================================
+"""
+Simple task scheduler.
+"""
+
+
+class Scheduler:
+    """Executes scheduled tasks."""
+
+    def __init__(self, interval: int = 1) -> None:
+        self.interval = interval
+
+    def run(self, task) -> None:
+        task()
+
+==================================================
+runtime/session_manager.py
+==================================================
+"""
+Trading session manager.
+"""
+
+
+class SessionManager:
+    """Manages trading session lifecycle."""
+
+    def __init__(self) -> None:
+        self.status = "closed"
+
+    def open(self) -> None:
+        self.status = "open"
+
+    def close(self) -> None:
+        self.status = "closed"
+
+    def restart(self) -> None:
+        self.close()
+        self.open()
+
+    def is_open(self) -> bool:
+        return self.status == "open"
+
+==================================================
+runtime/shutdown.py
+==================================================
+"""
+Application shutdown manager.
+"""
+
+
+class Shutdown:
+    """Handles graceful shutdown."""
+
+    def __init__(self) -> None:
+        self.broker_closed = False
+        self.logs_flushed = False
+        self.state_saved = False
+
+    def close_broker(self) -> None:
+        self.broker_closed = True
+
+    def flush_logs(self) -> None:
+        self.logs_flushed = True
+
+    def save_state(self) -> None:
+        self.state_saved = True
+
+==================================================
+runtime/signal_handler.py
+==================================================
+"""
+Signal handler for graceful shutdown.
+"""
+
+
+class SignalHandler:
+    """Handles runtime shutdown signals."""
+
+    def __init__(self) -> None:
+        self.signal_received: str | None = None
+
+    def register(self, signal_name: str) -> None:
+        self.signal_received = signal_name
+
+    def is_shutdown_requested(self) -> bool:
+        return self.signal_received in ("SIGINT", "SIGTERM")
+
+    def reset(self) -> None:
+        self.signal_received = None
+
+==================================================
+runtime/signals.py
+==================================================
+
+==================================================
+runtime/startup.py
+==================================================
+"""
+Application startup manager.
+"""
+
+
+class Startup:
+    """Handles application startup."""
+
+    def __init__(self) -> None:
+        self.broker = None
+        self.portfolio = None
+        self.services_initialized = False
+
+    def load_broker(self, broker: str) -> None:
+        self.broker = broker
+
+    def load_portfolio(self, portfolio: str) -> None:
+        self.portfolio = portfolio
+
+    def initialize_services(self) -> None:
+        self.services_initialized = True
+

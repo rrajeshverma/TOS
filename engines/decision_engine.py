@@ -11,17 +11,14 @@ Description : Generates trading decisions from
 
 from __future__ import annotations
 
-from domain.market import Market
-from domain.indicator_set import IndicatorSet
 from domain.decision import Decision
-
+from domain.indicator_set import IndicatorSet
+from domain.market import Market
 from shared.enums import (
-    Signal,
     DecisionStatus,
+    Signal,
 )
-
 from shared.logger import get_logger
-
 from utils.id_generator import generate_decision_id
 
 

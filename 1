@@ -1,0 +1,80 @@
+[1mdiff --git a/tests/execution/test_order_service.py b/tests/execution/test_order_service.py[m
+[1mindex 898f142..91ac6be 100644[m
+[1m--- a/tests/execution/test_order_service.py[m
+[1m+++ b/tests/execution/test_order_service.py[m
+[36m@@ -1,60 +1,23 @@[m
+[31m-import pytest[m
+[32m+[m[32mfrom unittest.mock import Mock[m
+ [m
+[31m-from execution.order_service import OrderService[m
+[32m+[m[32mfrom execution.order_service import OrderService, OrderStatus[m
+ [m
+ [m
+[31m-def test_order_service_starts_empty():[m
+[31m-    service = OrderService()[m
+[32m+[m[32mdef test_duplicate_status_update_does_not_publish_event():[m
+[32m+[m[32m    dispatcher = Mock()[m
+ [m
+[31m-    assert service.order_count == 0[m
+[32m+[m[32m    service = OrderService(dispatcher=dispatcher)[m
+ [m
+[32m+[m[32m    order_id = service.submit({"symbol": "NIFTY", "qty": 1})[m
+ [m
+[31m-def test_submit_order():[m
+[31m-    service = OrderService()[m
+[32m+[m[32m    # Ignore NEW event[m
+[32m+[m[32m    dispatcher.publish.reset_mock()[m
+ [m
+[31m-    order = {[m
+[31m-        "symbol": "NIFTY",[m
+[31m-        "side": "BUY",[m
+[31m-        "quantity": 50,[m
+[31m-    }[m
+[32m+[m[32m    service.update_status(order_id, OrderStatus.SUBMITTED)[m
+ [m
+[31m-    order_id = service.submit(order)[m
+[32m+[m[32m    assert dispatcher.publish.call_count == 1[m
+ [m
+[31m-    assert order_id == 1[m
+[31m-    assert service.order_count == 1[m
+[32m+[m[32m    # Duplicate update should not publish again[m
+[32m+[m[32m    service.update_status(order_id, OrderStatus.SUBMITTED)[m
+ [m
+[31m-[m
+[31m-def test_get_order():[m
+[31m-    service = OrderService()[m
+[31m-[m
+[31m-    order = {[m
+[31m-        "symbol": "NIFTY",[m
+[31m-        "side": "BUY",[m
+[31m-        "quantity": 50,[m
+[31m-    }[m
+[31m-[m
+[31m-    order_id = service.submit(order)[m
+[31m-[m
+[31m-    assert service.get(order_id) == order[m
+[31m-[m
+[31m-[m
+[31m-def test_get_unknown_order_returns_none():[m
+[31m-    service = OrderService()[m
+[31m-[m
+[31m-    assert service.get(999) is None[m
+[31m-[m
+[31m-[m
+[31m-@pytest.mark.parametrize("count", [1, 2, 5])[m
+[31m-def test_multiple_orders(count):[m
+[31m-    service = OrderService()[m
+[31m-[m
+[31m-    for i in range(count):[m
+[31m-        service.submit([m
+[31m-            {[m
+[31m-                "symbol": f"SYM{i}",[m
+[31m-                "side": "BUY",[m
+[31m-                "quantity": 10,[m
+[31m-            }[m
+[31m-        )[m
+[31m-[m
+[31m-    assert service.order_count == count[m
+\ No newline at end of file[m
+[32m+[m[32m    assert dispatcher.publish.call_count == 1[m
+\ No newline at end of file[m

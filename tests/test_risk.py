@@ -1,13 +1,10 @@
 from datetime import datetime
 
-from domain.market import Market
-from domain.indicator_set import IndicatorSet
 from domain.decision import Decision
+from domain.indicator_set import IndicatorSet
+from domain.market import Market
 from domain.risk import Risk
-
-from shared.enums import Signal
-from shared.enums import DecisionStatus
-
+from shared.enums import DecisionStatus, Signal
 
 market = Market(
     symbol="NIFTY",

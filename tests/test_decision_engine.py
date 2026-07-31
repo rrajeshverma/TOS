@@ -1,9 +1,9 @@
 from datetime import datetime
 
-from domain.market import Market
 from domain.indicator_set import IndicatorSet
+from domain.market import Market
 from engines.decision_engine import DecisionEngine
-from shared.enums import Signal, DecisionStatus
+from shared.enums import DecisionStatus, Signal
 
 
 def create_market(close: float) -> Market:

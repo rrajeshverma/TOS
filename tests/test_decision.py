@@ -1,12 +1,9 @@
 from datetime import datetime
 
-from domain.market import Market
-from domain.indicator_set import IndicatorSet
 from domain.decision import Decision
-
-from shared.enums import Signal
-from shared.enums import DecisionStatus
-
+from domain.indicator_set import IndicatorSet
+from domain.market import Market
+from shared.enums import DecisionStatus, Signal
 
 market = Market(
     symbol="NIFTY",
@@ -17,7 +14,7 @@ market = Market(
     high=24125,
     low=24095,
     close=24120,
-    volume=152340.0
+    volume=152340.0,
 )
 
 indicator = IndicatorSet(
@@ -25,7 +22,7 @@ indicator = IndicatorSet(
     ema_low=24134.70,
     vwap=24120.10,
     rsi=58.75,
-    volume_average=125000.0
+    volume_average=125000.0,
 )
 
 decision = Decision(

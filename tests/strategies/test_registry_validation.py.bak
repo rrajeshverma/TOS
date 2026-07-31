@@ -1,0 +1,70 @@
+import pytest
+
+from strategies.base_strategy import BaseStrategy
+from strategies.registry import StrategyRegistry
+from strategies.strategy_metadata import StrategyMetadata
+
+
+class ValidStrategy(BaseStrategy):
+    metadata = StrategyMetadata(
+        name="EMA",
+        version="1.0.0",
+        author="Rajesh Varma",
+        market="NIFTY",
+        timeframe="5m",
+    )
+
+    def name(self):
+        return self.metadata.name
+
+    def analyze(self, market):
+        return market
+
+    def generate_signal(self, market):
+        return "BUY"
+
+
+class InvalidStrategy(BaseStrategy):
+    def name(self):
+        return "Invalid"
+
+    def analyze(self, market):
+        return market
+
+    def generate_signal(self, market):
+        return "BUY"
+
+
+def test_register_valid_strategy():
+    registry = StrategyRegistry()
+
+    strategy = ValidStrategy()
+
+    registry.register(
+        strategy.metadata.name,
+        strategy,
+    )
+
+    assert registry.get("EMA") is strategy
+
+
+def test_register_strategy_without_metadata_fails():
+    registry = StrategyRegistry()
+
+    with pytest.raises(ValueError, match="metadata"):
+        registry.register(
+            "Invalid",
+            InvalidStrategy(),
+        )
+
+
+def test_failed_registration_does_not_modify_registry():
+    registry = StrategyRegistry()
+
+    with pytest.raises(ValueError):
+        registry.register(
+            "Invalid",
+            InvalidStrategy(),
+        )
+
+    assert registry.list() == []

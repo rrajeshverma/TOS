@@ -1,7 +1,9 @@
 from datetime import datetime, timedelta
 
-from domain.market import Market
+import pytest
+
 from domain.indicator_set import IndicatorSet
+from domain.market import Market
 from engines.indicator_engine import IndicatorEngine
 
 
@@ -44,3 +46,34 @@ def test_indicator_engine_returns_indicator_set():
     assert indicator.vwap > 0
     assert indicator.rsi >= 0
     assert indicator.volume_average > 0
+
+
+def test_indicator_engine_none_history():
+    engine = IndicatorEngine()
+
+    with pytest.raises(
+        ValueError,
+        match="Market history is None.",
+    ):
+        engine.calculate(None)
+
+
+def test_indicator_engine_insufficient_history():
+    engine = IndicatorEngine()
+
+    start = datetime(2026, 1, 1, 9, 15)
+
+    candles = [
+        create_market(
+            price=24000 + i,
+            volume=100000,
+            ts=start + timedelta(minutes=5 * i),
+        )
+        for i in range(engine.MIN_CANDLES - 1)
+    ]
+
+    with pytest.raises(
+        ValueError,
+        match=f"Minimum {engine.MIN_CANDLES} candles required.",
+    ):
+        engine.calculate(candles)

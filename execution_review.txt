@@ -1,0 +1,1093 @@
+==================================================
+execution/dead_letter_queue.py
+==================================================
+class DeadLetterQueue:
+    """
+    Stores failed execution items for recovery.
+    """
+
+    def __init__(self):
+        self.orders = []
+
+    def add(
+        self,
+        order,
+    ):
+        self.orders.append(order)
+
+    def pop(self):
+        if not self.orders:
+            return None
+
+        return self.orders.pop(0)
+
+    def count(self):
+        return len(self.orders)
+
+    def is_empty(self):
+        return len(self.orders) == 0
+
+    def clear(self):
+        self.orders.clear()
+
+==================================================
+execution/duplicate_order_guard.py
+==================================================
+"""
+Duplicate order protection.
+"""
+
+from execution.order_registry import OrderRegistry
+
+
+class DuplicateOrderGuard:
+    """Prevents duplicate order submissions."""
+
+    def __init__(self, registry: OrderRegistry) -> None:
+        self._registry = registry
+
+    def should_submit(self, request_id: str) -> bool:
+        return not self._registry.exists(request_id)
+
+    def register(self, request_id: str, order: object) -> None:
+        self._registry.register(request_id, order)
+
+==================================================
+execution/execution_engine.py
+==================================================
+from execution.execution_result import ExecutionResult
+
+
+class ExecutionEngine:
+    def __init__(self, order_service):
+        self.order_service = order_service
+
+    def execute(self, request):
+        if request is None:
+            raise ValueError("ExecutionRequest cannot be None")
+
+        try:
+            order_id = self.order_service.submit(request)
+
+            if hasattr(self.order_service, "place_order"):
+                response = self.order_service.place_order(request)
+
+                broker_order_id = response.get("orderId")
+
+                if broker_order_id and hasattr(
+                    self.order_service,
+                    "register_broker_order",
+                ):
+                    self.order_service.register_broker_order(
+                        order_id,
+                        broker_order_id,
+                    )
+
+                if hasattr(
+                    self.order_service,
+                    "update_status",
+                ):
+                    from execution.order_service import OrderStatus
+
+                    self.order_service.update_status(
+                        order_id,
+                        OrderStatus.SUBMITTED,
+                    )
+
+            return ExecutionResult(
+                success=True,
+                order_id=order_id,
+            )
+
+        except Exception as exc:
+            return ExecutionResult(
+                success=False,
+                error=str(exc),
+            )
+
+==================================================
+execution/execution_manager.py
+==================================================
+
+==================================================
+execution/execution_request.py
+==================================================
+from dataclasses import dataclass
+
+
+@dataclass(frozen=True)
+class ExecutionRequest:
+    symbol: str
+    side: str
+    quantity: int
+
+    def __post_init__(self):
+        if self.quantity <= 0:
+            raise ValueError("Quantity must be greater than zero")
+
+        if self.side not in ("BUY", "SELL"):
+            raise ValueError("Invalid side")
+
+==================================================
+execution/execution_result_mapper.py
+==================================================
+from execution.execution_result import ExecutionResult
+
+
+class ExecutionResultMapper:
+    """
+    Converts broker responses into ExecutionResult.
+    """
+
+    def map(
+        self,
+        response: dict,
+    ) -> ExecutionResult:
+        if response.get("status") == "success":
+            data = response.get(
+                "data",
+                {},
+            )
+
+            return ExecutionResult(
+                success=True,
+                order_id=data.get("orderId"),
+            )
+
+        return ExecutionResult(
+            success=False,
+            error=response.get(
+                "message",
+                "Unknown execution error",
+            ),
+        )
+
+==================================================
+execution/execution_result.py
+==================================================
+from dataclasses import dataclass
+
+
+@dataclass
+class ExecutionResult:
+    success: bool
+    order_id: str | None = None
+    error: str | None = None
+
+==================================================
+execution/execution_status.py
+==================================================
+from enum import Enum
+
+
+class ExecutionStatus(Enum):
+    PENDING = "PENDING"
+    SUBMITTED = "SUBMITTED"
+    FILLED = "FILLED"
+    REJECTED = "REJECTED"
+    FAILED = "FAILED"
+
+==================================================
+execution/order_audit.py
+==================================================
+
+==================================================
+execution/order_event_dispatcher.py
+==================================================
+from __future__ import annotations
+
+from collections.abc import Callable
+
+from execution.order_events import OrderEvent
+
+
+class OrderEventDispatcher:
+    """
+    Dispatches order events to registered subscribers.
+
+    Provides:
+    - duplicate subscriber protection
+    - subscriber failure isolation
+    - publish status reporting
+    """
+
+    def __init__(self) -> None:
+        self._subscribers: list[Callable[[OrderEvent], None]] = []
+
+    def subscribe(
+        self,
+        callback: Callable[[OrderEvent], None],
+    ) -> None:
+        if callback not in self._subscribers:
+            self._subscribers.append(callback)
+
+    def publish(
+        self,
+        event: OrderEvent,
+    ) -> dict:
+        failed = 0
+
+        for callback in self._subscribers:
+            try:
+                callback(event)
+
+            except Exception:
+                failed += 1
+
+        return {
+            "published": True,
+            "failed": failed,
+        }
+
+    def clear(self) -> None:
+        self._subscribers.clear()
+
+==================================================
+execution/order_events.py
+==================================================
+from __future__ import annotations
+
+from dataclasses import dataclass
+from enum import Enum
+
+
+class OrderEventType(str, Enum):
+    NEW = "NEW"
+    PENDING = "PENDING"
+    SUBMITTED = "SUBMITTED"
+    PARTIALLY_FILLED = "PARTIALLY_FILLED"
+    FILLED = "FILLED"
+    CANCELLED = "CANCELLED"
+
+
+@dataclass(frozen=True, slots=True)
+class OrderEvent:
+    order_id: int
+    event_type: OrderEventType
+    broker_order_id: str | None = None
+
+==================================================
+execution/order_idempotency.py
+==================================================
+"""
+=========================================================
+Trading Operating System (TOS)
+
+Module      : Order Idempotency
+Description : Prevents duplicate order execution.
+=========================================================
+"""
+
+
+class OrderIdempotency:
+    """
+    Tracks submitted orders to prevent duplicates.
+    """
+
+    def __init__(self):
+        self._orders = {}
+
+    def is_duplicate(
+        self,
+        order_key,
+    ):
+        return order_key in self._orders
+
+    def record(
+        self,
+        order_key,
+        result=None,
+    ):
+        self._orders[order_key] = result
+
+    def get(
+        self,
+        order_key,
+    ):
+        return self._orders.get(order_key)
+
+    def clear(
+        self,
+        order_key,
+    ):
+        self._orders.pop(
+            order_key,
+            None,
+        )
+
+    def reset(self):
+        self._orders.clear()
+
+    def count(self):
+        return len(self._orders)
+
+==================================================
+execution/order_recovery.py
+==================================================
+"""
+=========================================================
+Trading Operating System (TOS)
+
+Module      : Order Recovery
+Description : Recovers broker orders after restart/failure.
+=========================================================
+"""
+
+from dataclasses import dataclass, field
+
+
+@dataclass
+class OrderRecovery:
+    """
+    Handles pending order recovery.
+
+    Supports:
+    - Local pending order tracking
+    - Broker order recovery
+    """
+
+    broker: object | None = None
+    pending_orders: dict = field(default_factory=dict)
+
+    def add_order(
+        self,
+        order_id,
+        symbol,
+    ):
+        self.pending_orders[order_id] = symbol
+
+    def remove_order(
+        self,
+        order_id,
+    ):
+        self.pending_orders.pop(
+            order_id,
+            None,
+        )
+
+    def has_pending_orders(self):
+        return len(self.pending_orders) > 0
+
+    def pending_count(self):
+        return len(self.pending_orders)
+
+    def clear(self):
+        self.pending_orders.clear()
+
+    def get_order(
+        self,
+        order_id,
+    ):
+        return self.pending_orders.get(order_id)
+
+    def recover(self):
+        """
+        Recover orders from broker.
+        """
+
+        if self.broker is None:
+            raise RuntimeError("Broker is not configured.")
+
+        return self.broker.get_orders()
+
+    def sync(self):
+        """
+        Recover and update local pending orders.
+        """
+
+        orders = self.recover()
+
+        self.pending_orders.clear()
+
+        for order in orders:
+            if order.get("status") in (
+                "PENDING",
+                "OPEN",
+            ):
+                self.pending_orders[order["order_id"]] = order.get("symbol")
+
+        return orders
+
+    def summary(self):
+        return {
+            "pending_orders": self.pending_orders.copy(),
+            "pending_count": self.pending_count(),
+            "has_pending": self.has_pending_orders(),
+        }
+
+==================================================
+execution/order_registry.py
+==================================================
+"""
+Order registry for duplicate order protection.
+"""
+
+from collections.abc import Hashable
+
+
+class OrderRegistry:
+    """Tracks submitted orders by request ID."""
+
+    def __init__(self) -> None:
+        self._orders: dict[Hashable, object] = {}
+
+    def register(self, request_id: Hashable, order: object) -> None:
+        """Register a new order."""
+        if request_id in self._orders:
+            raise ValueError(f"Duplicate request: {request_id}")
+
+        self._orders[request_id] = order
+
+    def exists(self, request_id: Hashable) -> bool:
+        """Return True if request exists."""
+        return request_id in self._orders
+
+    def get(self, request_id: Hashable) -> object | None:
+        """Return stored order."""
+        return self._orders.get(request_id)
+
+    def remove(self, request_id: Hashable) -> None:
+        """Remove order if present."""
+        self._orders.pop(request_id, None)
+
+    def clear(self) -> None:
+        """Clear registry."""
+        self._orders.clear()
+
+    def size(self) -> int:
+        """Return registry size."""
+        return len(self._orders)
+
+==================================================
+execution/order_repository.py
+==================================================
+class OrderRepository:
+    """In-memory repository for orders."""
+
+    def __init__(self):
+        self._orders = {}
+
+    def add(self, order):
+        self._orders[order["order_id"]] = order
+
+    def get(self, order_id):
+        return self._orders.get(order_id)
+
+==================================================
+execution/order_router.py
+==================================================
+
+==================================================
+execution/order_service.py
+==================================================
+"""
+Order Service.
+
+Manages the lifecycle of orders within the Trading Operating System.
+"""
+
+from __future__ import annotations
+
+from enum import Enum
+from typing import Any
+
+from execution.order_events import OrderEvent, OrderEventType
+
+
+class OrderStatus(str, Enum):
+    """Represents the lifecycle state of an order."""
+
+    NEW = "NEW"
+    PENDING = "PENDING"
+    SUBMITTED = "SUBMITTED"
+    PARTIALLY_FILLED = "PARTIALLY_FILLED"
+    FILLED = "FILLED"
+    CANCELLED = "CANCELLED"
+
+
+class OrderService:
+    """Service responsible for managing and placing orders."""
+
+    def __init__(
+        self,
+        broker=None,
+        repository=None,
+        dispatcher=None,
+    ) -> None:
+        self._broker = broker
+        self._repository = repository
+        self._dispatcher = dispatcher
+
+        self._orders: dict[int, dict[str, Any]] = {}
+        self._statuses: dict[int, OrderStatus] = {}
+        self._broker_order_ids: dict[int, str] = {}
+        self._filled_quantities: dict[int, int] = {}
+        self._filled_values: dict[int, float] = {}
+
+        self._next_order_id = 1
+
+    @property
+    def order_count(self) -> int:
+        """Return the number of tracked orders."""
+        return len(self._orders)
+
+    def submit(self, order: dict[str, Any]) -> int:
+        """
+        Register an order locally.
+
+        Returns the generated internal order ID.
+        """
+        order_id = self._next_order_id
+
+        self._orders[order_id] = dict(order)
+        self._statuses[order_id] = OrderStatus.NEW
+        self._filled_quantities[order_id] = 0
+        self._filled_values[order_id] = 0.0
+
+        self._next_order_id += 1
+
+        self._publish_event(
+            order_id=order_id,
+            event_type=OrderEventType.NEW,
+        )
+
+        return order_id
+
+    def get(self, order_id: int) -> dict[str, Any] | None:
+        """Return an order by its internal ID."""
+        return self._orders.get(order_id)
+
+    def status(self, order_id: int) -> OrderStatus | None:
+        """Return the current status of an order."""
+        return self._statuses.get(order_id)
+
+    def filled_quantity(self, order_id: int) -> int:
+        """Return filled quantity."""
+        if order_id not in self._orders:
+            raise KeyError(f"Unknown order id: {order_id}")
+
+        return self._filled_quantities[order_id]
+
+    def remaining_quantity(self, order_id: int) -> int:
+        """Return remaining quantity."""
+        if order_id not in self._orders:
+            raise KeyError(f"Unknown order id: {order_id}")
+
+        total = self._orders[order_id]["quantity"]
+        return total - self._filled_quantities[order_id]
+
+    def average_fill_price(self, order_id: int) -> float:
+        """
+        Return the average execution price for an order.
+        """
+        if order_id not in self._orders:
+            raise KeyError(f"Unknown order id: {order_id}")
+
+        filled = self._filled_quantities[order_id]
+
+        if filled == 0:
+            return 0.0
+
+        return self._filled_values[order_id] / filled
+
+    def modify_order(
+        self,
+        order_id: int,
+        quantity: int | None = None,
+    ) -> None:
+        """
+        Modify an existing order.
+        """
+        if order_id not in self._orders:
+            raise KeyError(f"Unknown order id: {order_id}")
+
+        current = self.status(order_id)
+
+        if current in (
+            OrderStatus.FILLED,
+            OrderStatus.CANCELLED,
+        ):
+            raise ValueError(f"Cannot modify order in {current.value} state.")
+
+        if quantity is not None:
+            if quantity <= 0:
+                raise ValueError("Quantity must be greater than zero.")
+
+            if quantity < self._filled_quantities[order_id]:
+                raise ValueError(
+                    "Modified quantity cannot be less than filled quantity."
+                )
+
+            self._orders[order_id]["quantity"] = quantity
+
+    def order(self, order_id: int) -> dict[str, Any]:
+        """
+        Return a copy of the order details.
+        """
+        if order_id not in self._orders:
+            raise KeyError(f"Unknown order id: {order_id}")
+
+        return dict(self._orders[order_id])
+
+    def record_fill(
+        self,
+        order_id: int,
+        quantity: int,
+        price: float = 0.0,
+    ) -> None:
+        """
+        Record an execution fill.
+        """
+        if order_id not in self._orders:
+            raise KeyError(f"Unknown order id: {order_id}")
+
+        total = self._orders[order_id]["quantity"]
+        filled = self._filled_quantities[order_id]
+
+        new_total = filled + quantity
+
+        if new_total > total:
+            raise ValueError("Order overfilled.")
+
+        self._filled_quantities[order_id] = new_total
+        self._filled_values[order_id] += quantity * price
+
+        if new_total == total:
+            self.update_status(order_id, OrderStatus.FILLED)
+        else:
+            self.update_status(order_id, OrderStatus.PARTIALLY_FILLED)
+
+    def update_status(self, order_id: int, status: OrderStatus) -> None:
+        """
+        Update the status of an existing order.
+        """
+        if order_id not in self._orders:
+            raise KeyError(f"Unknown order id: {order_id}")
+
+        current = self._statuses[order_id]
+
+        # Ignore duplicate status updates (idempotent)
+        if status == current:
+            return
+
+        # Ignore stale / out-of-order status updates
+        if self._STATUS_ORDER[status] < self._STATUS_ORDER[current]:
+            return
+
+        allowed = self._ALLOWED_TRANSITIONS.get(current, set())
+
+        if status not in allowed:
+            raise ValueError(
+                f"Invalid status transition: {current.value} -> {status.value}"
+            )
+
+        self._statuses[order_id] = status
+
+        self._publish_event(
+            order_id=order_id,
+            event_type=OrderEventType(status.value),
+            broker_order_id=self.broker_order_id(order_id),
+        )
+
+    def place_order(self, order: dict[str, Any]) -> dict[str, Any]:
+        """
+        Place an order through the configured broker.
+
+        The broker response is optionally persisted using the configured
+        repository and then returned.
+        """
+        if self._broker is None:
+            raise RuntimeError("Broker is not configured.")
+
+        result = self._broker.place_order(order)
+
+        if self._repository is not None:
+            self._repository.add(result)
+
+        return result
+
+    def cancel_order(self, order_id: int) -> bool:
+        """
+        Cancel an existing order.
+        """
+        if order_id not in self._orders:
+            raise KeyError(f"Unknown order id: {order_id}")
+
+        current_status = self.status(order_id)
+
+        if current_status in (
+            OrderStatus.FILLED,
+            OrderStatus.CANCELLED,
+        ):
+            raise ValueError(f"Cannot cancel order in {current_status.value} state.")
+
+        self._statuses[order_id] = OrderStatus.CANCELLED
+
+        if self._broker is not None and hasattr(self._broker, "cancel_order"):
+            self._broker.cancel_order(order_id)
+
+        self._publish_event(
+            order_id=order_id,
+            event_type=OrderEventType.CANCELLED,
+            broker_order_id=self.broker_order_id(order_id),
+        )
+
+        return True
+
+    def register_broker_order(
+        self,
+        order_id: int,
+        broker_order_id: str,
+    ) -> None:
+        """
+        Associate an internal order with a broker order.
+        """
+        if order_id not in self._orders:
+            raise KeyError(f"Unknown order id: {order_id}")
+
+        if order_id in self._broker_order_ids:
+            raise ValueError(f"Broker order already registered for order {order_id}")
+
+        self._broker_order_ids[order_id] = broker_order_id
+
+    def broker_order_id(self, order_id: int) -> str | None:
+        """
+        Return the broker order ID for an internal order.
+        """
+        return self._broker_order_ids.get(order_id)
+
+    def process_broker_callback(
+        self,
+        broker_order_id: str,
+        status: OrderStatus,
+    ) -> None:
+        """
+        Process a broker callback using the broker order ID.
+        """
+        for order_id, registered_broker_id in self._broker_order_ids.items():
+            if registered_broker_id == broker_order_id:
+                self.update_status(order_id, status)
+                return
+
+        raise KeyError(f"Unknown broker order id: {broker_order_id}")
+
+    def _publish_event(
+        self,
+        *,
+        order_id: int,
+        event_type: OrderEventType,
+        broker_order_id: str | None = None,
+    ) -> None:
+        """Publish an order event if a dispatcher is configured."""
+        if self._dispatcher is None:
+            return
+
+        self._dispatcher.publish(
+            OrderEvent(
+                order_id=order_id,
+                event_type=event_type,
+                broker_order_id=broker_order_id,
+            )
+        )
+
+    _STATUS_ORDER = {
+        OrderStatus.NEW: 0,
+        OrderStatus.PENDING: 1,
+        OrderStatus.SUBMITTED: 2,
+        OrderStatus.PARTIALLY_FILLED: 3,
+        OrderStatus.FILLED: 4,
+        OrderStatus.CANCELLED: 4,
+    }
+
+    _ALLOWED_TRANSITIONS = {
+        OrderStatus.NEW: {
+            OrderStatus.PENDING,
+            OrderStatus.SUBMITTED,
+            OrderStatus.PARTIALLY_FILLED,
+            OrderStatus.CANCELLED,
+            OrderStatus.FILLED,
+        },
+        OrderStatus.PENDING: {
+            OrderStatus.SUBMITTED,
+            OrderStatus.PARTIALLY_FILLED,
+            OrderStatus.CANCELLED,
+            OrderStatus.FILLED,
+        },
+        OrderStatus.SUBMITTED: {
+            OrderStatus.PARTIALLY_FILLED,
+            OrderStatus.FILLED,
+            OrderStatus.CANCELLED,
+        },
+        OrderStatus.PARTIALLY_FILLED: {
+            OrderStatus.PARTIALLY_FILLED,
+            OrderStatus.FILLED,
+            OrderStatus.CANCELLED,
+        },
+        OrderStatus.FILLED: set(),
+        OrderStatus.CANCELLED: set(),
+    }
+
+==================================================
+execution/order_status.py
+==================================================
+from dataclasses import dataclass
+
+
+@dataclass
+class OrderStatus:
+    state: str = "NEW"
+
+    TERMINAL_STATES = (
+        "FILLED",
+        "CANCELLED",
+        "REJECTED",
+    )
+
+    def _transition(
+        self,
+        new_state: str,
+    ):
+        if self.state in self.TERMINAL_STATES:
+            raise ValueError(f"Invalid transition from {self.state}")
+
+        self.state = new_state
+
+    def mark_submitted(self):
+        self._transition("SUBMITTED")
+
+    def mark_filled(self):
+        self._transition("FILLED")
+
+    def mark_cancelled(self):
+        self._transition("CANCELLED")
+
+    def mark_rejected(self):
+        self._transition("REJECTED")
+
+    def is_open(self):
+        return self.state in (
+            "NEW",
+            "SUBMITTED",
+        )
+
+    def is_closed(self):
+        return self.state == "FILLED"
+
+    def is_cancelled(self):
+        return self.state == "CANCELLED"
+
+    def is_rejected(self):
+        return self.state == "REJECTED"
+
+    def reset(self):
+        self.state = "NEW"
+
+    def to_dict(self):
+        return {"state": self.state}
+
+    def __str__(self):
+        return self.state
+
+    def __repr__(self):
+        return f"OrderStatus(state='{self.state}')"
+
+==================================================
+execution/order_sync.py
+==================================================
+
+==================================================
+execution/position_synchronizer.py
+==================================================
+class PositionSynchronizer:
+    """Synchronizes broker positions with TOS."""
+
+    def __init__(self, broker):
+        self.broker = broker
+
+    def sync(self):
+        """Fetch positions from broker."""
+        return self.broker.get_positions()
+
+==================================================
+execution/retry_policy.py
+==================================================
+class RetryPolicy:
+    def __init__(self, max_retries=3):
+        self.max_retries = max_retries
+
+    def execute(self, func):
+        last_exception = None
+
+        for _ in range(self.max_retries):
+            try:
+                return func()
+            except Exception as exc:
+                last_exception = exc
+
+        raise last_exception
+
+==================================================
+execution/timeout_handler.py
+==================================================
+import time
+
+
+class TimeoutHandler:
+    def __init__(self, timeout_seconds):
+        self.timeout_seconds = timeout_seconds
+
+    def is_timed_out(self, start_time):
+        return (time.time() - start_time) >= self.timeout_seconds
+
+    def remaining_time(self, start_time):
+        remaining = self.timeout_seconds - (time.time() - start_time)
+        return max(0, remaining)
+
+==================================================
+execution/trade_executor.py
+==================================================
+"""
+=========================================================
+Trading Operating System (TOS)
+
+Module      : Trade Executor
+Description : Converts trades into positions.
+=========================================================
+"""
+
+from __future__ import annotations
+
+from services.position_manager import PositionManager
+from services.position_book import PositionBook
+
+
+class TradeExecutor:
+    def __init__(
+        self,
+        position_manager: PositionManager,
+        position_book: PositionBook | None = None,
+    ):
+        self.position_manager = position_manager
+        self.position_book = position_book
+
+    def execute(
+        self,
+        trade,
+        order=None,
+        quantity=None,
+        price=None,
+    ):
+        if trade is None:
+            raise ValueError("Trade cannot be None")
+
+        if quantity is None or quantity <= 0:
+            raise ValueError("Quantity must be greater than zero")
+
+        if price is None or price <= 0:
+            raise ValueError("Price must be greater than zero")
+
+        # Backward compatibility:
+        # If order is not supplied, use trade reference.
+        if order is None:
+            order = getattr(
+                trade.risk.decision,
+                "order",
+                None,
+            )
+
+        position = self.position_manager.open_position(
+            order=order,
+            quantity=quantity,
+            price=price,
+        )
+
+        if self.position_book is not None:
+            self.position_book.add_position(
+                position.position_id,
+                position,
+            )
+
+        return position
+
+==================================================
+execution/trade_reconciliation.py
+==================================================
+from dataclasses import dataclass, field
+
+
+@dataclass
+class TradeReconciliation:
+    local_trades: dict = field(default_factory=dict)
+    broker_trades: dict = field(default_factory=dict)
+
+    def add_local(self, trade_id, quantity):
+        self.local_trades[trade_id] = quantity
+
+    def add_broker(self, trade_id, quantity):
+        self.broker_trades[trade_id] = quantity
+
+    def remove_local(self, trade_id):
+        self.local_trades.pop(trade_id, None)
+
+    def remove_broker(self, trade_id):
+        self.broker_trades.pop(trade_id, None)
+
+    def difference(self, trade_id):
+        return self.local_trades.get(trade_id, 0) - self.broker_trades.get(trade_id, 0)
+
+    def is_reconciled(self):
+        return self.local_trades == self.broker_trades
+
+    def reset(self):
+        self.local_trades.clear()
+        self.broker_trades.clear()
+
+    def summary(self):
+        return {
+            "local_trades": self.local_trades.copy(),
+            "broker_trades": self.broker_trades.copy(),
+            "reconciled": self.is_reconciled(),
+        }
+
+    def missing_broker_trades(self):
+        """
+        Trades present locally but missing at broker.
+        """
+
+        return [
+            trade_id
+            for trade_id in self.local_trades
+            if trade_id not in self.broker_trades
+        ]
+
+    def extra_broker_trades(self):
+        """
+        Trades present at broker but missing locally.
+        """
+
+        return [
+            trade_id
+            for trade_id in self.broker_trades
+            if trade_id not in self.local_trades
+        ]
+
+    def reconciliation_report(self):
+        """
+        Complete reconciliation report.
+        """
+
+        differences = {}
+
+        for trade_id in set(self.local_trades) & set(self.broker_trades):
+            difference = self.difference(trade_id)
+
+            if difference != 0:
+                differences[trade_id] = difference
+
+        return {
+            "reconciled": self.is_reconciled(),
+            "missing": self.missing_broker_trades(),
+            "extra": self.extra_broker_trades(),
+            "differences": differences,
+        }
+

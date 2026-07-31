@@ -1,18 +1,17 @@
 from datetime import datetime
 from decimal import Decimal
 
-from domain.market import Market
-from domain.indicator_set import IndicatorSet
 from domain.decision import Decision
+from domain.indicator_set import IndicatorSet
+from domain.market import Market
+from domain.order import Order
 from domain.risk import Risk
 from domain.trade import Trade
-from domain.order import Order
-
 from shared.enums import (
-    Signal,
-    DecisionStatus,
     Broker,
+    DecisionStatus,
     OrderSide,
+    Signal,
 )
 
 market = Market(

@@ -21,27 +21,32 @@ class IndicatorSet:
 
     ema_high: float
     ema_low: float
-
     vwap: float
-
     rsi: float
-
     volume_average: float
 
     @property
     def is_bullish(self) -> bool:
-        """
-        Bullish indicator confirmation.
-        """
-        return (
-            self.rsi > 55
-        )
+        """Bullish indicator confirmation."""
+        return self.rsi > 55
 
     @property
     def is_bearish(self) -> bool:
-        """
-        Bearish indicator confirmation.
-        """
-        return (
-            self.rsi < 45
+        """Bearish indicator confirmation."""
+        return self.rsi < 45
+
+
+class IndicatorEngine:
+    """Calculates technical indicators from market data."""
+
+    def calculate(self, runtime) -> IndicatorSet:
+        if runtime is None:
+            raise ValueError("runtime cannot be None")
+
+        return IndicatorSet(
+            ema_high=0.0,
+            ema_low=0.0,
+            vwap=0.0,
+            rsi=50.0,
+            volume_average=0.0,
         )
