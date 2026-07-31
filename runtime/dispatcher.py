@@ -5,6 +5,10 @@ from main import main as application_main
 from runtime.health_monitor import HealthMonitor
 from runtime.runtime_mode import RuntimeMode
 
+from config.config_validator import ConfigValidator
+from config.settings_loader import SettingsLoader
+
+DEFAULT_CONFIG_PATH = "config/default.json"
 
 class CommandDispatcher:
     def __init__(self) -> None:
@@ -39,11 +43,19 @@ class CommandDispatcher:
         return 0
 
     def _validate(self) -> int:
-        print("Configuration validation entry point.")
-        return 0
+            try:
+                manager = SettingsLoader().load_json(DEFAULT_CONFIG_PATH)
+                ConfigValidator(manager).validate()
+                print("Configuration is valid.")
+                return 0
+            except Exception as exc:
+                print(f"Configuration validation failed: {exc}")
+                return 1
 
+            
     def _paper(self) -> int:
         return application_main()
+
 
     def _live(self) -> int:
         print("Live mode not yet implemented.")

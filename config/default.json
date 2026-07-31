@@ -1,0 +1,13 @@
+{
+  "broker": {
+    "name": "paper",
+    "api_key": "demo"
+  },
+  "risk": {
+    "capital": 100000,
+    "risk_percent": 1
+  },
+  "trading": {
+    "mode": "PAPER"
+  }
+}
