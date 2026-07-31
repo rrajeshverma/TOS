@@ -62,11 +62,10 @@ class TradingRuntime:
 
         indicators = indicator_engine.calculate(history)
 
-        decision = strategy_engine.evaluate(
-            market,
-            history,
-            indicators,
-        )
+        decision = strategy_engine.decide(
+        market,
+        indicators,
+    )
 
         risk = risk_engine.evaluate(
             decision,

@@ -74,3 +74,31 @@ def test_run_cycle_uses_indicator_engine():
     )
 
     indicator_engine.calculate.assert_called_once_with(history)
+
+def test_run_cycle_uses_strategy_decide():
+    indicator_engine = Mock()
+    indicator_engine.calculate.return_value = "INDICATORS"
+
+    strategy_engine = Mock()
+    strategy_engine.decide.return_value = "DECISION"
+
+    risk_engine = Mock()
+    risk_engine.evaluate.return_value = "RISK"
+
+    runtime = TradingRuntime(
+        {
+            "indicator_engine": indicator_engine,
+            "strategy_engine": strategy_engine,
+            "risk_engine": risk_engine,
+        }
+    )
+
+    market = Mock()
+    history = [market]
+
+    runtime.run_cycle(market, history)
+
+    strategy_engine.decide.assert_called_once_with(
+        market,
+        "INDICATORS",
+    )
