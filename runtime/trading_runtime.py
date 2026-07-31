@@ -9,6 +9,15 @@ from shared.logger import get_logger
 
 LOGGER = get_logger(__name__)
 
+REQUIRED_SERVICES = (
+    "indicator_engine",
+    "strategy_engine",
+    "risk_engine",
+    "execution_manager",
+    "market_data_service",
+    "trading_pipeline",
+)
+
 
 class TradingRuntime:
     """
@@ -23,6 +32,21 @@ class TradingRuntime:
         self.strategy_engine = services.get("strategy_engine")
         self.risk_engine = services.get("risk_engine")
         self.execution_manager = services.get("execution_manager")
+
+    def validate(self) -> list[str]:
+        """
+        Validate that all required runtime services exist.
+
+        Returns
+        -------
+        list[str]
+            Names of missing services.
+        """
+        return [
+            service
+            for service in REQUIRED_SERVICES
+            if self.services.get(service) is None
+        ]
 
     def start(self) -> None:
         self.running = True

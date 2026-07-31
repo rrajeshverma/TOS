@@ -14,7 +14,7 @@ from runtime.application import Application
 from runtime.startup import Startup
 from runtime.shutdown import Shutdown
 from runtime.signal_handler import SignalHandler
-
+from runtime.trading_runtime import TradingRuntime
 
 LOGGER = logging.getLogger("tos")
 
@@ -85,8 +85,6 @@ def main() -> int:
     register_signal_handlers(app, signal_handler)
 
     startup(app)
-
-    from runtime.trading_runtime import TradingRuntime
 
     trading_runtime = TradingRuntime(
         app.services,
