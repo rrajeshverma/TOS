@@ -4,13 +4,13 @@ from runtime.startup import Startup
 def test_startup_loads_broker():
     startup = Startup()
     startup.load_broker("paper")
-    assert startup.broker == "paper"
+    assert startup.config.broker == "paper"
 
 
 def test_startup_loads_portfolio():
     startup = Startup()
     startup.load_portfolio("default")
-    assert startup.portfolio == "default"
+    assert startup.config.portfolio == "default"
 
 
 def test_startup_initializes_services():

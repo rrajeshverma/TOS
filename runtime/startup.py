@@ -24,6 +24,8 @@ from market.candle_builder import CandleBuilder
 from integration.pipeline import TradingPipeline
 from runtime.trading_runtime import TradingRuntime
 from execution.execution_manager import ExecutionManager
+from config.runtime_config import RuntimeConfig
+from dataclasses import replace
 
 LOGGER = logging.getLogger("tos")
 
@@ -32,23 +34,22 @@ class Startup:
     """Handles application startup."""
 
     def __init__(self) -> None:
-        self.broker = None
-        self.portfolio = None
+        self.config = RuntimeConfig()
         self.services = {}
         self.services_initialized = False
 
     def load_broker(self, broker: str) -> None:
-        self.broker = broker
+        self.config = replace(self.config, broker=broker)
 
     def load_portfolio(self, portfolio: str) -> None:
-        self.portfolio = portfolio
+        self.config = replace(self.config, portfolio=portfolio)
 
     def initialize_services(self) -> None:
         """Initialize trading services."""
 
         self.log_banner()
 
-        if self.broker == "dhan":
+        if self.config.broker == "dhan":
             client = DhanClient()
 
             broker = DhanBroker(
@@ -134,7 +135,7 @@ class Startup:
 
         runtime.services = self.services
 
-        if self.broker == "dhan":
+        if self.config.broker == "dhan":
             self.services["dhan_client"] = client
 
         self.services_initialized = True

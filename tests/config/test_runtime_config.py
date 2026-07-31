@@ -1,13 +1,21 @@
-def test_runtime_config_default_cycle(): ...
+from config.runtime_config import RuntimeConfig
 
 
-def test_runtime_config_heartbeat(): ...
+def test_runtime_config_defaults():
+    config = RuntimeConfig()
+
+    assert config.broker == "paper"
+    assert config.mode == "PAPER"
+    assert config.portfolio == "default"
 
 
-def test_runtime_config_retry_count(): ...
+def test_runtime_config_custom_values():
+    config = RuntimeConfig(
+        broker="dhan",
+        mode="LIVE",
+        portfolio="nifty",
+    )
 
-
-def test_runtime_config_shutdown_timeout(): ...
-
-
-def test_runtime_config_validation(): ...
+    assert config.broker == "dhan"
+    assert config.mode == "LIVE"
+    assert config.portfolio == "nifty"
