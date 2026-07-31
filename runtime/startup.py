@@ -101,15 +101,14 @@ class Startup:
         )
 
         trading_pipeline = TradingPipeline(
-                candle_builder=candle_builder,
-                market_engine=market_engine,
-                indicator_engine=indicator_engine,
-                runtime=runtime,
-            )
+            candle_builder=candle_builder,
+            market_engine=market_engine,
+            indicator_engine=indicator_engine,
+            runtime=runtime,
+        )
 
         market_data_service = MarketDataService(
             websocket=WebSocketClient(),
-
         )
 
         self.services = {
@@ -131,7 +130,7 @@ class Startup:
         }
 
         runtime.services = self.services
-        
+
         if self.broker == "dhan":
             self.services["dhan_client"] = client
 

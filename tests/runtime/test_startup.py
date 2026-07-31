@@ -18,6 +18,7 @@ def test_startup_initializes_services():
     startup.initialize_services()
     assert startup.services_initialized is True
 
+
 def test_initialize_services_creates_market_data_service():
     startup = Startup()
 

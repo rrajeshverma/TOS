@@ -104,6 +104,7 @@ def test_run_cycle_uses_strategy_decide():
         "INDICATORS",
     )
 
+
 def test_run_cycle_uses_risk_engine():
     indicator_engine = Mock()
     indicator_engine.calculate.return_value = "INDICATORS"
@@ -137,6 +138,7 @@ def test_run_cycle_uses_risk_engine():
     )
 
     assert result == "RISK"
+
 
 def test_run_cycle_uses_execution_manager():
     indicator_engine = Mock()
@@ -173,6 +175,7 @@ def test_run_cycle_uses_execution_manager():
 
     execution_manager.execute.assert_called_once_with(risk)
     assert result is execution_result
+
 
 def test_constructor_exposes_runtime_services():
     indicator_engine = Mock()

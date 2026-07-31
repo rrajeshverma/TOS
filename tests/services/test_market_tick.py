@@ -8,6 +8,7 @@ from domain.market_tick import MarketTick
 
 from datetime import datetime
 
+
 def test_market_tick():
     tick = MarketTick(
         symbol="NIFTY",
@@ -20,6 +21,7 @@ def test_market_tick():
     assert tick.ltp == Decimal("25123.45")
     assert tick.volume == 100
     assert tick.timestamp == "2026-07-29T09:15:00"
+
 
 def test_to_market_tick():
     websocket = Mock()

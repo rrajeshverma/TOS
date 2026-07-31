@@ -16,6 +16,7 @@ from shared.enums import (
 
 from execution.execution_request import ExecutionRequest
 
+
 def create_risk(
     approved: bool = True,
 ) -> Risk:
@@ -111,6 +112,7 @@ def test_constructor_raises_for_none_execution_engine():
         match="Execution engine cannot be None",
     ):
         ExecutionManager(None)
+
 
 def test_execute_passes_execution_request_to_engine():
     engine = Mock()

@@ -28,6 +28,4 @@ class SignalMapper:
         try:
             return cls._MAP[signal]
         except KeyError as exc:
-            raise ValueError(
-                f"Unsupported signal: {signal}"
-            ) from exc
+            raise ValueError(f"Unsupported signal: {signal}") from exc

@@ -42,6 +42,7 @@ def test_invalid_mode_raises():
     with pytest.raises(ValueError):
         ExecutionModeController("INVALID")
 
+
 def test_start_calls_paper_runner():
     paper_runner = MagicMock()
     live_runtime = MagicMock()
@@ -71,7 +72,9 @@ def test_start_calls_live_runtime():
 
     live_runtime.start.assert_called_once_with()
 
+
 # ---------- Stop delegation ----------
+
 
 def test_stop_calls_paper_runner():
     paper_runner = MagicMock()
@@ -105,6 +108,7 @@ def test_stop_calls_live_runtime():
 
     live_runtime.start.assert_called_once_with()
     live_runtime.stop.assert_called_once_with()
+
 
 def test_status_is_stopped_initially():
     controller = ExecutionModeController(

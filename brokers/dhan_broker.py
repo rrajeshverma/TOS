@@ -88,23 +88,14 @@ class DhanBroker(BaseBroker):
     def get_orders(self):
         response = self.client.get_order_list()
 
-        return [
-            DhanMapper.to_order(item)
-            for item in response["data"]
-        ]
+        return [DhanMapper.to_order(item) for item in response["data"]]
 
     def get_positions(self):
         response = self.client.get_positions()
 
-        return [
-            DhanMapper.to_position(item)
-            for item in response["data"]
-        ]
+        return [DhanMapper.to_position(item) for item in response["data"]]
 
     def get_holdings(self):
         response = self.client.get_holdings()
 
-        return [
-            DhanMapper.to_holding(item)
-            for item in response["data"]
-        ]
+        return [DhanMapper.to_holding(item) for item in response["data"]]

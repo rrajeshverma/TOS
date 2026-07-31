@@ -200,6 +200,7 @@ def test_engine_runner_shutdown():
     assert runner.running is False
     broker.disconnect.assert_called_once()
 
+
 def test_restart_stops_and_starts():
     runner = EngineRunner()
 

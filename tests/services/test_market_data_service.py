@@ -91,6 +91,7 @@ def test_subscriptions():
         "BANKNIFTY",
     }
 
+
 def test_to_market_tick():
     websocket = Mock()
     service = MarketDataService(websocket)
@@ -109,6 +110,7 @@ def test_to_market_tick():
     assert tick.ltp == Decimal("25001.25")
     assert tick.volume == 123
     assert tick.timestamp == broker_tick.timestamp
+
 
 def test_emit_market_tick():
     websocket = Mock()
@@ -134,6 +136,7 @@ def test_emit_market_tick():
     assert market_tick.symbol == "NIFTY"
     assert market_tick.ltp == Decimal("25000")
     assert market_tick.volume == 5
+
 
 def test_emit_market_tick_without_callback():
     websocket = Mock()

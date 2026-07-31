@@ -33,6 +33,7 @@ def test_map_failed_broker_response():
     assert result.success is False
     assert result.error == "Insufficient funds"
 
+
 def test_map_success_without_data():
     mapper = ExecutionResultMapper()
 

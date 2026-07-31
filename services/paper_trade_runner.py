@@ -45,7 +45,7 @@ class PaperTradeRunner:
 
     def run(
         self,
-        market: Market, 
+        market: Market,
         indicators: IndicatorSet,
     ):
         decision = self.strategy_engine.decide(

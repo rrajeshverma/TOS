@@ -34,6 +34,7 @@ def test_get_orders_delegates():
 
     assert service.client.get_orders() == []
 
+
 def test_get_holdings_delegates():
     client = Mock()
     client.get_holdings.return_value = []
@@ -50,6 +51,7 @@ def test_get_fund_limits_delegates():
     service = DhanOrderService(client)
 
     assert service.get_fund_limits() == {"data": {}}
+
 
 def test_place_order_delegates():
     client = Mock()

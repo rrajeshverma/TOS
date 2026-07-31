@@ -226,6 +226,7 @@ def test_position_manager_called_once():
         100,
     )
 
+
 def test_execution_manager_called_when_available():
     strategy = Mock()
     risk_engine = Mock()

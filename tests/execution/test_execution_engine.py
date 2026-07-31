@@ -80,6 +80,7 @@ class StubExecutionEngine(ExecutionEngine):
         self.called = True
         return {"orderId": "TEST-ORDER"}
 
+
 def test_execute_uses_place_order_hook():
     order_service = Mock()
     order_service.submit.return_value = "ORDER-1"

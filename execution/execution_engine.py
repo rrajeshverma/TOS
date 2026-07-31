@@ -3,6 +3,7 @@ from execution.order_service_protocol import (
     OrderServiceProtocol,
 )
 
+
 class ExecutionEngine:
     def __init__(
         self,

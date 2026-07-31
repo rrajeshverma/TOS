@@ -82,6 +82,7 @@ def test_none_context_raises_value_error():
     with pytest.raises(ValueError):
         ExecutionRequestFactory.create(None)
 
+
 def test_buy_signal_maps_to_buy():
     context = create_context()
 
@@ -91,8 +92,6 @@ def test_buy_signal_maps_to_buy():
 
 
 def test_buy_pe_maps_to_buy():
-    request = ExecutionRequestFactory.create(
-        create_context(Signal.BUY_PE)
-    )
+    request = ExecutionRequestFactory.create(create_context(Signal.BUY_PE))
 
     assert request.side == "BUY"

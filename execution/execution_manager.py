@@ -24,7 +24,8 @@ class ExecutionManager:
     Coordinates the execution pipeline.
     """
 
-    def __init__(self,
+    def __init__(
+        self,
         execution_engine,
     ) -> None:
         if execution_engine is None:
