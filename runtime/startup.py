@@ -4,6 +4,7 @@ Application startup manager.
 
 import logging
 
+from config.version import APP_NAME, VERSION, BUILD, MODE
 from brokers.dhan.websocket import WebSocketClient
 from services.market_data_service import MarketDataService
 from brokers.clients.dhan_client import DhanClient
@@ -44,6 +45,8 @@ class Startup:
 
     def initialize_services(self) -> None:
         """Initialize trading services."""
+
+        self.log_banner()
 
         if self.broker == "dhan":
             client = DhanClient()
@@ -159,5 +162,14 @@ class Startup:
         LOGGER.info("Paper Trading       : READY")
         LOGGER.info("Paper Trade Runner  : READY")
 
-        LOGGER.info("Trading Runtime READY")
+        LOGGER.info("Trading Runtime     : READY")
         LOGGER.info("========================================")
+
+    def log_banner(self) -> None:
+        LOGGER.info("=" * 56)
+        LOGGER.info("%s", APP_NAME)
+        LOGGER.info("=" * 56)
+        LOGGER.info("Version             : %s", VERSION)
+        LOGGER.info("Build               : %s", BUILD)
+        LOGGER.info("Mode                : %s", MODE)
+        LOGGER.info("=" * 56)
