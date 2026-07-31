@@ -25,6 +25,7 @@ def test_dispatch_validate(
     mock_config_validator.assert_called_once_with(manager)
     validator.validate.assert_called_once()
 
+
 def test_dispatch_version():
     dispatcher = CommandDispatcher()
 

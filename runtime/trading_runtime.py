@@ -32,16 +32,13 @@ class TradingRuntime:
     def indicator_engine(self):
         return self.services.get("indicator_engine")
 
-
     @property
     def strategy_engine(self):
         return self.services.get("strategy_engine")
 
-
     @property
     def risk_engine(self):
         return self.services.get("risk_engine")
-
 
     @property
     def execution_manager(self):

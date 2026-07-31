@@ -245,6 +245,7 @@ def test_on_market_tick_delegates_to_run_cycle():
 
     assert result == "RESULT"
 
+
 def test_runtime_resolves_services_dynamically():
     runtime = TradingRuntime({})
 

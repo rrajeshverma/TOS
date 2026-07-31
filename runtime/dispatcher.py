@@ -10,6 +10,7 @@ from config.settings_loader import SettingsLoader
 
 DEFAULT_CONFIG_PATH = "config/default.json"
 
+
 class CommandDispatcher:
     def __init__(self) -> None:
         self._commands = {
@@ -43,19 +44,17 @@ class CommandDispatcher:
         return 0
 
     def _validate(self) -> int:
-            try:
-                manager = SettingsLoader().load_json(DEFAULT_CONFIG_PATH)
-                ConfigValidator(manager).validate()
-                print("Configuration is valid.")
-                return 0
-            except Exception as exc:
-                print(f"Configuration validation failed: {exc}")
-                return 1
+        try:
+            manager = SettingsLoader().load_json(DEFAULT_CONFIG_PATH)
+            ConfigValidator(manager).validate()
+            print("Configuration is valid.")
+            return 0
+        except Exception as exc:
+            print(f"Configuration validation failed: {exc}")
+            return 1
 
-            
     def _paper(self) -> int:
         return application_main()
-
 
     def _live(self) -> int:
         print("Live mode not yet implemented.")
