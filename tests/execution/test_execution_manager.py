@@ -3,6 +3,7 @@ from unittest.mock import Mock
 
 import pytest
 
+
 from domain.decision import Decision
 from domain.market import Market
 from domain.risk import Risk
@@ -13,6 +14,7 @@ from shared.enums import (
     Signal,
 )
 
+from execution.execution_request import ExecutionRequest
 
 def create_risk(
     approved: bool = True,
@@ -102,9 +104,29 @@ def test_execute_returns_execution_result():
 
     assert result is expected
 
+
 def test_constructor_raises_for_none_execution_engine():
     with pytest.raises(
         ValueError,
         match="Execution engine cannot be None",
     ):
         ExecutionManager(None)
+
+def test_execute_passes_execution_request_to_engine():
+    engine = Mock()
+
+    engine.execute.return_value = ExecutionResult(
+        success=True,
+        order_id="ORD-1",
+    )
+
+    manager = ExecutionManager(engine)
+
+    manager.execute(create_risk())
+
+    request = engine.execute.call_args.args[0]
+
+    assert isinstance(request, ExecutionRequest)
+    assert request.symbol == "NIFTY"
+    assert request.side == "BUY"
+    assert request.quantity == 1
