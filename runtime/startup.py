@@ -22,6 +22,7 @@ from engines.indicator_engine import IndicatorEngine
 from market.candle_builder import CandleBuilder
 from integration.pipeline import TradingPipeline
 from runtime.trading_runtime import TradingRuntime
+from execution.execution_manager import ExecutionManager
 
 LOGGER = logging.getLogger("tos")
 
@@ -74,6 +75,10 @@ class Startup:
             order_service,
         )
 
+        execution_manager = ExecutionManager(
+            execution_engine,
+        )
+
         market_engine = MarketEngine()
 
         indicator_engine = IndicatorEngine()
@@ -89,10 +94,11 @@ class Startup:
         paper_service = PaperTradingService()
 
         paper_trade_runner = PaperTradeRunner(
-                strategy_engine=strategy_engine,
-                risk_engine=risk_engine,
-                order_execution_adapter=execution_adapter,
-            )
+            strategy_engine=strategy_engine,
+            risk_engine=risk_engine,
+            order_execution_adapter=execution_adapter,
+            execution_manager=execution_manager,
+        )
 
         trading_pipeline = TradingPipeline(
                 candle_builder=candle_builder,

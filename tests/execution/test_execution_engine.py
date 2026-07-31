@@ -69,3 +69,29 @@ def test_execute_returns_failure_for_invalid_guard():
 
     assert result.success is False
     assert "can_execute" in result.error
+
+
+class StubExecutionEngine(ExecutionEngine):
+    def __init__(self):
+        super().__init__(order_service=Mock())
+        self.called = False
+
+    def _place_order(self, request):
+        self.called = True
+        return {"orderId": "TEST-ORDER"}
+
+def test_execute_uses_place_order_hook():
+    order_service = Mock()
+    order_service.submit.return_value = "ORDER-1"
+    order_service.register_broker_order = Mock()
+    order_service.update_status = Mock()
+
+    engine = StubExecutionEngine()
+    engine.order_service = order_service
+
+    request = Mock()
+
+    result = engine.execute(request)
+
+    assert engine.called is True
+    assert result.success is True

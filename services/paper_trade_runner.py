@@ -67,9 +67,7 @@ class PaperTradeRunner:
 
         if self.execution_manager is not None:
             return self.execution_manager.execute(
-                market=market,
-                decision=decision,
-                risk=risk,
+                risk,
             )
 
         plan = self.trade_planner.plan(

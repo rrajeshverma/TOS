@@ -240,7 +240,9 @@ def test_execution_manager_called_when_available():
     )
 
     strategy.decide.return_value = FakeDecision()
-    risk_engine.evaluate.return_value = FakeRisk()
+
+    risk = FakeRisk()
+    risk_engine.evaluate.return_value = risk
 
     execution_manager.execute.return_value = {
         "status": "EXECUTED",
@@ -253,12 +255,34 @@ def test_execution_manager_called_when_available():
         indicators,
     )
 
-    execution_manager.execute.assert_called_once_with(
-        market=market,
-        decision=strategy.decide.return_value,
-        risk=risk_engine.evaluate.return_value,
-    )
+    execution_manager.execute.assert_called_once_with(risk)
 
     assert result == {
         "status": "EXECUTED",
     }
+
+
+def test_runner_uses_execution_manager_when_configured():
+    strategy = Mock()
+    risk_engine = Mock()
+    execution_manager = Mock()
+
+    decision = Mock()
+    risk = Mock()
+    risk.is_approved = True
+
+    strategy.decide.return_value = decision
+    risk_engine.evaluate.return_value = risk
+    execution_manager.execute.return_value = {"status": "OK"}
+
+    runner = PaperTradeRunner(
+        strategy_engine=strategy,
+        risk_engine=risk_engine,
+        order_execution_adapter=Mock(),
+        execution_manager=execution_manager,
+    )
+
+    result = runner.run(Mock(), Mock())
+
+    execution_manager.execute.assert_called_once_with(risk)
+    assert result == {"status": "OK"}

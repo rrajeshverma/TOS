@@ -32,3 +32,34 @@ def test_map_failed_broker_response():
 
     assert result.success is False
     assert result.error == "Insufficient funds"
+
+def test_map_success_without_data():
+    mapper = ExecutionResultMapper()
+
+    result = mapper.map({"status": "success"})
+
+    assert result.success is True
+    assert result.order_id is None
+
+
+def test_map_failure_without_message():
+    mapper = ExecutionResultMapper()
+
+    result = mapper.map({"status": "failed"})
+
+    assert result.success is False
+    assert result.error == "Unknown execution error"
+
+
+def test_map_failure_with_message():
+    mapper = ExecutionResultMapper()
+
+    result = mapper.map(
+        {
+            "status": "failed",
+            "message": "Rejected",
+        }
+    )
+
+    assert result.success is False
+    assert result.error == "Rejected"
