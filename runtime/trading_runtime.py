@@ -19,6 +19,11 @@ class TradingRuntime:
         self.services = services
         self.running = False
 
+        self.indicator_engine = services.get("indicator_engine")
+        self.strategy_engine = services.get("strategy_engine")
+        self.risk_engine = services.get("risk_engine")
+        self.execution_manager = services.get("execution_manager")
+
     def start(self) -> None:
         self.running = True
 
@@ -56,9 +61,9 @@ class TradingRuntime:
         market,
         history,
     ):
-        indicator_engine = self.services["indicator_engine"]
-        strategy_engine = self.services["strategy_engine"]
-        risk_engine = self.services["risk_engine"]
+        indicator_engine = self.indicator_engine
+        strategy_engine = self.strategy_engine
+        risk_engine = self.risk_engine
 
         indicators = indicator_engine.calculate(history)
 
@@ -73,7 +78,7 @@ class TradingRuntime:
             daily_loss=0,
         )
 
-        execution_manager = self.services.get("execution_manager")
+        execution_manager = self.execution_manager
 
         if execution_manager is None:
             return risk

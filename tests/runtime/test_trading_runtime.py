@@ -173,3 +173,23 @@ def test_run_cycle_uses_execution_manager():
 
     execution_manager.execute.assert_called_once_with(risk)
     assert result is execution_result
+
+def test_constructor_exposes_runtime_services():
+    indicator_engine = Mock()
+    strategy_engine = Mock()
+    risk_engine = Mock()
+    execution_manager = Mock()
+
+    runtime = TradingRuntime(
+        {
+            "indicator_engine": indicator_engine,
+            "strategy_engine": strategy_engine,
+            "risk_engine": risk_engine,
+            "execution_manager": execution_manager,
+        }
+    )
+
+    assert runtime.indicator_engine is indicator_engine
+    assert runtime.strategy_engine is strategy_engine
+    assert runtime.risk_engine is risk_engine
+    assert runtime.execution_manager is execution_manager
