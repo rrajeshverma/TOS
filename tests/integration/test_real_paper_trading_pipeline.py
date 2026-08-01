@@ -7,37 +7,16 @@ Validates actual TOS trading flow
 using simplified service wiring.
 """
 
-from datetime import datetime
 from decimal import Decimal
 
-from domain.market import Market
-from domain.indicator_set import IndicatorSet
+
+from tests.helpers.domain_factory import (
+    make_indicator_set,
+    make_market,
+)
+
 from engines.decision_engine import DecisionEngine
 from engines.risk_engine import RiskEngine
-
-
-def create_market():
-    return Market(
-        symbol="NIFTY",
-        exchange="NSE",
-        timeframe="TICK",
-        open=25000,
-        high=25100,
-        low=24900,
-        close=25100,
-        volume=100000,
-        timestamp=datetime.now(),
-    )
-
-
-def create_indicators():
-    return IndicatorSet(
-        ema_high=25000,
-        ema_low=24900,
-        vwap=25000,
-        rsi=60,
-        volume_average=50000,
-    )
 
 
 class DummyPaperExecutor:
@@ -54,15 +33,25 @@ class DummyPaperExecutor:
 
 
 def test_market_object_reaches_strategy():
-    market = create_market()
+    market = make_market(
+        close=Decimal("25100"),
+    )
 
     assert market.symbol == "NIFTY"
 
 
 def test_decision_engine_generates_trade_signal():
-    market = create_market()
+    market = make_market(
+        close=Decimal("25100"),
+    )
 
-    indicators = create_indicators()
+    indicators = make_indicator_set(
+        ema_high=Decimal("25000"),
+        ema_low=Decimal("24900"),
+        vwap=Decimal("25000"),
+        rsi=60,
+        volume_average=50000,
+    )
 
     decision = DecisionEngine().evaluate(
         market,
@@ -73,9 +62,17 @@ def test_decision_engine_generates_trade_signal():
 
 
 def test_risk_engine_accepts_trade_decision():
-    market = create_market()
+    market = make_market(
+        close=Decimal("25100"),
+    )
 
-    indicators = create_indicators()
+    indicators = make_indicator_set(
+        ema_high=Decimal("25000"),
+        ema_low=Decimal("24900"),
+        vwap=Decimal("25000"),
+        rsi=60,
+        volume_average=50000,
+    )
 
     decision = DecisionEngine().evaluate(
         market,
@@ -112,9 +109,17 @@ def test_trade_pipeline_reaches_executor():
 
 
 def test_complete_paper_pipeline():
-    market = create_market()
+    market = make_market(
+        close=Decimal("25100"),
+    )
 
-    indicators = create_indicators()
+    indicators = make_indicator_set(
+        ema_high=Decimal("25000"),
+        ema_low=Decimal("24900"),
+        vwap=Decimal("25000"),
+        rsi=60,
+        volume_average=50000,
+    )
 
     decision = DecisionEngine().evaluate(
         market,
