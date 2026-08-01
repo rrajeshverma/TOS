@@ -48,9 +48,7 @@ def test_summary_values_are_bool():
 
 
 def test_summary_has_three_entries():
-    assert len(
-        DeploymentValidator().validation_summary()
-    ) == 3
+    assert len(DeploymentValidator().validation_summary()) == 3
 
 
 def test_validator_instantiation():

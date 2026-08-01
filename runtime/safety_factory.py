@@ -1,0 +1,25 @@
+"""
+Runtime safety factory.
+"""
+
+from __future__ import annotations
+
+from safety.composite_execution_guard import CompositeExecutionGuard
+from safety.kill_switch import KillSwitch
+from safety.kill_switch_guard import KillSwitchGuard
+from safety.market_hours_guard import MarketHoursGuard
+
+
+class SafetyFactory:
+    """Creates the default execution guard stack."""
+
+    @staticmethod
+    def create() -> CompositeExecutionGuard:
+        """Build the production execution guard."""
+
+        return CompositeExecutionGuard(
+            [
+                KillSwitchGuard(KillSwitch()),
+                MarketHoursGuard(),
+            ]
+        )

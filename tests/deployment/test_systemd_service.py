@@ -41,10 +41,7 @@ def test_service_has_slots():
 
 
 def test_multiple_instances_are_equal():
-    assert (
-        SystemdService(ServiceInfo())
-        == SystemdService(ServiceInfo())
-    )
+    assert SystemdService(ServiceInfo()) == SystemdService(ServiceInfo())
 
 
 def test_service_contains_service_info():

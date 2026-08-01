@@ -36,22 +36,16 @@ def test_strategy_can_generate_signal():
     assert signal == "BUY"
 
 
-def test_base_strategy_cannot_be_used_directly():
-    strategy = BaseStrategy()
-
-    with pytest.raises(NotImplementedError):
-        strategy.name()
+def test_base_strategy_cannot_be_instantiated():
+    with pytest.raises(TypeError):
+        BaseStrategy()
 
 
 def test_base_strategy_requires_analyze():
-    strategy = BaseStrategy()
-
-    with pytest.raises(NotImplementedError):
-        strategy.analyze(None)
+    with pytest.raises(TypeError):
+        BaseStrategy()
 
 
 def test_base_strategy_requires_signal_generation():
-    strategy = BaseStrategy()
-
-    with pytest.raises(NotImplementedError):
-        strategy.generate_signal(None)
+    with pytest.raises(TypeError):
+        BaseStrategy()

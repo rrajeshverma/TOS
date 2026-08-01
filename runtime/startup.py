@@ -26,6 +26,7 @@ from services.market_data_service import MarketDataService
 from services.order_execution_adapter import OrderExecutionAdapter
 from services.paper_trade_runner import PaperTradeRunner
 from services.paper_trading_service import PaperTradingService
+from runtime.safety_factory import SafetyFactory
 
 LOGGER = logging.getLogger("tos")
 
@@ -79,8 +80,11 @@ class Startup:
             order_service=order_service,
         )
 
+        execution_guard = SafetyFactory.create()
+
         execution_engine = ExecutionEngine(
             order_service,
+            execution_guard=execution_guard,
         )
 
         execution_manager = ExecutionManager(

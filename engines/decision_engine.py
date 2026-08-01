@@ -19,6 +19,9 @@ from shared.enums import (
     Signal,
 )
 from shared.logger import get_logger
+from strategies.ema_vwap_rsi_strategy import (
+    EMAVWAPRSIStrategy,
+)
 from utils.id_generator import generate_decision_id
 
 
@@ -27,8 +30,15 @@ class DecisionEngine:
     Generates strategy decisions.
     """
 
-    def __init__(self) -> None:
+    from strategies.base_strategy import BaseStrategy
+
+    def __init__(
+        self,
+        strategy: BaseStrategy | None = None,
+    ) -> None:
         self._logger = get_logger(__name__)
+
+        self._strategy = strategy or EMAVWAPRSIStrategy()
 
     def evaluate(
         self,
@@ -39,35 +49,34 @@ class DecisionEngine:
         Evaluate trading conditions.
         """
 
-        signal = Signal.NONE
-        status = DecisionStatus.NO_SIGNAL
+        signal = self._strategy.generate_signal(
+            market,
+            indicators,
+        )
+
+        status = (
+            DecisionStatus.VALID if signal != Signal.NONE else DecisionStatus.NO_SIGNAL
+        )
+
         reasons = []
 
-        # BUY CE
-        if (
-            market.close > indicators.ema_high
-            and market.close > indicators.vwap
-            and indicators.rsi > 55
-        ):
-            signal = Signal.BUY_CE
-            status = DecisionStatus.VALID
+        if signal == Signal.BUY_CE:
+            reasons.extend(
+                (
+                    "Bullish EMA breakout",
+                    "Above VWAP",
+                    "RSI > 55",
+                )
+            )
 
-            reasons.append("Bullish EMA breakout")
-            reasons.append("Above VWAP")
-            reasons.append("RSI > 55")
-
-        # BUY PE
-        elif (
-            market.close < indicators.ema_low
-            and market.close < indicators.vwap
-            and indicators.rsi < 45
-        ):
-            signal = Signal.BUY_PE
-            status = DecisionStatus.VALID
-
-            reasons.append("Bearish EMA breakdown")
-            reasons.append("Below VWAP")
-            reasons.append("RSI < 45")
+        elif signal == Signal.BUY_PE:
+            reasons.extend(
+                (
+                    "Bearish EMA breakdown",
+                    "Below VWAP",
+                    "RSI < 45",
+                )
+            )
 
         decision = Decision(
             decision_id=generate_decision_id(),

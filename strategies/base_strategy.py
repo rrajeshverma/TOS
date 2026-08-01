@@ -4,28 +4,37 @@ TOS Strategy Plugin Framework
 Base contract for all trading strategies.
 """
 
+from __future__ import annotations
 
-class BaseStrategy:
+from abc import ABC
+from abc import abstractmethod
+
+
+class BaseStrategy(ABC):
     """
-    Abstract strategy interface.
-
-    Every strategy must implement:
-    - name()
-    - analyze()
-    - generate_signal()
+    Base contract for every trading strategy.
     """
 
-    def name(self):
-        raise NotImplementedError("Strategy name must be implemented")
+    @abstractmethod
+    def name(self) -> str:
+        """Return strategy name."""
 
+    @abstractmethod
     def analyze(
         self,
         market,
+        indicators,
     ):
-        raise NotImplementedError("Strategy analyze must be implemented")
+        """
+        Analyze market and indicators.
+        """
 
+    @abstractmethod
     def generate_signal(
         self,
         market,
+        indicators,
     ):
-        raise NotImplementedError("Strategy signal generation must be implemented")
+        """
+        Generate BUY / SELL / HOLD signal.
+        """

@@ -6,6 +6,7 @@ from __future__ import annotations
 
 from shared.logger import get_logger
 
+from runtime.runtime_metrics import RuntimeMetrics
 
 LOGGER = get_logger(__name__)
 
@@ -27,6 +28,7 @@ class TradingRuntime:
     def __init__(self, services: dict) -> None:
         self.services = services
         self.running = False
+        self.metrics = RuntimeMetrics()
 
     @property
     def indicator_engine(self):
@@ -136,3 +138,10 @@ class TradingRuntime:
             market,
             history,
         )
+
+    def status(self) -> dict:
+        """Return runtime status."""
+
+        return {
+            "metrics": self.metrics.snapshot(),
+        }
