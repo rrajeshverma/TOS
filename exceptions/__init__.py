@@ -17,6 +17,12 @@ from .base_exception import (
     ValidationError,
 )
 
+from .configuration_exception import (
+    ConfigurationError,
+    InvalidConfigurationError,
+    MissingConfigurationError,
+)
+
 __all__ = [
     "TOSException",
     "ValidationError",
@@ -24,4 +30,7 @@ __all__ = [
     "InvalidTimestampError",
     "InvalidPriceError",
     "InvalidVolumeError",
+    "ConfigurationError",
+    "InvalidConfigurationError",
+    "MissingConfigurationError",
 ]

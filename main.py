@@ -10,11 +10,13 @@ import logging
 import signal
 import sys
 
+from config.runtime_config_loader import RuntimeConfigLoader
 from runtime.application import Application
 from runtime.startup import Startup
 from runtime.shutdown import Shutdown
 from runtime.signal_handler import SignalHandler
 from runtime.trading_runtime import TradingRuntime
+
 
 LOGGER = logging.getLogger("tos")
 
@@ -32,7 +34,10 @@ def create_application() -> Application:
 
 
 def startup(app: Application) -> Startup:
-    startup = Startup()
+    loader = RuntimeConfigLoader()
+    config = loader.load()
+
+    startup = Startup(config)
 
     LOGGER.info("Initializing services...")
     startup.initialize_services()

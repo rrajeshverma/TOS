@@ -3,29 +3,29 @@ Application startup manager.
 """
 
 import logging
+from dataclasses import replace
 
-from config.version import APP_NAME, VERSION, BUILD, MODE
-from brokers.dhan.websocket import WebSocketClient
-from services.market_data_service import MarketDataService
 from brokers.clients.dhan_client import DhanClient
+from brokers.dhan.websocket import WebSocketClient
 from brokers.dhan_broker import DhanBroker
 from brokers.paper_broker import PaperBroker
-from execution.execution_engine import ExecutionEngine
-from execution.order_repository import OrderRepository
-from execution.order_service import OrderService
+from config.runtime_config import RuntimeConfig
+from config.version import APP_NAME, BUILD, MODE, VERSION
+from engines.indicator_engine import IndicatorEngine
+from engines.market_engine import MarketEngine
 from engines.risk_engine import RiskEngine
 from engines.strategy_engine import StrategyEngine
+from execution.execution_engine import ExecutionEngine
+from execution.execution_manager import ExecutionManager
+from execution.order_repository import OrderRepository
+from execution.order_service import OrderService
+from integration.pipeline import TradingPipeline
+from market.candle_builder import CandleBuilder
+from runtime.trading_runtime import TradingRuntime
+from services.market_data_service import MarketDataService
 from services.order_execution_adapter import OrderExecutionAdapter
 from services.paper_trade_runner import PaperTradeRunner
 from services.paper_trading_service import PaperTradingService
-from engines.market_engine import MarketEngine
-from engines.indicator_engine import IndicatorEngine
-from market.candle_builder import CandleBuilder
-from integration.pipeline import TradingPipeline
-from runtime.trading_runtime import TradingRuntime
-from execution.execution_manager import ExecutionManager
-from config.runtime_config import RuntimeConfig
-from dataclasses import replace
 
 LOGGER = logging.getLogger("tos")
 
@@ -33,9 +33,11 @@ LOGGER = logging.getLogger("tos")
 class Startup:
     """Handles application startup."""
 
-    def __init__(self) -> None:
-        self.config = RuntimeConfig()
-        self.services = {}
+    def __init__(self, config: RuntimeConfig | None = None) -> None:
+        """Initialize startup manager."""
+
+        self.config = config or RuntimeConfig()
+        self.services: dict[str, object] = {}
         self.services_initialized = False
 
     def load_broker(self, broker: str) -> None:
@@ -46,6 +48,8 @@ class Startup:
 
     def initialize_services(self) -> None:
         """Initialize trading services."""
+
+        self.config.validate()
 
         self.log_banner()
 
@@ -121,6 +125,7 @@ class Startup:
             "order_service": order_service,
             "order_execution_adapter": execution_adapter,
             "execution_engine": execution_engine,
+            "execution_manager": execution_manager,
             "market_engine": market_engine,
             "indicator_engine": indicator_engine,
             "candle_builder": candle_builder,
@@ -162,11 +167,12 @@ class Startup:
         LOGGER.info("Risk Engine         : READY")
         LOGGER.info("Paper Trading       : READY")
         LOGGER.info("Paper Trade Runner  : READY")
-
         LOGGER.info("Trading Runtime     : READY")
         LOGGER.info("========================================")
 
     def log_banner(self) -> None:
+        """Log startup banner."""
+
         LOGGER.info("=" * 56)
         LOGGER.info("%s", APP_NAME)
         LOGGER.info("=" * 56)
