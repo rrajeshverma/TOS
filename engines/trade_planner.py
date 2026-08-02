@@ -42,11 +42,8 @@ class TradePlanner:
         market: Market,
         risk: Risk,
     ) -> TradePlan:
-
         if not risk.is_approved:
-            raise ValueError(
-                "Cannot create TradePlan for rejected Risk."
-            )
+            raise ValueError("Cannot create TradePlan for rejected Risk.")
 
         return TradePlan(
             entry_price=Decimal(str(market.close)),
