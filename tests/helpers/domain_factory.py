@@ -51,26 +51,25 @@ def make_indicator_set(
     )
 
 
-def make_trade():
-    market = Market(
-        symbol="NIFTY",
-        exchange="NSE",
-        timeframe="5m",
-        timestamp=datetime.now(),
-        open=24990,
-        high=25010,
-        low=24980,
-        close=25000,
-        volume=100000,
+def make_decision():
+    """
+    Create a valid strategy decision.
+    """
+
+    market = make_market()
+
+    indicators = make_indicator_set()
+
+    return DecisionEngine().evaluate(
+        market,
+        indicators,
     )
 
-    indicators = IndicatorSet(
-        ema_high=24950,
-        ema_low=24850,
-        vwap=24900,
-        rsi=60,
-        volume_average=100000,
-    )
+
+def make_trade():
+    market = make_market()
+
+    indicators = make_indicator_set()
 
     decision = DecisionEngine().evaluate(
         market,

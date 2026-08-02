@@ -33,10 +33,8 @@ class TradePlanner:
     Generates trade parameters from market data.
 
     Current implementation:
-    - Entry  : Market Close
-    - Stop   : Market Low
-
-    This logic can later become strategy-specific.
+    - Entry : Market Close
+    - Stop  : Market Low
     """
 
     def plan(
@@ -44,12 +42,11 @@ class TradePlanner:
         market: Market,
         risk: Risk,
     ) -> TradePlan:
-        """
-        Build a trade plan for an approved risk.
-        """
 
         if not risk.is_approved:
-            raise ValueError("Cannot create TradePlan for rejected Risk.")
+            raise ValueError(
+                "Cannot create TradePlan for rejected Risk."
+            )
 
         return TradePlan(
             entry_price=Decimal(str(market.close)),
