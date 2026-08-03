@@ -30,7 +30,6 @@ class LiveMarketFeed:
         dhan_context,
         instruments: list[tuple],
     ) -> None:
-
         self._tick_callback: Callable[[BrokerTick], None] | None = None
 
         self._market_feed = MarketFeed(
@@ -114,15 +113,9 @@ class LiveMarketFeed:
             return
 
         broker_tick = BrokerTick(
-            symbol=str(
-                data.get("security_id", "")
-            ),
-            ltp=Decimal(
-                data.get("LTP", "0")
-            ),
-            volume=int(
-                data.get("volume", 0)
-            ),
+            symbol=str(data.get("security_id", "")),
+            ltp=Decimal(data.get("LTP", "0")),
+            volume=int(data.get("volume", 0)),
             timestamp=datetime.now(),
         )
 

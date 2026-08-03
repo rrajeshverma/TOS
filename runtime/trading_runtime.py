@@ -11,6 +11,7 @@ from shared.events import Event
 from shared.logger import get_logger
 from shared.runtime_status import RuntimeStatus
 from runtime.market_clock import MarketClock
+from runtime.runtime_mode import RuntimeMode
 
 LOGGER = get_logger(__name__)
 
@@ -29,7 +30,11 @@ class TradingRuntime:
     Coordinates the trading lifecycle.
     """
 
-    def __init__(self, services: dict) -> None:
+    def __init__(
+        self,
+        services: dict,
+        mode: RuntimeMode = RuntimeMode.PAPER,
+    ) -> None:
         self.services = services
         self.running = False
         self.runtime_status = RuntimeStatus.INITIALIZING
@@ -176,6 +181,14 @@ class TradingRuntime:
             indicators,
         )
 
+        LOGGER.info(
+            "BTC %s | Close=%0.2f | RSI=%0.2f | Decision=%s",
+            market.timestamp,
+            market.close,
+            indicators.rsi,
+            decision.signal,
+        )
+
         risk = risk_engine.evaluate(
             decision,
             trades_today=0,
@@ -205,18 +218,19 @@ class TradingRuntime:
         market,
         history,
     ):
-        session = self.market_clock.current_session()
+        if self.mode != RuntimeMode.BACKTEST:
+            session = self.market_clock.current_session()
 
-        self.trading_session.set_state(
-            session,
-        )
-
-        if not self.trading_session.is_trading_allowed():
-            LOGGER.debug(
-                "Ignoring market tick because session is %s",
-                self.trading_session.state,
+            self.trading_session.set_state(
+                session,
             )
-            return None
+
+            if not self.trading_session.is_trading_allowed():
+                LOGGER.debug(
+                    "Ignoring market tick because session is %s",
+                    self.trading_session.state,
+                )
+                return None
 
         self.publish(
             Event.MARKET_TICK,

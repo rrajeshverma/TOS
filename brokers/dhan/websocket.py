@@ -69,9 +69,7 @@ class WebSocketClient:
 
         if self.session is not None:
             if not self.session.is_authenticated:
-                raise RuntimeError(
-                    "WebSocket requires authentication."
-                )
+                raise RuntimeError("WebSocket requires authentication.")
 
             if self.transport is not None:
                 self.transport.authenticate(
@@ -84,7 +82,6 @@ class WebSocketClient:
         self._connected = True
 
     def disconnect(self) -> None:
-
         if self.live_market_feed is not None:
             self.live_market_feed.stop()
             self._connected = False
@@ -111,9 +108,7 @@ class WebSocketClient:
             return
 
         if self.session is not None and not self._connected:
-            raise RuntimeError(
-                "WebSocket is not connected."
-            )
+            raise RuntimeError("WebSocket is not connected.")
 
         if not self._connected:
             self._connected = True
@@ -131,7 +126,6 @@ class WebSocketClient:
         self,
         instrument,
     ) -> None:
-
         self._subscriptions.discard(
             instrument,
         )

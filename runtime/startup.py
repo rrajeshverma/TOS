@@ -29,12 +29,12 @@ from services.paper_trading_service import PaperTradingService
 from runtime.safety_factory import SafetyFactory
 
 from brokers.dhan.live_market_feed import LiveMarketFeed
-from brokers.dhan.session import DhanSession
+
 from config.system import (
     DHAN_ACCESS_TOKEN,
     DHAN_CLIENT_ID,
 )
-from dhanhq import DhanContext, MarketFeed
+from dhanhq import DhanContext
 
 LOGGER = logging.getLogger("tos")
 
