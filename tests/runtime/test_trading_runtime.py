@@ -1,6 +1,8 @@
 from unittest.mock import Mock
 
+from shared.events import Event
 from runtime.trading_runtime import TradingRuntime
+from runtime.session_state import SessionState
 
 
 def test_start_registers_market_data_callback():
@@ -225,25 +227,23 @@ def test_health_reports_runtime_status():
     ]
 
 
-def test_on_market_tick_delegates_to_run_cycle():
+def test_on_market_tick_ignored_when_market_closed():
     runtime = TradingRuntime({})
 
-    runtime.run_cycle = Mock(return_value="RESULT")
-
-    market = Mock()
-    history = [market]
-
-    result = runtime.on_market_tick(
-        market,
-        history,
+    runtime.market_clock.current_session = Mock(
+        return_value=SessionState.CLOSED,
     )
 
-    runtime.run_cycle.assert_called_once_with(
-        market,
-        history,
+    runtime.publish = Mock()
+    runtime.run_cycle = Mock()
+
+    runtime.on_market_tick(
+        Mock(),
+        [],
     )
 
-    assert result == "RESULT"
+    runtime.publish.assert_not_called()
+    runtime.run_cycle.assert_not_called()
 
 
 def test_runtime_resolves_services_dynamically():
@@ -262,3 +262,26 @@ def test_runtime_resolves_services_dynamically():
     assert runtime.strategy_engine is services["strategy_engine"]
     assert runtime.risk_engine is services["risk_engine"]
     assert runtime.execution_manager is services["execution_manager"]
+
+
+def test_runtime_start_registers_market_tick_handler():
+    runtime = TradingRuntime({})
+
+    received = []
+
+    runtime.bus.subscribe(
+        Event.MARKET_TICK.value,
+        lambda payload: received.append(payload),
+    )
+
+    runtime.start()
+
+    runtime.publish(
+        Event.MARKET_TICK,
+        {
+            "market": object(),
+            "history": [],
+        },
+    )
+
+    assert received

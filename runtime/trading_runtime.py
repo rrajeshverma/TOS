@@ -4,9 +4,13 @@ Trading runtime orchestrator.
 
 from __future__ import annotations
 
-from shared.logger import get_logger
-
 from runtime.runtime_metrics import RuntimeMetrics
+from runtime.trading_session import TradingSession
+from shared.event_bus import EventBus
+from shared.events import Event
+from shared.logger import get_logger
+from shared.runtime_status import RuntimeStatus
+from runtime.market_clock import MarketClock
 
 LOGGER = get_logger(__name__)
 
@@ -28,7 +32,12 @@ class TradingRuntime:
     def __init__(self, services: dict) -> None:
         self.services = services
         self.running = False
+        self.runtime_status = RuntimeStatus.INITIALIZING
         self.metrics = RuntimeMetrics()
+        self.event_bus = EventBus()
+
+        self.trading_session = TradingSession()
+        self.market_clock = MarketClock()
 
     @property
     def indicator_engine(self):
@@ -46,6 +55,21 @@ class TradingRuntime:
     def execution_manager(self):
         return self.services.get("execution_manager")
 
+    @property
+    def bus(self) -> EventBus:
+        """Return runtime event bus."""
+        return self.event_bus
+
+    @property
+    def is_running(self) -> bool:
+        """Return True when runtime is active."""
+        return self.runtime_status == RuntimeStatus.RUNNING
+
+    @property
+    def state(self) -> RuntimeStatus:
+        """Current runtime state."""
+        return self.runtime_status
+
     def validate(self) -> list[str]:
         """
         Validate that all required runtime services exist.
@@ -62,6 +86,7 @@ class TradingRuntime:
         ]
 
     def start(self) -> None:
+        self.runtime_status = RuntimeStatus.STARTING
         self.running = True
 
         market_data = self.services.get("market_data_service")
@@ -75,7 +100,12 @@ class TradingRuntime:
 
             market_data.connect()
 
-        LOGGER.info("Trading runtime started")
+        self.runtime_status = RuntimeStatus.RUNNING
+
+        LOGGER.info(
+            "Trading runtime started [%s]",
+            self.runtime_status,
+        )
 
     def stop(self) -> None:
         market_data = self.services.get("market_data_service")
@@ -83,13 +113,50 @@ class TradingRuntime:
         if market_data is not None:
             market_data.disconnect()
 
+        self.runtime_status = RuntimeStatus.STOPPING
         self.running = False
+        self.runtime_status = RuntimeStatus.STOPPED
+        self.bus.unsubscribe(
+            Event.MARKET_TICK.value,
+            self._handle_market_tick,
+        )
 
-        LOGGER.info("Trading runtime stopped")
+        LOGGER.info(
+            "Trading runtime stopped [%s]",
+            self.runtime_status,
+        )
+
+    def pause(self) -> None:
+        """Pause the runtime."""
+
+        self.runtime_status = RuntimeStatus.PAUSED
+
+        LOGGER.info(
+            "Trading runtime paused [%s]",
+            self.runtime_status,
+        )
+
+    def fail(self) -> None:
+        """Move runtime into FAILED state."""
+
+        self.running = False
+        self.runtime_status = RuntimeStatus.FAILED
+
+        LOGGER.exception(
+            "Trading runtime entered FAILED state",
+        )
 
     def health(self) -> dict:
+        """Return runtime health."""
+
+        market_data = self.services.get("market_data_service")
+
         return {
             "running": self.running,
+            "runtime_status": self.runtime_status,
+            "session_state": self.trading_session.state,
+            "market_data_connected": market_data is not None,
+            "trading_allowed": self.trading_session.is_trading_allowed(),
             "services": list(self.services.keys()),
         }
 
@@ -122,17 +189,42 @@ class TradingRuntime:
 
         return execution_manager.execute(risk)
 
+    def _handle_market_tick(
+        self,
+        payload: dict,
+    ) -> None:
+        """Handle MARKET_TICK events."""
+
+        self.run_cycle(
+            payload["market"],
+            payload["history"],
+        )
+
     def on_market_tick(
         self,
         market,
         history,
     ):
-        """
-        Process a market update.
+        session = self.market_clock.current_session()
 
-        This is the entry point used by the live
-        market data service.
-        """
+        self.trading_session.set_state(
+            session,
+        )
+
+        if not self.trading_session.is_trading_allowed():
+            LOGGER.debug(
+                "Ignoring market tick because session is %s",
+                self.trading_session.state,
+            )
+            return None
+
+        self.publish(
+            Event.MARKET_TICK,
+            {
+                "market": market,
+                "history": history,
+            },
+        )
 
         return self.run_cycle(
             market,
@@ -143,5 +235,19 @@ class TradingRuntime:
         """Return runtime status."""
 
         return {
+            "status": self.runtime_status,
+            "running": self.running,
             "metrics": self.metrics.snapshot(),
         }
+
+    def publish(
+        self,
+        event: Event,
+        payload,
+    ) -> None:
+        """Publish a runtime event."""
+
+        self.event_bus.publish(
+            event.value,
+            payload,
+        )

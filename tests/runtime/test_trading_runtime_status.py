@@ -55,8 +55,14 @@ def test_status_reports_reconnects():
     assert runtime.status()["metrics"]["reconnects"] == 1
 
 
-def test_status_has_one_section():
-    assert len(create_runtime().status()) == 1
+def test_status_contains_required_sections():
+    runtime = create_runtime()
+
+    status = runtime.status()
+
+    assert "status" in status
+    assert "running" in status
+    assert "metrics" in status
 
 
 def test_status_is_repeatable():

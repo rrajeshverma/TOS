@@ -171,7 +171,12 @@ class Startup:
         LOGGER.info("Risk Engine         : READY")
         LOGGER.info("Paper Trading       : READY")
         LOGGER.info("Paper Trade Runner  : READY")
-        LOGGER.info("Trading Runtime     : READY")
+        runtime = self.services.get("trading_runtime")
+
+        LOGGER.info(
+            "Trading Runtime     : %s",
+            runtime.state if runtime else "UNKNOWN",
+        )
         LOGGER.info("========================================")
 
     def log_banner(self) -> None:
@@ -184,3 +189,20 @@ class Startup:
         LOGGER.info("Build               : %s", BUILD)
         LOGGER.info("Mode                : %s", MODE)
         LOGGER.info("=" * 56)
+
+    def shutdown(self) -> None:
+        """Shutdown all runtime services."""
+
+        runtime = self.services.get("trading_runtime")
+
+        if runtime is not None:
+            runtime.stop()
+
+        broker = self.services.get("broker")
+
+        if broker is not None:
+            broker.disconnect()
+
+        self.services_initialized = False
+
+        LOGGER.info("Application shutdown complete")
