@@ -28,6 +28,14 @@ from services.paper_trade_runner import PaperTradeRunner
 from services.paper_trading_service import PaperTradingService
 from runtime.safety_factory import SafetyFactory
 
+from brokers.dhan.live_market_feed import LiveMarketFeed
+from brokers.dhan.session import DhanSession
+from config.system import (
+    DHAN_ACCESS_TOKEN,
+    DHAN_CLIENT_ID,
+)
+from dhanhq import DhanContext, MarketFeed
+
 LOGGER = logging.getLogger("tos")
 
 
@@ -119,8 +127,30 @@ class Startup:
             runtime=runtime,
         )
 
+        # Create Dhan context
+        dhan_context = DhanContext(
+            DHAN_CLIENT_ID,
+            DHAN_ACCESS_TOKEN,
+        )
+
+        # Initial subscriptions
+        # (We'll later get these from InstrumentProvider)
+        instruments = [
+            # Example only
+            # (MarketFeed.IDX, "13", MarketFeed.Quote)
+        ]
+
+        live_market_feed = LiveMarketFeed(
+            dhan_context=dhan_context,
+            instruments=instruments,
+        )
+
+        websocket = WebSocketClient(
+            live_market_feed=live_market_feed,
+        )
+
         market_data_service = MarketDataService(
-            websocket=WebSocketClient(),
+            websocket=websocket,
         )
 
         self.services = {
