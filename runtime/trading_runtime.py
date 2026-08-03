@@ -36,6 +36,7 @@ class TradingRuntime:
         mode: RuntimeMode = RuntimeMode.PAPER,
     ) -> None:
         self.services = services
+        self.mode = mode
         self.running = False
         self.runtime_status = RuntimeStatus.INITIALIZING
         self.metrics = RuntimeMetrics()
@@ -179,14 +180,6 @@ class TradingRuntime:
         decision = strategy_engine.decide(
             market,
             indicators,
-        )
-
-        LOGGER.info(
-            "BTC %s | Close=%0.2f | RSI=%0.2f | Decision=%s",
-            market.timestamp,
-            market.close,
-            indicators.rsi,
-            decision.signal,
         )
 
         risk = risk_engine.evaluate(

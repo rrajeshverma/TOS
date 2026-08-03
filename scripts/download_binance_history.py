@@ -47,9 +47,7 @@ def download():
         f.write("timestamp,open,high,low,close,volume\n")
 
         for candle in candles:
-            timestamp = datetime.utcfromtimestamp(
-                candle[0] / 1000
-            ).isoformat()
+            timestamp = datetime.utcfromtimestamp(candle[0] / 1000).isoformat()
 
             f.write(
                 f"{timestamp},"
