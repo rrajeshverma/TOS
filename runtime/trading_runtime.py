@@ -190,6 +190,9 @@ class TradingRuntime:
 
         execution_manager = self.execution_manager
 
+        if self.mode == RuntimeMode.BACKTEST:
+            return risk
+
         if execution_manager is None:
             return risk
 

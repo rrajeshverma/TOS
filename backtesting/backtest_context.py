@@ -9,7 +9,7 @@ Description : Owns all backtesting state during replay.
 """
 
 from __future__ import annotations
-
+from decimal import Decimal
 from backtesting.trade_executor import TradeExecutor
 from backtesting.trade_recorder import TradeRecorder
 from shared.enums import ExitReason
@@ -47,7 +47,7 @@ class BacktestContext:
         if not executor.has_open_trade:
             trade = executor.open_trade(
                 risk=risk,
-                entry_price=market.close,
+                entry_price=Decimal(str(market.close)),
                 quantity=1,
                 entry_time=market.timestamp,
             )
@@ -69,7 +69,7 @@ class BacktestContext:
             return
 
         closed_trade = executor.close_trade(
-            exit_price=market.close,
+            exit_price=Decimal(str(market.close)),
             exit_time=market.timestamp,
             exit_reason=ExitReason.MANUAL,
         )
@@ -78,7 +78,7 @@ class BacktestContext:
 
         new_trade = executor.open_trade(
             risk=risk,
-            entry_price=market.close,
+            entry_price=Decimal(str(market.close)),
             quantity=1,
             entry_time=market.timestamp,
         )
