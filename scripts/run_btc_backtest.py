@@ -9,6 +9,8 @@ from backtesting.historical_data_feed import HistoricalDataFeed
 from backtesting.replay_runner import ReplayRunner
 from runtime.runtime_mode import RuntimeMode
 from runtime.startup import Startup
+from backtesting.backtest_context import BacktestContext
+from backtesting.historical_backtest_engine import HistoricalBacktestEngine
 
 
 def main() -> None:
@@ -34,12 +36,20 @@ def main() -> None:
         )
     )
 
+    context = BacktestContext()
+
     runner = ReplayRunner(
         runtime=runtime,
         feed=feed,
+        context=context,
     )
 
-    processed = runner.run()
+    engine = HistoricalBacktestEngine(
+        runtime=runtime,
+        replay_runner=runner,
+    )
+
+    processed = engine.run()
 
     print("=" * 60)
     print(f"Replay Complete : {processed} candles")

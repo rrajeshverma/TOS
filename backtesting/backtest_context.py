@@ -1,0 +1,86 @@
+"""
+=========================================================
+Trading Operating System (TOS)
+Module      : Backtest Context
+Version     : 1.1.0
+Author      : Rajesh Varma
+Description : Owns all backtesting state during replay.
+=========================================================
+"""
+
+from __future__ import annotations
+
+from backtesting.trade_executor import TradeExecutor
+from backtesting.trade_recorder import TradeRecorder
+from shared.enums import ExitReason
+
+
+class BacktestContext:
+    """
+    Holds all runtime objects required during backtesting.
+
+    Live trading never uses this class.
+    """
+
+    def __init__(self) -> None:
+        self.trade_executor = TradeExecutor()
+        self.trade_recorder = TradeRecorder()
+
+    def on_risk(
+        self,
+        risk,
+        market,
+    ) -> None:
+        """
+        Process a completed Risk evaluation.
+        """
+
+        if not risk.is_approved:
+            return
+
+        executor = self.trade_executor
+
+        # -------------------------------------------------
+        # No open trade -> Open one
+        # -------------------------------------------------
+
+        if not executor.has_open_trade:
+            trade = executor.open_trade(
+                risk=risk,
+                entry_price=market.close,
+                quantity=1,
+                entry_time=market.timestamp,
+            )
+
+            self.trade_recorder.record(trade)
+
+            return
+
+        # -------------------------------------------------
+        # Existing trade
+        # -------------------------------------------------
+
+        current = executor.current_trade
+
+        current_signal = current.risk.decision.signal
+        new_signal = risk.decision.signal
+
+        if current_signal == new_signal:
+            return
+
+        closed_trade = executor.close_trade(
+            exit_price=market.close,
+            exit_time=market.timestamp,
+            exit_reason=ExitReason.MANUAL,
+        )
+
+        self.trade_recorder.record(closed_trade)
+
+        new_trade = executor.open_trade(
+            risk=risk,
+            entry_price=market.close,
+            quantity=1,
+            entry_time=market.timestamp,
+        )
+
+        self.trade_recorder.record(new_trade)
