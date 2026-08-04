@@ -4,9 +4,12 @@ from decimal import Decimal
 from domain.indicator_set import IndicatorSet
 from domain.market import Market
 from domain.portfolio import Portfolio
+from domain.position_size import PositionSize
+
 from engines.decision_engine import DecisionEngine
 from engines.risk_engine import RiskEngine
 from engines.trade_factory import TradeFactory
+from engines.trade_quality_engine import TradeQualityEngine
 
 
 def make_market(
@@ -100,4 +103,43 @@ def make_portfolio():
         unrealized_pnl=0.0,
         positions=0,
         holdings=0,
+    )
+
+
+def make_trade_quality():
+    """
+    Create a valid TradeQuality object.
+    """
+
+    decision = make_decision()
+
+    return TradeQualityEngine().evaluate(
+        decision=decision,
+        trades_today=0,
+    )
+
+
+def make_risk():
+    """
+    Create a valid Risk object.
+    """
+
+    decision = make_decision()
+
+    return RiskEngine().evaluate(
+        decision=decision,
+        trades_today=0,
+        daily_loss=0,
+    )
+
+
+def make_position_size():
+    """
+    Create a valid PositionSize object.
+    """
+
+    return PositionSize(
+        lots=2,
+        quantity=130,
+        risk_amount=Decimal("1300"),
     )

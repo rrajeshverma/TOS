@@ -1,9 +1,7 @@
 from unittest.mock import Mock
 
 from shared.enums import Signal
-from strategies.ema_vwap_rsi_strategy import (
-    EMAVWAPRSIStrategy,
-)
+from strategies.ema_vwap_rsi_strategy import EMAVWAPRSIStrategy
 
 
 def market(close):
@@ -35,137 +33,96 @@ def test_strategy_name():
 def test_buy_signal():
     strategy = EMAVWAPRSIStrategy()
 
-    signal = strategy.generate_signal(
+    result = strategy.analyze(
         market(110),
         indicators(),
     )
 
-    assert signal == Signal.BUY_CE
+    assert result.signal == Signal.BUY_CE
+    assert result.has_signal
+    assert len(result.reasons) > 0
 
 
 def test_sell_signal():
     strategy = EMAVWAPRSIStrategy()
 
-    signal = strategy.generate_signal(
+    result = strategy.analyze(
         market(80),
-        indicators(
-            rsi=40,
-        ),
+        indicators(rsi=40),
     )
 
-    assert signal == Signal.BUY_PE
+    assert result.signal == Signal.BUY_PE
+    assert result.has_signal
+    assert len(result.reasons) > 0
 
 
 def test_hold_when_rsi_between_45_and_55():
     strategy = EMAVWAPRSIStrategy()
 
-    signal = strategy.generate_signal(
+    result = strategy.analyze(
         market(110),
-        indicators(
-            rsi=50,
-        ),
+        indicators(rsi=50),
     )
 
-    assert signal == Signal.NONE
+    assert result.signal == Signal.NONE
+    assert not result.has_signal
 
 
 def test_hold_when_price_below_vwap():
     strategy = EMAVWAPRSIStrategy()
 
-    signal = strategy.generate_signal(
+    result = strategy.analyze(
         market(94),
-        indicators(
-            rsi=60,
-        ),
+        indicators(rsi=60),
     )
 
-    assert signal == Signal.NONE
+    assert result.signal == Signal.NONE
+    assert not result.has_signal
 
 
 def test_hold_when_price_below_ema_high():
     strategy = EMAVWAPRSIStrategy()
 
-    signal = strategy.generate_signal(
+    result = strategy.analyze(
         market(99),
         indicators(),
     )
 
-    assert signal == Signal.NONE
+    assert result.signal == Signal.NONE
+    assert not result.has_signal
 
 
 def test_hold_when_price_above_ema_low_for_sell():
     strategy = EMAVWAPRSIStrategy()
 
-    signal = strategy.generate_signal(
+    result = strategy.analyze(
         market(91),
-        indicators(
-            rsi=40,
-        ),
+        indicators(rsi=40),
     )
 
-    assert signal == Signal.NONE
+    assert result.signal == Signal.NONE
+    assert not result.has_signal
 
 
 def test_hold_when_price_above_vwap_for_sell():
     strategy = EMAVWAPRSIStrategy()
 
-    signal = strategy.generate_signal(
+    result = strategy.analyze(
         market(96),
-        indicators(
-            rsi=40,
-        ),
+        indicators(rsi=40),
     )
 
-    assert signal == Signal.NONE
+    assert result.signal == Signal.NONE
+    assert not result.has_signal
 
 
-def test_analyze_returns_market():
+def test_strategy_returns_reasons():
     strategy = EMAVWAPRSIStrategy()
-
-    m = market(100)
-    i = indicators()
 
     result = strategy.analyze(
-        m,
-        i,
-    )
-
-    assert result["market"] is m
-
-
-def test_analyze_returns_indicators():
-    strategy = EMAVWAPRSIStrategy()
-
-    m = market(100)
-    i = indicators()
-
-    result = strategy.analyze(
-        m,
-        i,
-    )
-
-    assert result["indicators"] is i
-
-
-def test_buy_uses_filters():
-    strategy = EMAVWAPRSIStrategy()
-
-    signal = strategy.generate_signal(
         market(110),
         indicators(),
     )
 
-    assert signal == Signal.BUY_CE
-
-
-def test_sell_uses_filters():
-    strategy = EMAVWAPRSIStrategy()
-
-    signal = strategy.generate_signal(
-        market(80),
-        indicators(
-            rsi=40,
-        ),
-    )
-
-    assert signal == Signal.BUY_PE
+    assert isinstance(result.reasons, tuple)
+    assert len(result.reasons) > 0

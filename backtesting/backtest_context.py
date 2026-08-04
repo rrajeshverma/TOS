@@ -9,8 +9,11 @@ Description : Owns all backtesting state during replay.
 """
 
 from __future__ import annotations
+
 from decimal import Decimal
+
 from backtesting.trade_executor import TradeExecutor
+from backtesting.trade_ledger import TradeLedger
 from backtesting.trade_recorder import TradeRecorder
 from shared.enums import ExitReason
 
@@ -25,6 +28,7 @@ class BacktestContext:
     def __init__(self) -> None:
         self.trade_executor = TradeExecutor()
         self.trade_recorder = TradeRecorder()
+        self.trade_ledger = TradeLedger()
 
     def on_risk(
         self,
@@ -53,7 +57,6 @@ class BacktestContext:
             )
 
             self.trade_recorder.record(trade)
-
             return
 
         # -------------------------------------------------
@@ -75,6 +78,7 @@ class BacktestContext:
         )
 
         self.trade_recorder.record(closed_trade)
+        self.trade_ledger.add(closed_trade)
 
         new_trade = executor.open_trade(
             risk=risk,
@@ -84,3 +88,25 @@ class BacktestContext:
         )
 
         self.trade_recorder.record(new_trade)
+
+    def finalize(
+        self,
+        market,
+    ) -> None:
+        """
+        Close any remaining open trade at the end of replay.
+        """
+
+        executor = self.trade_executor
+
+        if not executor.has_open_trade:
+            return
+
+        closed_trade = executor.close_trade(
+            exit_price=Decimal(str(market.close)),
+            exit_time=market.timestamp,
+            exit_reason=ExitReason.END_OF_DATA,
+        )
+
+        self.trade_recorder.record(closed_trade)
+        self.trade_ledger.add(closed_trade)

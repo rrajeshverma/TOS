@@ -21,5 +21,5 @@ def test_create_trade_plan():
     assert plan.entry_price == Decimal("250")
     assert plan.stop_loss == Decimal("240")
     assert plan.target_price == Decimal("270")
-    assert plan.lots > 0
-    assert plan.quantity > 0
+    assert plan.position_size.lots > 0
+    assert plan.position_size.quantity > 0

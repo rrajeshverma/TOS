@@ -1,10 +1,11 @@
 """
 =========================================================
 Trading Operating System (TOS)
-Module      : Trade Plan
+
+Module      : Trade Management
 Version     : 1.0.0
 Author      : Rajesh Varma
-Description : Immutable execution-ready trade plan.
+Description : Immutable trade management decision.
 =========================================================
 """
 
@@ -13,19 +14,15 @@ from __future__ import annotations
 from dataclasses import dataclass
 from decimal import Decimal
 
-from domain.decision import Decision
-from domain.position_size import PositionSize
-
 
 @dataclass(frozen=True, slots=True)
-class TradePlan:
+class TradeManagement:
     """
-    Immutable execution-ready trade plan.
+    Represents trade management actions.
     """
 
-    decision: Decision
-    position_size: PositionSize
+    move_stop_loss: bool
 
-    entry_price: Decimal
-    stop_loss: Decimal
-    target_price: Decimal
+    new_stop_loss: Decimal | None
+
+    exit_trade: bool

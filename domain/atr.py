@@ -1,10 +1,11 @@
 """
 =========================================================
 Trading Operating System (TOS)
-Module      : Trade Plan
+
+Module      : ATR
 Version     : 1.0.0
 Author      : Rajesh Varma
-Description : Immutable execution-ready trade plan.
+Description : Immutable Average True Range.
 =========================================================
 """
 
@@ -13,19 +14,13 @@ from __future__ import annotations
 from dataclasses import dataclass
 from decimal import Decimal
 
-from domain.decision import Decision
-from domain.position_size import PositionSize
-
 
 @dataclass(frozen=True, slots=True)
-class TradePlan:
+class ATR:
     """
-    Immutable execution-ready trade plan.
+    Average True Range.
     """
 
-    decision: Decision
-    position_size: PositionSize
+    period: int
 
-    entry_price: Decimal
-    stop_loss: Decimal
-    target_price: Decimal
+    value: Decimal

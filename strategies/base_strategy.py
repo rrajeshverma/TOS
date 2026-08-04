@@ -9,6 +9,8 @@ from __future__ import annotations
 from abc import ABC
 from abc import abstractmethod
 
+from domain.strategy_result import StrategyResult
+
 
 class BaseStrategy(ABC):
     """
@@ -24,17 +26,7 @@ class BaseStrategy(ABC):
         self,
         market,
         indicators,
-    ):
+    ) -> StrategyResult:
         """
-        Analyze market and indicators.
-        """
-
-    @abstractmethod
-    def generate_signal(
-        self,
-        market,
-        indicators,
-    ):
-        """
-        Generate BUY / SELL / HOLD signal.
+        Analyze market and indicators and return a StrategyResult.
         """

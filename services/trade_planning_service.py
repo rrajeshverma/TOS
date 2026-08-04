@@ -13,6 +13,7 @@ from decimal import Decimal
 
 from domain.decision import Decision
 from domain.trade_plan import TradePlan
+from engines.atr_stop_engine import ATRStopEngine
 from engines.trade_planning_engine import (
     TradePlanningEngine,
 )
@@ -30,11 +31,22 @@ class TradePlanningService:
         self,
         trade_planning_engine: TradePlanningEngine | None = None,
         position_sizing_service: PositionSizingService | None = None,
+        atr_stop_engine: ATRStopEngine | None = None,
     ) -> None:
-        self._trade_planning_engine = trade_planning_engine or TradePlanningEngine()
+
+        self._trade_planning_engine = (
+            trade_planning_engine
+            or TradePlanningEngine()
+        )
 
         self._position_sizing_service = (
-            position_sizing_service or PositionSizingService()
+            position_sizing_service
+            or PositionSizingService()
+        )
+
+        self._atr_stop_engine = (
+            atr_stop_engine
+            or ATRStopEngine()
         )
 
     def create_trade_plan(
@@ -60,9 +72,8 @@ class TradePlanningService:
 
         return self._trade_planning_engine.create_plan(
             decision=decision,
+            position_size=position,
             entry_price=entry_price,
             stop_loss=stop_loss,
             target_price=target_price,
-            lots=position.lots,
-            quantity=position.quantity,
         )

@@ -2,21 +2,25 @@
 =========================================================
 Trading Operating System (TOS)
 
-Module      : EMA + VWAP + RSI Strategy
-Version     : 2.0.0
+Module      : Delta India Strategy
+Version     : 1.0.0
 Author      : Rajesh Varma
-Description : Trend-following strategy using
-              EMA, VWAP and RSI.
+Description : Production strategy for
+              Delta Exchange India BTC Futures.
 =========================================================
 """
 
 from __future__ import annotations
 
 from datetime import time
+from decimal import Decimal
 
 from domain.strategy_result import StrategyResult
 from shared.enums import Signal
 from strategies.base_strategy import BaseStrategy
+from strategies.filters.big_candle_filter import (
+    BigCandleFilter,
+)
 from strategies.filters.confirmation_filter import (
     ConfirmationFilter,
 )
@@ -29,25 +33,15 @@ from strategies.filters.trade_limit_filter import (
 from strategies.filters.vwap_filter import VWAPFilter
 
 
-class EMAVWAPRSIStrategy(BaseStrategy):
+class DeltaIndiaStrategy(BaseStrategy):
     """
-    EMA + VWAP + RSI Trend Strategy.
-
-    BUY
-        • Close > EMA High
-        • RSI > 55
-        • Close > VWAP
-
-    SELL
-        • Close < EMA Low
-        • RSI < 45
-        • Close < VWAP
+    Production strategy for BTC Futures.
     """
 
     def __init__(self) -> None:
         self._time_filter = TimeFilter(
-            time(10, 15),
-            time(14, 30),
+            time(0, 0),
+            time(23, 59),
         )
 
         self._ema_filter = EMAFilter()
@@ -60,8 +54,10 @@ class EMAVWAPRSIStrategy(BaseStrategy):
 
         self._confirmation_filter = ConfirmationFilter()
 
+        self._big_candle_filter = BigCandleFilter()
+
     def name(self) -> str:
-        return "EMA_VWAP_RSI"
+        return "DELTA_INDIA"
 
     def analyze(
         self,
@@ -69,14 +65,28 @@ class EMAVWAPRSIStrategy(BaseStrategy):
         indicators,
     ) -> StrategyResult:
         """
-        Analyze the current market and return a StrategyResult.
+        Analyze market conditions and return a trading decision.
         """
 
         close = market.close
 
-        # ------------------------------------------
-        # EMA Filter
-        # ------------------------------------------
+        open_price = Decimal(str(market.open))
+        close_price = Decimal(str(market.close))
+
+        candle_body = abs(close_price - open_price)
+
+        # Temporary fixed threshold.
+        # Will be replaced with ATR / average candle size.
+        average_body = Decimal("100")
+
+        if not self._big_candle_filter.allowed(
+            candle_body,
+            average_body,
+        ):
+            return StrategyResult(
+                signal=Signal.NONE,
+                reasons=("Big candle rejected",),
+            )
 
         buy_ema = self._ema_filter.buy_allowed(
             close,
@@ -87,16 +97,6 @@ class EMAVWAPRSIStrategy(BaseStrategy):
             close,
             indicators.ema_low,
         )
-
-        if not buy_ema and not sell_ema:
-            return StrategyResult(
-                signal=Signal.NONE,
-                reasons=("EMA conditions not met",),
-            )
-
-        # ------------------------------------------
-        # BUY
-        # ------------------------------------------
 
         if (
             buy_ema
@@ -111,15 +111,11 @@ class EMAVWAPRSIStrategy(BaseStrategy):
             return StrategyResult(
                 signal=Signal.BUY_CE,
                 reasons=(
-                    "EMA bullish confirmation",
-                    "RSI bullish confirmation",
-                    "VWAP bullish confirmation",
+                    "Close above EMA High",
+                    "Price above VWAP",
+                    "RSI above 55",
                 ),
             )
-
-        # ------------------------------------------
-        # SELL
-        # ------------------------------------------
 
         if (
             sell_ema
@@ -134,17 +130,27 @@ class EMAVWAPRSIStrategy(BaseStrategy):
             return StrategyResult(
                 signal=Signal.BUY_PE,
                 reasons=(
-                    "EMA bearish confirmation",
-                    "RSI bearish confirmation",
-                    "VWAP bearish confirmation",
+                    "Close below EMA Low",
+                    "Price below VWAP",
+                    "RSI below 45",
                 ),
             )
 
-        # ------------------------------------------
-        # NO SIGNAL
-        # ------------------------------------------
-
         return StrategyResult(
             signal=Signal.NONE,
-            reasons=("Strategy conditions not met",),
+            reasons=("No trading opportunity",),
         )
+
+    def generate_signal(
+        self,
+        market,
+        indicators,
+    ) -> Signal:
+        """
+        Return only the trading signal.
+        """
+
+        return self.analyze(
+            market,
+            indicators,
+        ).signal

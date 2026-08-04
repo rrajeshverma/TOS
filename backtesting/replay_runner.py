@@ -29,14 +29,22 @@ class ReplayRunner:
 
         processed = 0
         skipped = 0
+        last_market = None
 
         for market in self._feed:
+            last_market = market
             history.append(market)
 
             try:
                 risk = self._runtime.on_market_tick(
                     market,
                     history,
+                )
+
+                print(
+                    "RETURN:",
+                    type(risk).__name__,
+                    risk,
                 )
 
                 if risk is not None:
@@ -51,8 +59,12 @@ class ReplayRunner:
                     print(f"Processed {processed} candles...")
 
             except ValueError:
-                # IndicatorEngine needs enough candles
                 skipped += 1
+
+        # <-- OUTSIDE THE LOOP
+
+        if last_market is not None:
+            self.context.finalize(last_market)
 
         print("\nReplay completed")
         print(f"Processed : {processed}")

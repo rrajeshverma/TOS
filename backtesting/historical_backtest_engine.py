@@ -28,7 +28,7 @@ class HistoricalBacktestEngine:
         processed = self._runner.run()
 
         statistics = TradeStatistics(
-            self.context.trade_recorder.trades,
+            self.context.trade_ledger.trades,
         )
 
         report = PerformanceReport(
