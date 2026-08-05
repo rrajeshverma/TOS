@@ -48,3 +48,73 @@ def test_live_registered():
     dispatcher = CommandDispatcher()
 
     assert RuntimeMode.LIVE in dispatcher._commands
+
+
+@patch("builtins.print")
+def test_dispatch_unknown_mode(mock_print):
+    dispatcher = CommandDispatcher()
+
+    result = dispatcher.dispatch("UNKNOWN")
+
+    assert result == 1
+
+    mock_print.assert_called_once_with(
+        "Unsupported mode: UNKNOWN",
+    )
+
+
+@patch("builtins.print")
+@patch("runtime.dispatcher.ConfigValidator")
+@patch("runtime.dispatcher.SettingsLoader")
+def test_dispatch_validate_failure(
+    mock_settings_loader,
+    mock_config_validator,
+    mock_print,
+):
+    manager = object()
+
+    loader = mock_settings_loader.return_value
+    loader.load_json.return_value = manager
+
+    validator = mock_config_validator.return_value
+    validator.validate.side_effect = RuntimeError(
+        "Invalid configuration",
+    )
+
+    dispatcher = CommandDispatcher()
+
+    result = dispatcher.dispatch(RuntimeMode.VALIDATE)
+
+    assert result == 1
+
+    mock_print.assert_called_once_with(
+        "Configuration validation failed: Invalid configuration",
+    )
+
+
+@patch("builtins.print")
+def test_dispatch_live(
+    mock_print,
+):
+    dispatcher = CommandDispatcher()
+
+    result = dispatcher.dispatch(RuntimeMode.LIVE)
+
+    assert result == 0
+
+    mock_print.assert_called_once_with(
+        "Live mode not yet implemented.",
+    )
+
+
+@patch("runtime.dispatcher.application_main")
+def test_dispatch_paper(mock_application_main):
+    mock_application_main.return_value = 0
+
+    dispatcher = CommandDispatcher()
+
+    result = dispatcher.dispatch(RuntimeMode.PAPER)
+
+    assert result == 0
+
+    mock_application_main.assert_called_once_with()

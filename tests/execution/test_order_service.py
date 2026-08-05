@@ -111,3 +111,13 @@ def test_update_status_rejects_invalid_transition():
             order_id,
             OrderStatus.CANCELLED,
         )
+
+
+def test_submit_none_order_raises_value_error():
+    service = OrderService()
+
+    with pytest.raises(
+        ValueError,
+        match="Order cannot be None.",
+    ):
+        service.submit(None)

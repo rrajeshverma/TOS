@@ -3,6 +3,8 @@ from unittest.mock import Mock
 from shared.events import Event
 from runtime.trading_runtime import TradingRuntime
 from runtime.session_state import SessionState
+from shared.runtime_status import RuntimeStatus
+from runtime.runtime_mode import RuntimeMode
 
 
 def test_start_registers_market_data_callback():
@@ -285,3 +287,160 @@ def test_runtime_start_registers_market_tick_handler():
     )
 
     assert received
+
+
+def test_validate_reports_missing_services():
+    runtime = TradingRuntime({})
+
+    missing = runtime.validate()
+
+    assert sorted(missing) == sorted(
+        [
+            "indicator_engine",
+            "strategy_engine",
+            "risk_engine",
+            "execution_manager",
+            "market_data_service",
+            "trading_pipeline",
+        ]
+    )
+
+
+def test_validate_returns_empty_when_complete():
+    runtime = TradingRuntime(
+        {
+            "indicator_engine": Mock(),
+            "strategy_engine": Mock(),
+            "risk_engine": Mock(),
+            "execution_manager": Mock(),
+            "market_data_service": Mock(),
+            "trading_pipeline": Mock(),
+        }
+    )
+
+    assert runtime.validate() == []
+
+
+def test_is_running_property():
+    runtime = TradingRuntime({})
+
+    assert runtime.is_running is False
+
+    runtime.runtime_status = RuntimeStatus.RUNNING
+
+    assert runtime.is_running is True
+
+
+def test_pause_changes_runtime_state():
+    runtime = TradingRuntime({})
+
+    runtime.pause()
+
+    assert runtime.state == RuntimeStatus.PAUSED
+
+
+def test_fail_changes_runtime_state():
+    runtime = TradingRuntime({})
+
+    runtime.running = True
+
+    runtime.fail()
+
+    assert runtime.running is False
+    assert runtime.state == RuntimeStatus.FAILED
+
+
+def test_backtest_mode_returns_risk_without_execution():
+    indicator_engine = Mock()
+    indicator_engine.calculate.return_value = "IND"
+
+    strategy_engine = Mock()
+    strategy_engine.decide.return_value = "DEC"
+
+    risk = Mock()
+
+    risk_engine = Mock()
+    risk_engine.evaluate.return_value = risk
+
+    execution_manager = Mock()
+
+    runtime = TradingRuntime(
+        {
+            "indicator_engine": indicator_engine,
+            "strategy_engine": strategy_engine,
+            "risk_engine": risk_engine,
+            "execution_manager": execution_manager,
+        },
+        mode=RuntimeMode.BACKTEST,
+    )
+
+    result = runtime.run_cycle(
+        Mock(),
+        [],
+    )
+
+    execution_manager.execute.assert_not_called()
+
+    assert result is risk
+
+
+def test_handle_market_tick_calls_run_cycle():
+    runtime = TradingRuntime({})
+
+    runtime.run_cycle = Mock()
+
+    payload = {
+        "market": Mock(),
+        "history": [],
+    }
+
+    runtime._handle_market_tick(payload)
+
+    runtime.run_cycle.assert_called_once_with(
+        payload["market"],
+        payload["history"],
+    )
+
+
+def test_on_market_tick_publishes_and_runs_cycle():
+    runtime = TradingRuntime({})
+
+    runtime.market_clock.current_session = Mock(
+        return_value=SessionState.OPEN,
+    )
+
+    runtime.publish = Mock()
+    runtime.run_cycle = Mock(return_value="RESULT")
+
+    market = Mock()
+    history = []
+
+    result = runtime.on_market_tick(
+        market,
+        history,
+    )
+
+    runtime.publish.assert_called_once_with(
+        Event.MARKET_TICK,
+        {
+            "market": market,
+            "history": history,
+        },
+    )
+
+    runtime.run_cycle.assert_called_once_with(
+        market,
+        history,
+    )
+
+    assert result == "RESULT"
+
+
+def test_status_returns_runtime_information():
+    runtime = TradingRuntime({})
+
+    status = runtime.status()
+
+    assert status["status"] == runtime.runtime_status
+    assert status["running"] is False
+    assert "metrics" in status

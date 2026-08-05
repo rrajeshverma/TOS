@@ -50,6 +50,9 @@ class OrderService:
         return len(self._orders)
 
     def submit(self, order: dict[str, Any]) -> int:
+        if order is None:
+            raise ValueError("Order cannot be None.")
+
         """
         Register an order locally.
 

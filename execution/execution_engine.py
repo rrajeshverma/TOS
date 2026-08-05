@@ -1,3 +1,14 @@
+"""
+=========================================================
+Trading Operating System (TOS)
+
+Module      : Execution Engine
+Description : Executes validated execution requests.
+=========================================================
+"""
+
+from __future__ import annotations
+
 from execution.execution_result import ExecutionResult
 from execution.order_service_protocol import (
     OrderServiceProtocol,
