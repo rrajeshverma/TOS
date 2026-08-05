@@ -26,8 +26,6 @@ class Signal(str, Enum):
     EXIT = "EXIT"
 
 
-
-
 # ==========================================================
 # DECISION STATUS
 # ==========================================================
@@ -58,6 +56,7 @@ class ExitReason(str, Enum):
     TARGET = "TARGET"
     MANUAL = "MANUAL"
     END_OF_DATA = "END_OF_DATA"
+
 
 # ==========================================================
 # ORDER SIDE

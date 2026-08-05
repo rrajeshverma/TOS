@@ -33,21 +33,13 @@ class TradePlanningService:
         position_sizing_service: PositionSizingService | None = None,
         atr_stop_engine: ATRStopEngine | None = None,
     ) -> None:
-
-        self._trade_planning_engine = (
-            trade_planning_engine
-            or TradePlanningEngine()
-        )
+        self._trade_planning_engine = trade_planning_engine or TradePlanningEngine()
 
         self._position_sizing_service = (
-            position_sizing_service
-            or PositionSizingService()
+            position_sizing_service or PositionSizingService()
         )
 
-        self._atr_stop_engine = (
-            atr_stop_engine
-            or ATRStopEngine()
-        )
+        self._atr_stop_engine = atr_stop_engine or ATRStopEngine()
 
     def create_trade_plan(
         self,

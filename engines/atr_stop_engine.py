@@ -30,15 +30,9 @@ class ATRStopEngine:
         """
 
         if atr <= 0:
-            raise ValueError(
-                "ATR must be greater than zero."
-            )
+            raise ValueError("ATR must be greater than zero.")
 
         if multiplier <= 0:
-            raise ValueError(
-                "Multiplier must be greater than zero."
-            )
+            raise ValueError("Multiplier must be greater than zero.")
 
-        return entry_price - (
-            atr * multiplier
-        )
+        return entry_price - (atr * multiplier)
