@@ -4,6 +4,7 @@ Terminal Operations Dashboard.
 
 from datetime import datetime
 
+from dashboard.dashboard_service import DashboardService
 from dashboard.widgets.alert_widget import AlertWidget
 from dashboard.widgets.broker_widget import BrokerWidget
 from dashboard.widgets.market_widget import MarketWidget
@@ -27,9 +28,12 @@ class TerminalDashboard:
         risk_widget=None,
         system_widget=None,
         alert_widget=None,
+        dashboard_service=None,
     ) -> None:
         self.running = False
         self.started_at = None
+
+        self.dashboard_service = dashboard_service or DashboardService()
 
         self.runtime_widget = runtime_widget or RuntimeWidget()
         self.broker_widget = broker_widget or BrokerWidget()
@@ -39,25 +43,34 @@ class TerminalDashboard:
         self.system_widget = system_widget or SystemWidget()
         self.alert_widget = alert_widget or AlertWidget()
 
-    def start(self):
+    def start(self) -> None:
         self.running = True
         self.started_at = datetime.now()
 
-    def stop(self):
+    def stop(self) -> None:
         self.running = False
 
-    def refresh(self):
+    def refresh(self) -> None:
         """
         Future hook for updating widgets.
         """
+        pass
 
-    def render(self):
+    def render(self, runtime) -> str:
+        """
+        Render the complete dashboard.
+        """
+
+        runtime_snapshot = self.dashboard_service.get_runtime_snapshot(
+            runtime,
+        )
+
         return (
             "\n"
             "============================================================\n"
             "        Trading Operating System Dashboard\n"
             "============================================================\n\n"
-            + self.runtime_widget.render()
+            + self.runtime_widget.render(runtime_snapshot)
             + "\n"
             + self.broker_widget.render()
             + "\n"
@@ -70,5 +83,6 @@ class TerminalDashboard:
             + self.system_widget.render()
             + "\n"
             + self.alert_widget.render()
-            + "\n============================================================\n"
+            + "\n"
+            "============================================================\n"
         )

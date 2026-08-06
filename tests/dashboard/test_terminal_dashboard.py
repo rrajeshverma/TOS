@@ -1,4 +1,13 @@
 from dashboard.terminal_dashboard import TerminalDashboard
+from runtime.runtime_mode import RuntimeMode
+from runtime.trading_runtime import TradingRuntime
+
+
+def create_runtime():
+    return TradingRuntime(
+        services={},
+        mode=RuntimeMode.PAPER,
+    )
 
 
 def test_dashboard_initial_state():
@@ -28,8 +37,9 @@ def test_dashboard_stop():
 
 def test_dashboard_render():
     dashboard = TerminalDashboard()
+    runtime = create_runtime()
 
-    output = dashboard.render()
+    output = dashboard.render(runtime)
 
     assert "Trading Operating System Dashboard" in output
 
@@ -41,10 +51,12 @@ def test_dashboard_refresh():
 
     assert dashboard.running is False
 
+
 def test_dashboard_contains_all_widgets():
     dashboard = TerminalDashboard()
+    runtime = create_runtime()
 
-    output = dashboard.render()
+    output = dashboard.render(runtime)
 
     assert "Runtime" in output
     assert "Broker" in output

@@ -2,30 +2,25 @@
 Runtime Dashboard Widget.
 """
 
+from dashboard.snapshots import RuntimeSnapshot
+
 
 class RuntimeWidget:
     """
     Displays runtime information.
     """
 
-    def __init__(
+    def render(
         self,
-        status="STOPPED",
-        mode="PAPER",
-        uptime="00:00:00",
-    ) -> None:
-        self.status = status
-        self.mode = mode
-        self.uptime = uptime
-
-    def render(self) -> str:
-        """
-        Render runtime information.
-        """
-
+        snapshot: RuntimeSnapshot,
+    ) -> str:
         return (
             "Runtime\n"
-            f"Status : {self.status}\n"
-            f"Mode   : {self.mode}\n"
-            f"Uptime : {self.uptime}\n"
+            f"Status : {snapshot.status}\n"
+            f"Mode   : {snapshot.mode}\n"
+            f"Running: {'YES' if snapshot.running else 'NO'}\n"
+            f"Orders : {snapshot.metrics['orders_submitted']}\n"
+            f"Rejects: {snapshot.metrics['orders_rejected']}\n"
+            f"Guards : {snapshot.metrics['guard_blocks']}\n"
+            f"Reconnects : {snapshot.metrics['reconnects']}\n"
         )

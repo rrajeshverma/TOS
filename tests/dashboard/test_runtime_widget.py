@@ -1,36 +1,26 @@
+from dashboard.snapshots import RuntimeSnapshot
 from dashboard.widgets.runtime_widget import RuntimeWidget
 
 
-def test_runtime_widget_defaults():
-    widget = RuntimeWidget()
-
-    assert widget.status == "STOPPED"
-    assert widget.mode == "PAPER"
-    assert widget.uptime == "00:00:00"
-
-
-def test_runtime_widget_custom_values():
-    widget = RuntimeWidget(
-        status="RUNNING",
-        mode="LIVE",
-        uptime="01:15:42",
-    )
-
-    assert widget.status == "RUNNING"
-    assert widget.mode == "LIVE"
-    assert widget.uptime == "01:15:42"
-
-
 def test_runtime_widget_render():
-    widget = RuntimeWidget(
+    snapshot = RuntimeSnapshot(
         status="RUNNING",
         mode="PAPER",
-        uptime="00:30:00",
+        running=True,
+        metrics={
+            "orders_submitted": 10,
+            "orders_rejected": 1,
+            "guard_blocks": 2,
+            "reconnects": 0,
+        },
     )
 
-    output = widget.render()
+    output = RuntimeWidget().render(snapshot)
 
-    assert "Runtime" in output
     assert "RUNNING" in output
     assert "PAPER" in output
-    assert "00:30:00" in output
+    assert "YES" in output
+    assert "Orders : 10" in output
+    assert "Rejects: 1" in output
+    assert "Guards : 2" in output
+    assert "Reconnects : 0" in output
