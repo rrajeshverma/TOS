@@ -1,179 +1,135 @@
 # Trading Operating System (TOS)
 
-A modular algorithmic trading platform built using **Clean Architecture**, **SOLID principles**, **Domain-Driven Design (DDD)**, and **Test-Driven Development (TDD)**.
-
----
+> **A production-oriented algorithmic trading platform built with Clean
+> Architecture, Domain-Driven Design (DDD), SOLID principles, and
+> Test-Driven Development (TDD).**
 
 ## Overview
 
-Trading Operating System (TOS) is designed to provide a scalable, maintainable, and extensible framework for developing, testing, and executing algorithmic trading strategies.
+Trading Operating System (TOS) is a modular algorithmic trading platform
+designed to support the complete trading lifecycle---from market data
+ingestion and strategy evaluation through risk management, order
+execution, portfolio management, monitoring, and reporting.
 
-The platform supports:
+### Highlights
 
-- Historical Backtesting
-- Paper Trading
-- Strategy Optimization
-- Portfolio Analytics
-- Performance Reporting
-- Risk Management
-- Broker Integration
-- Runtime Monitoring
-
----
+-   Python 3.12+
+-   Clean Architecture
+-   SOLID Principles
+-   Domain-Driven Design (DDD)
+-   Test-Driven Development (TDD)
+-   Historical Backtesting
+-   Paper Trading
+-   Live Trading Framework
+-   5,217+ automated tests
+-   Ruff clean
 
 ## Architecture
 
-The project follows:
-
-- Clean Architecture
-- SOLID Principles
-- Domain-Driven Design (DDD)
-- Test-Driven Development (TDD)
-
-For more information, see:
-
+``` text
+Market Data
+    │
+    ▼
+Indicator Engine
+    │
+    ▼
+Strategy Engine
+    │
+    ▼
+Decision Engine
+    │
+    ▼
+Risk Engine
+    │
+    ▼
+Execution Manager
+    │
+    ▼
+Broker Adapter
+    │
+    ▼
+Portfolio / Positions
+    │
+    ▼
+Journal / Reporting
 ```
-docs/Architecture.md
-```
 
----
+## Repository Structure
 
-## Project Structure
-
-```
+``` text
 analytics/
 backtesting/
 brokers/
 config/
 dashboard/
+docs/
 domain/
 engines/
 events/
 execution/
 journal/
+market/
 monitoring/
-optimizer/
+paper/
 performance/
 portfolio/
 reporting/
 risk/
+runtime/
 services/
 storage/
 tests/
 validation/
 ```
 
----
-
-## Requirements
-
-- Python 3.12+
-- Linux (Ubuntu recommended)
-- Virtual Environment
-
----
-
 ## Installation
 
-Clone the repository:
-
-```bash
+``` bash
 git clone <repository-url>
 cd TOS
-```
-
-Create a virtual environment:
-
-```bash
 python3 -m venv .venv
 source .venv/bin/activate
-```
-
-Install runtime dependencies:
-
-```bash
 pip install -r requirements.txt
-```
-
-Install development dependencies:
-
-```bash
 pip install -r requirements-dev.txt
 ```
 
----
+## Quick Start
 
-## Running Tests
-
-Run the full test suite:
-
-```bash
-python -m pytest
+``` bash
+python main.py
+pytest
+ruff check .
+ruff format --check .
 ```
 
----
+## Documentation
 
-## Code Quality
-
-Formatting:
-
-```bash
-python -m black .
-```
-
-Import sorting:
-
-```bash
-python -m isort .
-```
-
-Linting:
-
-```bash
-python -m ruff check .
-```
-
-Coverage:
-
-```bash
-python -m pytest --cov=.
-```
-
----
+See: - docs/architecture.md - docs/deployment.md - docs/API.md -
+docs/strategy_development.md - docs/TRADING_RULEBOOK.md -
+docs/ReleaseNotes.md
 
 ## Development Workflow
 
-The project follows:
-
-1. RED
-2. GREEN
-3. REFACTOR
-
-Every production change is expected to include automated tests.
-
----
+1.  Write tests.
+2.  Implement changes.
+3.  Run the full test suite.
+4.  Run Ruff.
+5.  Commit only with a clean repository.
 
 ## Current Status
 
-- Clean Architecture
-- SOLID
-- Domain-Driven Design
-- Test-Driven Development
-- 1505+ Passing Tests
-
----
+-   5,217+ tests passing
+-   0 failures
+-   Ruff clean
+-   Python 3.12+
 
 ## Roadmap
 
-- Enhanced Reporting
-- HTML/PDF Reports
-- Portfolio Dashboard
-- Multi-Strategy Execution
-- Live Trading Enhancements
-
----
+-   v2.5.0-beta1
+-   Live Trading Readiness
+-   Enhanced reporting
+-   Operational dashboards
 
 ## License
 
-Proprietary.
-All rights reserved.
+Proprietary. All rights reserved.
