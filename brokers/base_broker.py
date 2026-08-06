@@ -27,6 +27,13 @@ class BaseBroker(ABC):
         raise NotImplementedError
 
     @abstractmethod
+    def get_health(self) -> dict:
+        """
+        Return broker health information.
+        """
+        raise NotImplementedError
+
+    @abstractmethod
     def place_order(self, order):
         """Place an order."""
         raise NotImplementedError

@@ -138,3 +138,16 @@ def test_cancel_changes_status():
     cancelled = broker.get_order(order.broker_order_id)
 
     assert cancelled.status == OrderStatus.CANCELLED
+
+
+def test_get_health():
+    broker = PaperBroker()
+
+    health = broker.get_health()
+
+    assert health == {
+        "broker": "PaperBroker",
+        "connected": False,
+        "latency_ms": 0,
+        "heartbeat": "UNKNOWN",
+    }

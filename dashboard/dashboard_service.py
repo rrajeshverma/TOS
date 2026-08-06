@@ -1,6 +1,7 @@
 from dashboard.dashboard_model import DashboardModel
 from dashboard.snapshots import RuntimeSnapshot
 
+
 class DashboardService:
     def __init__(
         self,
@@ -17,7 +18,6 @@ class DashboardService:
         self.position_service = position_service
         self.performance_service = performance_service
         self.risk_service = risk_service
-
 
     def get_dashboard(self) -> DashboardModel:
         dashboard = DashboardModel()
@@ -66,18 +66,18 @@ class DashboardService:
         return dashboard
 
     def get_runtime_snapshot(
-            self,
-            runtime,
-        ) -> RuntimeSnapshot:
-            """
-            Create runtime snapshot for terminal dashboard.
-            """
-    
-            snapshot = runtime.status()
-    
-            return RuntimeSnapshot(
-                status=snapshot["status"].name,
-                mode=runtime.mode.name,
-                running=snapshot["running"],
-                metrics=snapshot["metrics"],
-            )
+        self,
+        runtime,
+    ) -> RuntimeSnapshot:
+        """
+        Create runtime snapshot for terminal dashboard.
+        """
+
+        snapshot = runtime.status()
+
+        return RuntimeSnapshot(
+            status=snapshot["status"].name,
+            mode=runtime.mode.name,
+            running=snapshot["running"],
+            metrics=snapshot["metrics"],
+        )

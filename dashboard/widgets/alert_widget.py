@@ -19,7 +19,4 @@ class AlertWidget:
         if not self.alerts:
             return "Alerts\nNone\n"
 
-        return "Alerts\n" + "\n".join(
-            f"- {alert}"
-            for alert in self.alerts
-        ) + "\n"
+        return "Alerts\n" + "\n".join(f"- {alert}" for alert in self.alerts) + "\n"

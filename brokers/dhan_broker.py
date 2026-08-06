@@ -44,6 +44,14 @@ class DhanBroker(BaseBroker):
             )
         )
 
+    def get_health(self) -> dict:
+        return {
+            "broker": "DhanBroker",
+            "connected": self.is_connected(),
+            "latency_ms": 0,
+            "heartbeat": "UNKNOWN",
+        }
+
     def place_order(self, order):
         if not self.is_connected():
             raise RuntimeError("Dhan broker is not connected.")

@@ -66,3 +66,16 @@ def test_dhan_broker_multiple_disconnect_is_safe():
     broker.disconnect()
 
     assert broker.is_connected() is False
+
+
+def test_dhan_broker_health():
+    broker = create_broker()
+
+    health = broker.get_health()
+
+    assert health == {
+        "broker": "DhanBroker",
+        "connected": False,
+        "latency_ms": 0,
+        "heartbeat": "UNKNOWN",
+    }

@@ -2,23 +2,19 @@
 Risk Dashboard Widget.
 """
 
+from dataclasses import dataclass
 
+
+@dataclass
 class RiskWidget:
     """
     Displays runtime risk information.
     """
 
-    def __init__(
-        self,
-        status="SAFE",
-        daily_loss=0.0,
-        kill_switch=False,
-        circuit_breaker=False,
-    ) -> None:
-        self.status = status
-        self.daily_loss = daily_loss
-        self.kill_switch = kill_switch
-        self.circuit_breaker = circuit_breaker
+    status: str = "SAFE"
+    daily_loss: float = 0.0
+    kill_switch: bool = False
+    circuit_breaker: bool = False
 
     def render(self) -> str:
         """

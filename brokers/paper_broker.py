@@ -30,6 +30,14 @@ class PaperBroker(BaseBroker):
     def is_connected(self) -> bool:
         return self._is_connected
 
+    def get_health(self) -> dict:
+        return {
+            "broker": "PaperBroker",
+            "connected": self.is_connected(),
+            "latency_ms": 0,
+            "heartbeat": "UNKNOWN",
+        }
+
     def place_order(self, order):
         broker_order = replace(
             order,
