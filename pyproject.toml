@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "trading-operating-system"
-version = "2.0.1"
+version = "2.5.0-beta1"
 description = "A modular algorithmic trading platform built using Clean Architecture, SOLID principles, DDD, and TDD."
 readme = "README.md"
 requires-python = ">=3.12"

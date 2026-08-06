@@ -1,4 +1,7 @@
 APP_NAME = "Trading Operating System"
-VERSION = "1.0.0"
-BUILD = "2026.07.14"
+
+VERSION = "2.5.0-beta1"
+
+BUILD = "2026.08.06"
+
 MODE = "PAPER"
