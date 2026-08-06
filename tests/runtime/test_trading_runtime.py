@@ -444,3 +444,79 @@ def test_status_returns_runtime_information():
     assert status["status"] == runtime.runtime_status
     assert status["running"] is False
     assert "metrics" in status
+
+
+def test_runtime_exposes_trading_pipeline():
+    trading_pipeline = Mock()
+
+    runtime = TradingRuntime(
+        {
+            "trading_pipeline": trading_pipeline,
+        }
+    )
+
+    assert runtime.trading_pipeline is trading_pipeline
+
+
+def test_run_cycle_uses_trading_pipeline_when_available():
+    trading_pipeline = Mock()
+
+    trading_pipeline.run.return_value = (
+        "MARKET",
+        "INDICATORS",
+        "DECISION",
+        "QUALITY",
+        "RISK",
+        "POSITION_SIZE",
+    )
+
+    runtime = TradingRuntime(
+        {
+            "trading_pipeline": trading_pipeline,
+        }
+    )
+
+    market = Mock()
+    history = [market]
+
+    result = runtime.run_cycle(
+        market,
+        history,
+    )
+
+    trading_pipeline.run.assert_called_once_with(history)
+
+    assert result == "RISK"
+
+
+def test_run_cycle_executes_pipeline_risk():
+    trading_pipeline = Mock()
+
+    risk = Mock()
+
+    trading_pipeline.run.return_value = (
+        "MARKET",
+        "INDICATORS",
+        "DECISION",
+        "QUALITY",
+        risk,
+        "POSITION_SIZE",
+    )
+
+    execution_manager = Mock()
+    execution_manager.execute.return_value = "EXECUTION"
+
+    runtime = TradingRuntime(
+        {
+            "trading_pipeline": trading_pipeline,
+            "execution_manager": execution_manager,
+        }
+    )
+
+    result = runtime.run_cycle(
+        Mock(),
+        [Mock()],
+    )
+
+    execution_manager.execute.assert_called_once_with(risk)
+    assert result == "EXECUTION"

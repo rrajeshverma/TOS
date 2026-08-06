@@ -50,6 +50,13 @@ class TradingRuntime:
         return self.services.get("indicator_engine")
 
     @property
+    def trading_pipeline(self):
+        """
+        Return the configured trading pipeline.
+        """
+        return self.services.get("trading_pipeline")
+
+    @property
     def strategy_engine(self):
         return self.services.get("strategy_engine")
 
@@ -171,6 +178,24 @@ class TradingRuntime:
         market,
         history,
     ):
+        if self.trading_pipeline is not None:
+            (
+                _market,
+                _indicators,
+                _decision,
+                _quality,
+                risk,
+                _position_size,
+            ) = self.trading_pipeline.run(history)
+
+            if self.mode == RuntimeMode.BACKTEST:
+                return risk
+
+            if self.execution_manager is None:
+                return risk
+
+            return self.execution_manager.execute(risk)
+
         indicator_engine = self.indicator_engine
         strategy_engine = self.strategy_engine
         risk_engine = self.risk_engine
@@ -188,15 +213,13 @@ class TradingRuntime:
             daily_loss=0,
         )
 
-        execution_manager = self.execution_manager
-
         if self.mode == RuntimeMode.BACKTEST:
             return risk
 
-        if execution_manager is None:
+        if self.execution_manager is None:
             return risk
 
-        return execution_manager.execute(risk)
+        return self.execution_manager.execute(risk)
 
     def _handle_market_tick(
         self,
