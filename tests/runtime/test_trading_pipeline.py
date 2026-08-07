@@ -38,7 +38,7 @@ def create_pipeline():
         risk_engine=FakeRiskEngine(),
         position_sizing_engine=FakePositionSizingEngine(),
         trade_planning_engine=FakeTradePlanningEngine(),
-        trade_management_engine=Dummy(),
+        trade_management_engine=FakeTradeManagementEngine(),
     )
 
 
@@ -83,6 +83,7 @@ def test_pipeline_returns_market_and_indicators():
         risk,
         position_size,
         trade_plan,
+        _,
     ) = pipeline.run(["CANDLE"])
 
     assert market == "MARKET"
@@ -119,6 +120,7 @@ def test_pipeline_returns_decision():
         risk,
         position_size,
         trade_plan,
+        _,
     ) = pipeline.run(["CANDLE"])
 
     assert market == "MARKET"
@@ -149,7 +151,7 @@ def test_pipeline_calls_trade_quality_engine():
 def test_pipeline_returns_trade_quality():
     pipeline = create_pipeline()
 
-    _, _, _, quality, _, _, _ = pipeline.run(["CANDLE"])
+    _, _, _, quality, _, _, _, _ = pipeline.run(["CANDLE"])
 
     assert quality == "QUALITY"
 
@@ -194,7 +196,7 @@ def test_pipeline_calls_risk_engine():
 def test_pipeline_returns_risk():
     pipeline = create_pipeline()
 
-    _, _, _, _, risk, _, _ = pipeline.run(["CANDLE"])
+    _, _, _, _, risk, _, _, _ = pipeline.run(["CANDLE"])
 
     assert risk == "RISK"
 
@@ -217,6 +219,7 @@ def test_pipeline_returns_position_size():
         _,
         _,
         position_size,
+        _,
         _,
     ) = pipeline.run(["CANDLE"])
 
@@ -258,6 +261,46 @@ def test_pipeline_returns_trade_plan():
         _,
         _,
         trade_plan,
+        _,
     ) = pipeline.run(["CANDLE"])
 
     assert trade_plan == "TRADE_PLAN"
+
+
+class FakeTradeManagementEngine:
+    def __init__(self):
+        self.called = False
+
+    def evaluate(
+        self,
+        entry_price,
+        stop_loss,
+        current_price,
+    ):
+        self.called = True
+        return "TRADE_MANAGEMENT"
+
+
+def test_pipeline_calls_trade_management_engine():
+    pipeline = create_pipeline()
+
+    pipeline.run(["CANDLE"])
+
+    assert pipeline._trade_management_engine.called
+
+
+def test_pipeline_returns_trade_management():
+    pipeline = create_pipeline()
+
+    (
+        _,
+        _,
+        _,
+        _,
+        _,
+        _,
+        _,
+        trade_management,
+    ) = pipeline.run(["CANDLE"])
+
+    assert trade_management == "TRADE_MANAGEMENT"

@@ -186,6 +186,8 @@ class TradingRuntime:
                 _quality,
                 risk,
                 _position_size,
+                _trade_plan,
+                _trade_management,
             ) = self.trading_pipeline.run(history)
 
             if self.mode == RuntimeMode.BACKTEST:

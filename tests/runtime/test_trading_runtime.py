@@ -468,6 +468,8 @@ def test_run_cycle_uses_trading_pipeline_when_available():
         "QUALITY",
         "RISK",
         "POSITION_SIZE",
+        "TRADE_PLAN",
+        "TRADE_MANAGEMENT",
     )
 
     runtime = TradingRuntime(
@@ -501,6 +503,8 @@ def test_run_cycle_executes_pipeline_risk():
         "QUALITY",
         risk,
         "POSITION_SIZE",
+        "TRADE_PLAN",
+        "TRADE_MANAGEMENT",
     )
 
     execution_manager = Mock()

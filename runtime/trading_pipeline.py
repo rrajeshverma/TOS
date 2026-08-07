@@ -81,6 +81,12 @@ class TradingPipeline:
             target_price=270,
         )
 
+        trade_management = self._trade_management_engine.evaluate(
+            entry_price=250,
+            stop_loss=240,
+            current_price=250,
+        )
+
         return (
             market,
             indicators,
@@ -89,6 +95,7 @@ class TradingPipeline:
             risk,
             position_size,
             trade_plan,
+            trade_management,
         )
 
 
