@@ -7,6 +7,9 @@ Feeds historical Market objects into the TradingRuntime.
 from __future__ import annotations
 
 from backtesting.backtest_context import BacktestContext
+from shared.logger import get_logger
+
+LOGGER = get_logger(__name__)
 
 
 class ReplayRunner:
@@ -41,10 +44,9 @@ class ReplayRunner:
                     history,
                 )
 
-                print(
-                    "RETURN:",
+                LOGGER.debug(
+                    "Runtime returned: %s",
                     type(risk).__name__,
-                    risk,
                 )
 
                 if risk is not None:
@@ -56,18 +58,26 @@ class ReplayRunner:
                 processed += 1
 
                 if processed % 100 == 0:
-                    print(f"Processed {processed} candles...")
+                    LOGGER.info(
+                        "Processed %d candles",
+                        processed,
+                    )
 
-            except ValueError:
+            except ValueError as exc:
                 skipped += 1
 
-        # <-- OUTSIDE THE LOOP
+                LOGGER.debug(
+                    "Skipping candle: %s",
+                    exc,
+                )
 
         if last_market is not None:
             self.context.finalize(last_market)
 
-        print("\nReplay completed")
-        print(f"Processed : {processed}")
-        print(f"Skipped    : {skipped}")
+        LOGGER.info(
+            "Replay completed. Processed=%d Skipped=%d",
+            processed,
+            skipped,
+        )
 
         return processed

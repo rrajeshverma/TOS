@@ -38,3 +38,51 @@ def test_add_invalid_order_raises_value_error():
 
     with pytest.raises(ValueError, match="Invalid order type"):
         repo.add(object())
+
+
+def test_exists():
+    repo = OrderRepository()
+
+    repo.add({"order_id": "ORD001"})
+
+    assert repo.exists("ORD001")
+    assert not repo.exists("ORD999")
+
+
+def test_remove():
+    repo = OrderRepository()
+
+    repo.add({"order_id": "ORD001"})
+
+    repo.remove("ORD001")
+
+    assert repo.get("ORD001") is None
+
+
+def test_all():
+    repo = OrderRepository()
+
+    order1 = {"order_id": "ORD001"}
+    order2 = {"order_id": "ORD002"}
+
+    repo.add(order1)
+    repo.add(order2)
+
+    assert repo.all() == [order1, order2]
+
+
+def test_count():
+    repo = OrderRepository()
+
+    repo.add({"order_id": "ORD001"})
+    repo.add({"order_id": "ORD002"})
+
+    assert repo.count == 2
+
+
+def test_remove_unknown_order_is_safe():
+    repo = OrderRepository()
+
+    repo.remove("UNKNOWN")
+
+    assert repo.count == 0

@@ -97,3 +97,54 @@ def test_initialize_registers_dhan_client(
     startup.initialize_services()
 
     assert "dhan_client" in startup.services
+
+
+def test_startup_initial_state():
+    startup = Startup()
+
+    assert startup.services == {}
+    assert startup.services_initialized is False
+
+
+def test_shutdown_marks_services_uninitialized():
+    startup = Startup()
+
+    startup.services = {
+        "trading_runtime": Mock(),
+        "broker": Mock(),
+    }
+
+    startup.services_initialized = True
+
+    startup.shutdown()
+
+    assert startup.services_initialized is False
+
+
+@patch("runtime.startup.LOGGER")
+def test_log_banner(mock_logger):
+    startup = Startup()
+
+    startup.log_banner()
+
+    assert mock_logger.info.called
+
+
+@patch("runtime.startup.LOGGER")
+def test_log_health(mock_logger):
+    startup = Startup()
+
+    broker = Mock()
+    broker.is_connected.return_value = True
+
+    runtime = Mock()
+    runtime.state = "RUNNING"
+
+    startup.services = {
+        "broker": broker,
+        "trading_runtime": runtime,
+    }
+
+    startup.log_health()
+
+    assert mock_logger.info.called

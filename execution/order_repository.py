@@ -16,3 +16,16 @@ class OrderRepository:
 
     def get(self, order_id):
         return self._orders.get(order_id)
+
+    def exists(self, order_id) -> bool:
+        return order_id in self._orders
+
+    def remove(self, order_id):
+        self._orders.pop(order_id, None)
+
+    def all(self):
+        return list(self._orders.values())
+
+    @property
+    def count(self):
+        return len(self._orders)

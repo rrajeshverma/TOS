@@ -7,10 +7,15 @@ class RuntimeFactory:
 
     def create(self, mode: ExecutionMode, services: dict):
         if mode is ExecutionMode.PAPER:
-            return TradingRuntime(services)
+            return TradingRuntime(
+                services=services,
+                mode=mode,
+            )
 
         if mode is ExecutionMode.LIVE:
-            # Temporary until LiveTradingRuntime exists
-            return TradingRuntime(services)
+            return TradingRuntime(
+                services=services,
+                mode=mode,
+            )
 
         raise ValueError(f"Unsupported execution mode: {mode}")

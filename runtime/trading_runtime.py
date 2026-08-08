@@ -13,6 +13,7 @@ from shared.runtime_status import RuntimeStatus
 from runtime.market_clock import MarketClock
 from runtime.runtime_mode import RuntimeMode
 
+
 LOGGER = get_logger(__name__)
 
 REQUIRED_SERVICES = (
