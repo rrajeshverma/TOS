@@ -1,61 +1,45 @@
-from __future__ import annotations
-
-import random
-import logging
-from datetime import datetime
-from decimal import Decimal
-from collections.abc import Callable
-
-from brokers.dhan.models import BrokerTick
-
-LOGGER = logging.getLogger(__name__)
+import websocket
+import json
 
 
 class LiveMarketFeed:
-    """
-    Mock Market Feed (Temporary replacement for Dhan WebSocket)
-    """
+    def __init__(self, client_id: str, access_token: str):
+        self.client_id = client_id
+        self.access_token = access_token
 
-    def __init__(self) -> None:
-        self._tick_callback: Callable[[BrokerTick], None] | None = None
+    def _on_message(self, ws, message):
+        print("TICK:", message)
 
-    # ----------------------------------------------------
-    # PUBLIC METHODS
-    # ----------------------------------------------------
+    def _on_error(self, ws, error):
+        print("ERROR:", error)
 
-    def start(self) -> None:
-        LOGGER.info("Mock Market Feed started.")
+    def _on_close(self, ws, close_status_code, close_msg):
+        print("CLOSED")
 
-    def stop(self) -> None:
-        LOGGER.info("Mock Market Feed stopped.")
+    def _on_open(self, ws):
+        print("CONNECTED")
 
-    def subscribe(self, instruments: list[tuple]) -> None:
-        LOGGER.info("Subscribed (mock): %s", instruments)
+        # ✅ FIXED PAYLOAD (STRING IDS)
+        payload = {
+            "RequestCode": "15",
+            "InstrumentCount": "1",
+            "InstrumentList": [{"ExchangeSegment": "NSE_EQ", "SecurityId": "13"}],
+        }
 
-    def register_tick_callback(
-        self,
-        callback: Callable[[BrokerTick], None],
-    ) -> None:
-        self._tick_callback = callback
+        ws.send(json.dumps(payload))
 
-    # ----------------------------------------------------
-    # MOCK TICK GENERATOR
-    # ----------------------------------------------------
-
-    def generate_tick(self) -> None:
-        """
-        Call this manually or from loop to simulate ticks
-        """
-        if self._tick_callback is None:
-            return
-
-        price = 22000 + random.randint(-50, 50)
-
-        tick = BrokerTick(
-            symbol="NIFTY",
-            ltp=Decimal(str(price)),
-            volume=100,
-            timestamp=datetime.now(),
+    def run_forever(self):
+        url = (
+            f"wss://api-feed.dhan.co?"
+            f"version=2&token={self.access_token}&clientId={self.client_id}"
         )
 
-        self._tick_callback(tick)
+        ws = websocket.WebSocketApp(
+            url,
+            on_message=self._on_message,
+            on_error=self._on_error,
+            on_close=self._on_close,
+            on_open=self._on_open,
+        )
+
+        ws.run_forever()

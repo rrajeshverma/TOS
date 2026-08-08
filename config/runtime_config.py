@@ -15,6 +15,9 @@ class RuntimeConfig:
     mode: str = "PAPER"
     portfolio: str = "default"
 
+    dhan_client_id: str | None = None
+    dhan_access_token: str | None = None
+
     def validate(self) -> None:
         if self.broker not in {"paper", "dhan"}:
             raise InvalidConfigurationError(f"Unsupported broker: {self.broker}")

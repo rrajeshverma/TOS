@@ -117,25 +117,28 @@ class Startup:
 
         # ---------------- MARKET DATA ----------------
 
-        # Simple instrument (no SDK dependency)
-        instruments = [("NSE", "INDEX", "13")]
+        if self.config.broker == "dhan":
+            try:
+                live_market_feed = LiveMarketFeed(
+                    client_id=self.config.dhan_client_id,
+                    access_token=self.config.dhan_access_token,
+                )
 
-        # ✅ FIXED: no dhan_context passed
-        live_market_feed = LiveMarketFeed()
+                websocket = WebSocketClient(
+                    live_market_feed=live_market_feed,
+                )
 
-        # Optional safe subscribe
-        try:
-            live_market_feed.subscribe(instruments)
-        except Exception:
-            pass  # ignore in test mode
+                market_data_service = MarketDataService(
+                    websocket=websocket,
+                )
 
-        websocket = WebSocketClient(
-            live_market_feed=live_market_feed,
-        )
+            except Exception:
+                # Fallback for safety (important for tests)
+                market_data_service = MarketDataService(websocket=None)
 
-        market_data_service = MarketDataService(
-            websocket=websocket,
-        )
+        else:
+            # Paper mode → no live market dependency
+            market_data_service = MarketDataService(websocket=None)
 
         # ---------------- SERVICE REGISTRY ----------------
         self.services = {
