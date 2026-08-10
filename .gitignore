@@ -26,3 +26,6 @@ Thumbs.db
 .coverage
 htmlcov/
 journal/trade_journal.csv
+
+backups/
+*.zip
