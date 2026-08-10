@@ -50,11 +50,27 @@ class OrderPoller:
     # CORE LOGIC
     # -----------------------------------
     def _poll(self):
-        for order_id, broker_order_id in list(self.order_service._order_map.items()):
-            res = self.order_service.client.get_order_status(broker_order_id)[0]
+        for order_id in list(self.order_service.get_order_map().keys()):
+            res = self.order_service.get_order_status(order_id)
 
-            status = res["orderStatus"]
-            filled_qty = res["filledQty"]
+            # 🔥 Handle real vs paper mode
+            if hasattr(self.order_service, "client"):
+                res = self.order_service.get_order_status(order_id)
+
+                status = res["orderStatus"]
+                filled_qty = res["filledQty"]
+            else:
+
+                # 🧪 PAPER MODE SIMULATION
+                res = {
+                    "orderStatus": "TRADED",
+                    "filledQty": 1,
+                    "averageTradedPrice": 100.0,
+                }
+
+                status = res["orderStatus"]
+                filled_qty = res["filledQty"]
+
 
             prev_filled = self.order_service._fills.get(order_id, 0)
 
@@ -93,25 +109,40 @@ class OrderPoller:
             print(f"[WARN] Order not found for {order_id}")
             return
 
-        position = self.position_manager.open_position(
-            order=order,
-            quantity=new_fill_qty,
-            price=price,
-        )
+        # ✅ FIXED
+        side = order.side
 
-        if self.position_book:
-            self.position_book.add_position(
-                position.position_id,
-                position,
+        if side == "BUY":
+            position = self.position_manager.open_position(
+                order=order,
+                quantity=new_fill_qty,
+                price=price,
             )
 
+            if self.position_book:
+                self.position_book.add_position(
+                    position.position_id,
+                    position,
+                )
+
+        elif side == "SELL":
+            for pos_id, data in list(self.position_book.get_positions().items()):
+                position = data["position"]
+
+                if position.quantity == new_fill_qty:
+                    print(f"📕 Closing via SELL: {pos_id}")
+                    trade = self.position_book.close_position(pos_id)
+
+                    if trade and hasattr(self, "trade_history") and self.trade_history:
+                        self.trade_history.record_trade(trade)
+                    break
     # -----------------------------------
     # CLEANUP
     # -----------------------------------
     def _cleanup(self, order_id):
-        self.order_service._order_map.pop(order_id, None)
+        self.order_service.remove_order(order_id)
         self.order_service._fills.pop(order_id, None)
-        self.order_service._orders.pop(order_id, None)
+        self.order_service.orders.pop(order_id, None)
 
     def _handle_fill(self, fill):
         if not hasattr(self, "trade_ledger") or self.trade_ledger is None:

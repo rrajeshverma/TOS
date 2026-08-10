@@ -1,30 +1,72 @@
+import time
+
+
 class PaperPositionBook:
     def __init__(self):
-        self._positions = {}
+        self.positions = {}
 
-    def record(self, trade):
-        if trade is None:
-            raise ValueError("trade cannot be None")
+    # -----------------------------------
+    # ADD POSITION
+    # -----------------------------------
+    def add_position(self, position_id, position):
+        self.positions[position_id] = {
+            "position": position,
+            "entry_price": position.average_price,
+            "quantity": position.quantity,
+            "entry_time": time.time(),
+        }
 
-        symbol = trade["symbol"]
-        quantity = trade["quantity"]
-        price = trade["price"]
+    # -----------------------------------
+    # GET POSITIONS
+    # -----------------------------------
+    def get_positions(self):
+        return self.positions
 
-        if trade["side"] == "SELL":
-            quantity = -quantity
+    # -----------------------------------
+    # CALCULATE TOTAL PnL
+    # -----------------------------------
+    def calculate_pnl(self):
+        total_pnl = 0
 
-        if symbol not in self._positions:
-            self._positions[symbol] = {
-                "symbol": symbol,
-                "quantity": 0,
-                "price": price,
-            }
+        for data in self.positions.values():
+            position = data["position"]
+            entry_price = data["entry_price"]
+            qty = data["quantity"]
 
-        self._positions[symbol]["quantity"] += quantity
-        self._positions[symbol]["price"] = price
+            current_price = position.last_traded_price
 
-    def get(self, symbol):
-        return self._positions.get(symbol)
+            pnl = (current_price - entry_price) * qty
+            total_pnl += pnl
 
-    def positions(self):
-        return list(self._positions.values())
+        return total_pnl
+
+    # -----------------------------------
+    # CLOSE POSITION
+    # -----------------------------------
+    def close_position(self, position_id, exit_price=None, reason="UNKNOWN"):
+        data = self.positions.pop(position_id, None)
+
+        if not data:
+            return None
+
+        position = data["position"]
+        entry_price = data["entry_price"]
+        qty = data["quantity"]
+
+        if exit_price is None:
+            exit_price = position.last_traded_price
+
+        pnl = (exit_price - entry_price) * qty
+
+        trade = {
+            "position_id": position_id,
+            "entry_price": entry_price,
+            "exit_price": exit_price,
+            "quantity": qty,
+            "pnl": pnl,
+            "reason": reason,
+        }
+
+        print(f"📕 Position closed: {position_id} | PnL: {pnl}")
+
+        return trade
