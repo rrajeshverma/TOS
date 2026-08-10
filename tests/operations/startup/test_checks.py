@@ -1,6 +1,6 @@
 from operations.startup.checks import (
-    always_pass,
     always_fail,
+    always_pass,
     capital_check,
     risk_check,
 )

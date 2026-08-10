@@ -163,9 +163,9 @@ def test_realized_pnl():
     manager = PositionManager()
 
     pnl = manager.realized_pnl(
-        entry_price=Decimal("100"),
-        exit_price=Decimal("110"),
+        entry_price=Decimal(100),
+        exit_price=Decimal(110),
         quantity=10,
     )
 
-    assert pnl == Decimal("100")
+    assert pnl == Decimal(100)

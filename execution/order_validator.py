@@ -35,7 +35,4 @@ class OrderValidator:
         ):
             return False
 
-        if order.quantity <= 0:
-            return False
-
-        return True
+        return not order.quantity <= 0

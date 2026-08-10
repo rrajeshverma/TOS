@@ -3,18 +3,16 @@ from unittest.mock import Mock
 
 import pytest
 
-
 from domain.decision import Decision
 from domain.market import Market
 from domain.risk import Risk
 from execution.execution_manager import ExecutionManager
+from execution.execution_request import ExecutionRequest
 from execution.execution_result import ExecutionResult
 from shared.enums import (
     DecisionStatus,
     Signal,
 )
-
-from execution.execution_request import ExecutionRequest
 
 
 def create_risk(

@@ -14,7 +14,6 @@ from strategies.filters.trade_limit_filter import (
     TradeLimitFilter,
 )
 
-
 trade_limit = TradeLimitFilter(
     max_trades=2,
 )

@@ -1,6 +1,6 @@
 from portfolio.strategy_context import StrategyContext
-from portfolio.strategy_loader import StrategyLoader
 from portfolio.strategy_factory import StrategyFactory
+from portfolio.strategy_loader import StrategyLoader
 from portfolio.strategy_performance import StrategyPerformance
 from portfolio.strategy_ranker import StrategyRanker
 

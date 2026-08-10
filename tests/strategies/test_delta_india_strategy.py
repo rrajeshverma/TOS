@@ -1,6 +1,5 @@
 from decimal import Decimal
 
-
 from shared.enums import Signal
 from strategies.delta_india_strategy import DeltaIndiaStrategy
 from tests.helpers.domain_factory import (
@@ -32,8 +31,8 @@ def test_big_candle_returns_no_signal():
     strategy = DeltaIndiaStrategy()
 
     market = make_market(
-        open=Decimal("100"),
-        close=Decimal("350"),  # body = 250
+        open=Decimal(100),
+        close=Decimal(350),  # body = 250
     )
 
     indicators = make_indicator_set()

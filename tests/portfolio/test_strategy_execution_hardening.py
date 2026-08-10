@@ -1,8 +1,8 @@
 from portfolio.strategy_executor import StrategyExecutor
+from portfolio.strategy_lifecycle import StrategyLifecycle
 from portfolio.strategy_pipeline import StrategyPipeline
 from portfolio.strategy_scheduler import StrategyScheduler
 from portfolio.strategy_validator import StrategyValidator
-from portfolio.strategy_lifecycle import StrategyLifecycle
 
 
 class FakeStrategy:

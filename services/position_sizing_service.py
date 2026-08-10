@@ -9,7 +9,7 @@ Description : Calculates risk-based position size.
 =========================================================
 """
 
-from decimal import Decimal, ROUND_DOWN
+from decimal import ROUND_DOWN, Decimal
 
 from domain.position_size import PositionSize
 
@@ -31,7 +31,7 @@ class PositionSizingService:
 
         Formula
 
-        Risk Per Lot = Stop Distance × Lot Size
+        Risk Per Lot = Stop Distance x Lot Size
 
         Lots = Risk Per Trade // Risk Per Lot
         """

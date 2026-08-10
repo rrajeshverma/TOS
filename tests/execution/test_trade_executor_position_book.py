@@ -1,12 +1,10 @@
 from decimal import Decimal
 
-from execution.trade_executor import TradeExecutor
-from services.position_manager import PositionManager
-from services.position_book import PositionBook
-
 from engines.order_factory import OrderFactory
+from execution.trade_executor import TradeExecutor
+from services.position_book import PositionBook
+from services.position_manager import PositionManager
 from shared.enums import Broker, OrderSide
-
 from tests.test_trade_factory import create_trade
 
 
@@ -17,7 +15,7 @@ def create_order():
         trade=trade,
         broker=Broker.DHAN,
         side=OrderSide.BUY,
-        price=Decimal("25000"),
+        price=Decimal(25000),
     )
 
 

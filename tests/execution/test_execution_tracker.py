@@ -3,7 +3,6 @@ import pytest
 from execution.execution_status import ExecutionStatus
 from execution.execution_tracker import ExecutionTracker
 
-
 ORDER_ID = "ORDER-1"
 
 

@@ -4,7 +4,6 @@ Tests for Exit Service.
 
 from datetime import datetime, time
 from decimal import Decimal
-
 from unittest.mock import Mock
 
 from domain.decision import Decision
@@ -72,9 +71,9 @@ def create_position():
     trade = Trade(
         trade_id=generate_trade_id(),
         risk=risk,
-        entry_price=Decimal("100"),
-        stop_loss=Decimal("90"),
-        target=Decimal("120"),
+        entry_price=Decimal(100),
+        stop_loss=Decimal(90),
+        target=Decimal(120),
         quantity=65,
         entry_time=datetime.now(),
         status=TradeStatus.OPEN,
@@ -87,7 +86,7 @@ def create_position():
         broker=Broker.DHAN,
         side=OrderSide.BUY,
         quantity=65,
-        requested_price=Decimal("100"),
+        requested_price=Decimal(100),
         status=OrderStatus.EXECUTED,
     )
 
@@ -95,8 +94,8 @@ def create_position():
         position_id=generate_position_id(),
         order=order,
         quantity=65,
-        average_price=Decimal("100"),
-        last_traded_price=Decimal("100"),
+        average_price=Decimal(100),
+        last_traded_price=Decimal(100),
         status=TradeStatus.OPEN,
         opened_at=datetime.now(),
     )
@@ -109,7 +108,7 @@ def test_exit_service_closes_position_on_target():
 
     result = service.evaluate(
         position,
-        Decimal("121"),
+        Decimal(121),
         time(10, 0),
     )
 
@@ -125,7 +124,7 @@ def test_exit_service_closes_position_on_stop_loss():
 
     result = service.evaluate(
         position,
-        Decimal("89"),
+        Decimal(89),
         time(10, 0),
     )
 
@@ -141,7 +140,7 @@ def test_exit_service_closes_position_on_force_exit():
 
     result = service.evaluate(
         position,
-        Decimal("105"),
+        Decimal(105),
         time(15, 16),
     )
 
@@ -157,7 +156,7 @@ def test_exit_service_keeps_position_open_when_no_exit():
 
     result = service.evaluate(
         position,
-        Decimal("110"),
+        Decimal(110),
         time(10, 0),
     )
 
@@ -173,7 +172,7 @@ def test_no_exit_does_not_return_trade():
 
     result = service.evaluate(
         position,
-        Decimal("110"),
+        Decimal(110),
         time(10, 0),
     )
 
@@ -187,7 +186,7 @@ def test_closed_trade_status_is_closed():
 
     result = service.evaluate(
         position,
-        Decimal("121"),
+        Decimal(121),
         time(10, 0),
     )
 
@@ -201,11 +200,11 @@ def test_closed_trade_exit_price_set():
 
     result = service.evaluate(
         position,
-        Decimal("121"),
+        Decimal(121),
         time(10, 0),
     )
 
-    assert result["trade"].exit_price == Decimal("121")
+    assert result["trade"].exit_price == Decimal(121)
 
 
 def test_closed_trade_exit_reason_set():
@@ -215,7 +214,7 @@ def test_closed_trade_exit_reason_set():
 
     result = service.evaluate(
         position,
-        Decimal("89"),
+        Decimal(89),
         time(10, 0),
     )
 
@@ -229,11 +228,11 @@ def test_profit_pnl_calculated():
 
     result = service.evaluate(
         position,
-        Decimal("120"),
+        Decimal(120),
         time(10, 0),
     )
 
-    assert result["trade"].pnl == Decimal("1300")
+    assert result["trade"].pnl == Decimal(1300)
 
 
 def test_loss_pnl_calculated():
@@ -243,11 +242,11 @@ def test_loss_pnl_calculated():
 
     result = service.evaluate(
         position,
-        Decimal("90"),
+        Decimal(90),
         time(10, 0),
     )
 
-    assert result["trade"].pnl == Decimal("-650")
+    assert result["trade"].pnl == Decimal(-650)
 
 
 def test_trade_journal_called_once():
@@ -261,7 +260,7 @@ def test_trade_journal_called_once():
 
     service.evaluate(
         position,
-        Decimal("121"),
+        Decimal(121),
         time(10, 0),
     )
 
@@ -279,7 +278,7 @@ def test_trade_journal_not_called_when_no_exit():
 
     service.evaluate(
         position,
-        Decimal("110"),
+        Decimal(110),
         time(10, 0),
     )
 
@@ -301,13 +300,13 @@ def test_position_manager_called_once():
 
     service.evaluate(
         position,
-        Decimal("121"),
+        Decimal(121),
         time(10, 0),
     )
 
     manager.close_position.assert_called_once_with(
         position,
-        Decimal("121"),
+        Decimal(121),
     )
 
 
@@ -322,7 +321,7 @@ def test_position_manager_not_called_when_no_exit():
 
     service.evaluate(
         position,
-        Decimal("110"),
+        Decimal(110),
         time(10, 0),
     )
 
@@ -341,13 +340,13 @@ def test_exit_manager_called_once():
 
     service.evaluate(
         position,
-        Decimal("110"),
+        Decimal(110),
         time(10, 0),
     )
 
     exit_manager.check_exit.assert_called_once_with(
         position,
-        Decimal("110"),
+        Decimal(110),
         time(10, 0),
     )
 
@@ -359,7 +358,7 @@ def test_closed_result_contains_trade():
 
     result = service.evaluate(
         position,
-        Decimal("121"),
+        Decimal(121),
         time(10, 0),
     )
 

@@ -10,17 +10,17 @@ def test_create_first_candle():
 
     tick = MarketTick(
         symbol="NIFTY",
-        ltp=Decimal("25000"),
+        ltp=Decimal(25000),
         volume=100,
         timestamp=datetime.now(),
     )
 
     candle = builder.update(tick)
 
-    assert candle.open == Decimal("25000")
-    assert candle.high == Decimal("25000")
-    assert candle.low == Decimal("25000")
-    assert candle.close == Decimal("25000")
+    assert candle.open == Decimal(25000)
+    assert candle.high == Decimal(25000)
+    assert candle.low == Decimal(25000)
+    assert candle.close == Decimal(25000)
 
 
 def test_update_high_low_close():
@@ -28,14 +28,14 @@ def test_update_high_low_close():
 
     t1 = MarketTick(
         symbol="NIFTY",
-        ltp=Decimal("25000"),
+        ltp=Decimal(25000),
         volume=100,
         timestamp=datetime.now(),
     )
 
     t2 = MarketTick(
         symbol="NIFTY",
-        ltp=Decimal("25050"),
+        ltp=Decimal(25050),
         volume=200,
         timestamp=datetime.now(),
     )
@@ -44,5 +44,5 @@ def test_update_high_low_close():
 
     candle = builder.update(t2)
 
-    assert candle.high == Decimal("25050")
-    assert candle.close == Decimal("25050")
+    assert candle.high == Decimal(25050)
+    assert candle.close == Decimal(25050)

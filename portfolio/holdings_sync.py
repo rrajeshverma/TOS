@@ -47,11 +47,7 @@ class HoldingsSync:
             self.broker_holdings.clear()
 
             for holding in holdings:
-                if (
-                    isinstance(holding, dict)
-                    and "securityId" in holding
-                    and "quantity" in holding
-                ):
+                if isinstance(holding, dict) and "securityId" in holding and "quantity" in holding:
                     self.broker_holdings[holding["securityId"]] = holding["quantity"]
 
         return holdings

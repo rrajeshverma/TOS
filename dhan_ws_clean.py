@@ -1,7 +1,9 @@
 import asyncio
-import websockets
 import json
 
+import websockets
+
+# ruff: noqa: E501
 ACCESS_TOKEN = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJkaGFuIiwicGFydG5lcklkIjoiIiwiZXhwIjoxNzg2MjY2OTQ2LCJpYXQiOjE3ODYxODA1NDYsInRva2VuQ29uc3VtZXJUeXBlIjoiU0VMRiIsIndlYmhvb2tVcmwiOiIiLCJkaGFuQ2xpZW50SWQiOiIxMTAwMTE2NzMwIn0.iAzU2iXNV08F-FcNtSLYfuQXy-V7EPsPFVhWxcKlFkuxGTuJU1tBKwvErZTeQSrB-FrRn-fXo3pQj0RFcybGwA"
 
 WS_URL = "wss://api-feed.dhan.co"

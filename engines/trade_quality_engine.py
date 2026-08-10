@@ -12,12 +12,11 @@ Description : Evaluates whether a strategy decision
 
 from __future__ import annotations
 
+from config.risk import MAX_TRADES_PER_DAY
 from domain.decision import Decision
 from domain.trade_quality import TradeQuality
 from shared.enums import DecisionStatus, Signal
 from shared.logger import get_logger
-
-from config.risk import MAX_TRADES_PER_DAY
 
 
 class TradeQualityEngine:

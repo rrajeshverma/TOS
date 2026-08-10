@@ -12,7 +12,6 @@ from brokers.models import (
     Position,
     ProductType,
 )
-
 from domain.instrument import Instrument
 
 
@@ -67,7 +66,7 @@ def test_get_positions():
     assert positions[0].quantity == 65
     assert positions[0].average_price == Decimal("245.50")
     assert positions[0].last_price == Decimal("250.25")
-    assert positions[0].pnl == Decimal("0")
+    assert positions[0].pnl == Decimal(0)
 
 
 class DummyHoldingClient:

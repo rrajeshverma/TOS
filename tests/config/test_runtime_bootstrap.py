@@ -1,4 +1,5 @@
 import pytest
+
 from config.runtime_bootstrap import RuntimeBootstrap
 
 

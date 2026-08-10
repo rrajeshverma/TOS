@@ -14,5 +14,3 @@ class LiveExecutionEngine(ExecutionEngine):
     No behavior is overridden yet—the base ExecutionEngine
     already contains the required orchestration.
     """
-
-    pass

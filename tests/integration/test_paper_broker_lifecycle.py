@@ -1,13 +1,13 @@
 from decimal import Decimal
 
-from brokers.paper_broker import PaperBroker
 from brokers.models import (
     Order,
     OrderSide,
+    OrderStatus,
     OrderType,
     ProductType,
-    OrderStatus,
 )
+from brokers.paper_broker import PaperBroker
 
 
 def create_order():
@@ -17,7 +17,7 @@ def create_order():
         quantity=65,
         order_type=OrderType.MARKET,
         product=ProductType.INTRADAY,
-        price=Decimal("25000"),
+        price=Decimal(25000),
         status=OrderStatus.PENDING,
     )
 
@@ -96,7 +96,7 @@ def test_get_funds():
 
     funds = broker.get_funds()
 
-    assert funds.available_cash == Decimal("1000000")
+    assert funds.available_cash == Decimal(1000000)
 
 
 def test_empty_positions():

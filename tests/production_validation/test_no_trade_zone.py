@@ -14,25 +14,23 @@ RSI 45-55 -> NO TRADE
 
 from decimal import Decimal
 
+from engines.strategy_engine import StrategyEngine
+from shared.enums import Signal
 from tests.helpers.domain_factory import (
     make_indicator_set,
     make_market,
 )
 
-from engines.strategy_engine import StrategyEngine
-
-from shared.enums import Signal
-
 
 def test_rsi_44_allows_bearish_signal():
     market = make_market(
-        close=Decimal("100"),
+        close=Decimal(100),
     )
 
     indicators = make_indicator_set(
-        ema_high=Decimal("110"),
-        ema_low=Decimal("105"),
-        vwap=Decimal("108"),
+        ema_high=Decimal(110),
+        ema_low=Decimal(105),
+        vwap=Decimal(108),
         rsi=44,
     )
 
@@ -46,13 +44,13 @@ def test_rsi_44_allows_bearish_signal():
 
 def test_rsi_45_is_no_trade():
     market = make_market(
-        close=Decimal("120"),
+        close=Decimal(120),
     )
 
     indicators = make_indicator_set(
-        ema_high=Decimal("110"),
-        ema_low=Decimal("100"),
-        vwap=Decimal("105"),
+        ema_high=Decimal(110),
+        ema_low=Decimal(100),
+        vwap=Decimal(105),
         rsi=45,
     )
 
@@ -66,13 +64,13 @@ def test_rsi_45_is_no_trade():
 
 def test_rsi_50_is_no_trade():
     market = make_market(
-        close=Decimal("120"),
+        close=Decimal(120),
     )
 
     indicators = make_indicator_set(
-        ema_high=Decimal("110"),
-        ema_low=Decimal("100"),
-        vwap=Decimal("105"),
+        ema_high=Decimal(110),
+        ema_low=Decimal(100),
+        vwap=Decimal(105),
         rsi=50,
     )
 
@@ -86,13 +84,13 @@ def test_rsi_50_is_no_trade():
 
 def test_rsi_55_is_no_trade():
     market = make_market(
-        close=Decimal("120"),
+        close=Decimal(120),
     )
 
     indicators = make_indicator_set(
-        ema_high=Decimal("110"),
-        ema_low=Decimal("100"),
-        vwap=Decimal("105"),
+        ema_high=Decimal(110),
+        ema_low=Decimal(100),
+        vwap=Decimal(105),
         rsi=55,
     )
 
@@ -106,13 +104,13 @@ def test_rsi_55_is_no_trade():
 
 def test_rsi_56_allows_bullish_signal():
     market = make_market(
-        close=Decimal("120"),
+        close=Decimal(120),
     )
 
     indicators = make_indicator_set(
-        ema_high=Decimal("110"),
-        ema_low=Decimal("100"),
-        vwap=Decimal("105"),
+        ema_high=Decimal(110),
+        ema_low=Decimal(100),
+        vwap=Decimal(105),
         rsi=56,
     )
 

@@ -40,7 +40,7 @@ def test_calculate_exposure():
 
     aggregator = PositionAggregator()
 
-    assert aggregator.exposure(positions) == Decimal("1625000")
+    assert aggregator.exposure(positions) == Decimal(1625000)
 
 
 def test_unrealized_pnl():
@@ -50,7 +50,7 @@ def test_unrealized_pnl():
 
     aggregator = PositionAggregator()
 
-    assert aggregator.unrealized_pnl(positions) == Decimal("6500")
+    assert aggregator.unrealized_pnl(positions) == Decimal(6500)
 
 
 def test_position_count_none_returns_zero():
@@ -62,7 +62,7 @@ def test_position_count_none_returns_zero():
 def test_exposure_empty_positions():
     aggregator = PositionAggregator()
 
-    assert aggregator.exposure([]) == Decimal("0")
+    assert aggregator.exposure([]) == Decimal(0)
 
 
 def test_exposure_multiple_positions():
@@ -73,13 +73,13 @@ def test_exposure_multiple_positions():
 
     aggregator = PositionAggregator()
 
-    assert aggregator.exposure(positions) == Decimal("1630000")
+    assert aggregator.exposure(positions) == Decimal(1630000)
 
 
 def test_unrealized_pnl_empty_positions():
     aggregator = PositionAggregator()
 
-    assert aggregator.unrealized_pnl([]) == Decimal("0")
+    assert aggregator.unrealized_pnl([]) == Decimal(0)
 
 
 def test_unrealized_pnl_multiple_positions():
@@ -90,13 +90,13 @@ def test_unrealized_pnl_multiple_positions():
 
     aggregator = PositionAggregator()
 
-    assert aggregator.unrealized_pnl(positions) == Decimal("6000")
+    assert aggregator.unrealized_pnl(positions) == Decimal(6000)
 
 
 def test_build_snapshot_returns_snapshot():
     aggregator = PositionAggregator()
 
-    snapshot = aggregator.build_snapshot([], Decimal("100000"))
+    snapshot = aggregator.build_snapshot([], Decimal(100000))
 
     assert isinstance(snapshot, PortfolioSnapshot)
 
@@ -109,7 +109,7 @@ def test_build_snapshot_open_positions():
 
     aggregator = PositionAggregator()
 
-    snapshot = aggregator.build_snapshot(positions, Decimal("100000"))
+    snapshot = aggregator.build_snapshot(positions, Decimal(100000))
 
     assert snapshot.open_positions == 2
 
@@ -123,10 +123,10 @@ def test_build_snapshot_unrealized_pnl():
 
     snapshot = aggregator.build_snapshot(
         positions,
-        Decimal("100000"),
+        Decimal(100000),
     )
 
-    assert snapshot.unrealized_pnl == Decimal("6500")
+    assert snapshot.unrealized_pnl == Decimal(6500)
 
 
 def test_build_snapshot_realized_pnl():
@@ -134,11 +134,11 @@ def test_build_snapshot_realized_pnl():
 
     snapshot = aggregator.build_snapshot(
         [],
-        Decimal("100000"),
-        realized_pnl=Decimal("500"),
+        Decimal(100000),
+        realized_pnl=Decimal(500),
     )
 
-    assert snapshot.realized_pnl == Decimal("500")
+    assert snapshot.realized_pnl == Decimal(500)
 
 
 def test_build_snapshot_equity_without_positions():
@@ -146,10 +146,10 @@ def test_build_snapshot_equity_without_positions():
 
     snapshot = aggregator.build_snapshot(
         [],
-        Decimal("100000"),
+        Decimal(100000),
     )
 
-    assert snapshot.equity == Decimal("100000")
+    assert snapshot.equity == Decimal(100000)
 
 
 def test_build_snapshot_equity_with_realized_and_unrealized():
@@ -161,11 +161,11 @@ def test_build_snapshot_equity_with_realized_and_unrealized():
 
     snapshot = aggregator.build_snapshot(
         positions,
-        Decimal("100000"),
-        realized_pnl=Decimal("500"),
+        Decimal(100000),
+        realized_pnl=Decimal(500),
     )
 
-    assert snapshot.equity == Decimal("107000")
+    assert snapshot.equity == Decimal(107000)
 
 
 def test_build_snapshot_zero_open_positions():
@@ -173,7 +173,7 @@ def test_build_snapshot_zero_open_positions():
 
     snapshot = aggregator.build_snapshot(
         [],
-        Decimal("100000"),
+        Decimal(100000),
     )
 
     assert snapshot.open_positions == 0

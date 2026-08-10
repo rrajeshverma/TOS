@@ -53,15 +53,15 @@ def test_live_decision_to_trade_flow():
     risk = risk_engine.evaluate(
         decision,
         trades_today=0,
-        daily_loss=Decimal("0"),
+        daily_loss=Decimal(0),
     )
 
     assert risk.is_approved is True
 
     trade = trade_factory.create(
         risk,
-        entry_price=Decimal("100"),
-        stop_loss=Decimal("90"),
+        entry_price=Decimal(100),
+        stop_loss=Decimal(90),
     )
 
     assert trade is not None
@@ -82,20 +82,20 @@ def test_trade_to_order_flow():
     risk = risk_engine.evaluate(
         decision,
         trades_today=0,
-        daily_loss=Decimal("0"),
+        daily_loss=Decimal(0),
     )
 
     trade = trade_factory.create(
         risk,
-        entry_price=Decimal("100"),
-        stop_loss=Decimal("90"),
+        entry_price=Decimal(100),
+        stop_loss=Decimal(90),
     )
 
     order = order_factory.create(
         trade,
         Broker.DHAN,
         OrderSide.BUY,
-        Decimal("100"),
+        Decimal(100),
     )
 
     assert order is not None
@@ -126,7 +126,7 @@ def test_risk_rejects_invalid_loss():
     risk = risk_engine.evaluate(
         decision,
         trades_today=10,
-        daily_loss=Decimal("100000"),
+        daily_loss=Decimal(100000),
     )
 
     assert risk.is_approved is False

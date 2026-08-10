@@ -51,10 +51,7 @@ def test_indicator_engine_returns_indicator_set():
 def test_indicator_engine_none_history():
     engine = IndicatorEngine()
 
-    with pytest.raises(
-        ValueError,
-        match="Market history is None.",
-    ):
+    with pytest.raises(ValueError, match=r"Market history is None."):
         engine.calculate(None)
 
 

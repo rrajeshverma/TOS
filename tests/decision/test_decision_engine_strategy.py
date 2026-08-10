@@ -1,7 +1,7 @@
 from decision.decision_engine import DecisionEngine
-from strategy.strategy_registry import StrategyRegistry
-from strategy.strategy import Strategy
 from domain.indicator_set import IndicatorSet
+from strategy.strategy import Strategy
+from strategy.strategy_registry import StrategyRegistry
 
 
 class BuyStrategy(Strategy):

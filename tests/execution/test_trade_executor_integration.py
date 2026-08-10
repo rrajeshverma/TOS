@@ -2,7 +2,6 @@ from decimal import Decimal
 
 from execution.trade_executor import TradeExecutor
 from services.position_manager import PositionManager
-
 from tests.test_trade_factory import create_trade
 
 
@@ -42,7 +41,7 @@ def test_trade_executor_opens_position():
     position = executor.execute(
         trade,
         quantity=trade.quantity,
-        price=Decimal("25000"),
+        price=Decimal(25000),
     )
 
     assert position.is_open
@@ -55,7 +54,7 @@ def test_trade_executor_requires_trade():
         executor.execute(
             None,
             quantity=65,
-            price=Decimal("25000"),
+            price=Decimal(25000),
         )
         assert False
     except ValueError:

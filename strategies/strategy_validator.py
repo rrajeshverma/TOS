@@ -1,3 +1,5 @@
+from typing import ClassVar
+
 from config.config_manager import ConfigManager
 from config.validators import (
     validate_required,
@@ -6,7 +8,7 @@ from config.validators import (
 
 
 class StrategyValidator:
-    SUPPORTED_TIMEFRAMES = {
+    SUPPORTED_TIMEFRAMES: ClassVar[set[str]] = {
         "1m",
         "3m",
         "5m",

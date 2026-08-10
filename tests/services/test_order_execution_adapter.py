@@ -6,9 +6,9 @@ Version     : 1.1.0
 =========================================================
 """
 
-import pytest
-
 from unittest.mock import Mock
+
+import pytest
 
 from services.order_execution_adapter import OrderExecutionAdapter
 
@@ -16,17 +16,14 @@ from services.order_execution_adapter import OrderExecutionAdapter
 def test_to_execution_order_none_raises_value_error():
     adapter = OrderExecutionAdapter()
 
-    with pytest.raises(ValueError, match="Order cannot be None."):
+    with pytest.raises(ValueError, match=r"Order cannot be None."):
         adapter.to_execution_order(None)
 
 
 def test_execute_without_broker_raises_runtime_error():
     adapter = OrderExecutionAdapter()
 
-    with pytest.raises(
-        RuntimeError,
-        match="Execution service is not configured.",
-    ):
+    with pytest.raises(RuntimeError, match=r"Execution service is not configured."):
         adapter.execute({"symbol": "NIFTY"})
 
 
@@ -93,10 +90,7 @@ def test_execute_broker_not_connected():
         idempotency=DummyIdempotency(),
     )
 
-    with pytest.raises(
-        RuntimeError,
-        match="Broker is not connected.",
-    ):
+    with pytest.raises(RuntimeError, match=r"Broker is not connected."):
         adapter.execute({"symbol": "NIFTY"})
 
 

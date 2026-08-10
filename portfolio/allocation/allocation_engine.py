@@ -75,13 +75,11 @@ class AllocationEngine:
         if amount is None:
             return 0
 
-        if amount < 0:
-            amount = 0
+        amount = max(amount, 0)
 
         remaining = self.capital - self.total_allocated()
 
-        if amount > remaining:
-            amount = remaining
+        amount = min(amount, remaining)
 
         self.allocations[strategy] = amount
 

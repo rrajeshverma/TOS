@@ -10,7 +10,6 @@ from monitoring.broker_connection_monitor import (
 from monitoring.broker_reconnect_manager import (
     BrokerReconnectManager,
 )
-
 from monitoring.runtime_health_report import RuntimeHealthReport
 
 
@@ -30,7 +29,5 @@ class RuntimeHealthService:
 
         return RuntimeHealthReport(
             broker=("CONNECTED" if self._monitor.is_connected() else "DISCONNECTED"),
-            reconnect=(
-                "AVAILABLE" if self._reconnect_manager.should_reconnect() else "BLOCKED"
-            ),
+            reconnect=("AVAILABLE" if self._reconnect_manager.should_reconnect() else "BLOCKED"),
         )

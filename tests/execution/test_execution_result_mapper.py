@@ -1,7 +1,7 @@
+from execution.execution_result import ExecutionResult
 from execution.execution_result_mapper import (
     ExecutionResultMapper,
 )
-from execution.execution_result import ExecutionResult
 
 
 def test_map_successful_broker_response():

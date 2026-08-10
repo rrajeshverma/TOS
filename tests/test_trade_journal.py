@@ -44,15 +44,15 @@ def create_trade():
 
     trade = TradeFactory().create(
         risk=risk,
-        entry_price=Decimal("25000"),
-        stop_loss=Decimal("24950"),
+        entry_price=Decimal(25000),
+        stop_loss=Decimal(24950),
     )
 
     # Simulate a completed trade
     object.__setattr__(trade, "status", TradeStatus.CLOSED)
-    object.__setattr__(trade, "exit_price", Decimal("25100"))
+    object.__setattr__(trade, "exit_price", Decimal(25100))
     object.__setattr__(trade, "exit_time", datetime.now())
-    object.__setattr__(trade, "pnl", Decimal("6500"))
+    object.__setattr__(trade, "pnl", Decimal(6500))
 
     return trade
 

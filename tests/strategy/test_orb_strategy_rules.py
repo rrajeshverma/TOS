@@ -1,5 +1,5 @@
-from strategy.orb_strategy import OrbStrategy
 from domain.indicator_set import IndicatorSet
+from strategy.orb_strategy import OrbStrategy
 
 
 def indicators(rsi=50.0):

@@ -9,11 +9,7 @@ class StrategyValidator:
         self,
         strategy,
     ):
-        return (
-            strategy is not None
-            and hasattr(strategy, "execute")
-            and callable(strategy.execute)
-        )
+        return strategy is not None and hasattr(strategy, "execute") and callable(strategy.execute)
 
     def validate(
         self,
@@ -26,6 +22,4 @@ class StrategyValidator:
         self,
         strategies,
     ):
-        return all(
-            self.validate(name, strategy) for name, strategy in strategies.items()
-        )
+        return all(self.validate(name, strategy) for name, strategy in strategies.items())

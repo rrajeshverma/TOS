@@ -90,7 +90,7 @@ def create_trade_flow():
     risk = RiskEngine().evaluate(
         decision,
         trades_today=0,
-        daily_loss=Decimal("0"),
+        daily_loss=Decimal(0),
     )
 
     return risk

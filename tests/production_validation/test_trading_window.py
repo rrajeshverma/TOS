@@ -10,7 +10,6 @@ from datetime import time
 
 from strategies.filters.time_filter import TimeFilter
 
-
 time_filter = TimeFilter(
     time(10, 15),
     time(14, 30),

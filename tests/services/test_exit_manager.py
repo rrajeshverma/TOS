@@ -17,8 +17,8 @@ from shared.enums import (
     DecisionStatus,
     ExitReason,
     OrderSide,
-    TradeStatus,
     Signal,
+    TradeStatus,
 )
 from utils.id_generator import (
     generate_decision_id,
@@ -28,9 +28,9 @@ from utils.id_generator import (
 
 
 def create_position(
-    entry_price=Decimal("100"),
-    stop_loss=Decimal("95"),
-    target=Decimal("120"),
+    entry_price=Decimal(100),
+    stop_loss=Decimal(95),
+    target=Decimal(120),
 ):
     market = Market(
         symbol="NIFTY",
@@ -111,7 +111,7 @@ def test_target_hit_returns_target():
 
     result = manager.check_exit(
         position,
-        Decimal("121"),
+        Decimal(121),
         time(10, 0),
     )
 
@@ -125,7 +125,7 @@ def test_stop_loss_hit_returns_stop_loss():
 
     result = manager.check_exit(
         position,
-        Decimal("94"),
+        Decimal(94),
         time(10, 0),
     )
 
@@ -139,7 +139,7 @@ def test_force_exit_returns_force_exit():
 
     result = manager.check_exit(
         position,
-        Decimal("105"),
+        Decimal(105),
         time(15, 16),
     )
 
@@ -153,7 +153,7 @@ def test_no_exit_returns_none():
 
     result = manager.check_exit(
         position,
-        Decimal("110"),
+        Decimal(110),
         time(10, 0),
     )
 
@@ -164,12 +164,12 @@ def test_target_equal_to_target_returns_target():
     manager = ExitManager()
 
     position = create_position(
-        target=Decimal("120"),
+        target=Decimal(120),
     )
 
     result = manager.check_exit(
         position,
-        Decimal("120"),
+        Decimal(120),
         time(10, 0),
     )
 
@@ -180,12 +180,12 @@ def test_stop_loss_equal_to_stop_loss_returns_stop_loss():
     manager = ExitManager()
 
     position = create_position(
-        stop_loss=Decimal("95"),
+        stop_loss=Decimal(95),
     )
 
     result = manager.check_exit(
         position,
-        Decimal("95"),
+        Decimal(95),
         time(10, 0),
     )
 
@@ -199,7 +199,7 @@ def test_force_exit_at_exact_cutoff():
 
     result = manager.check_exit(
         position,
-        Decimal("110"),
+        Decimal(110),
         ExitManager.FORCE_EXIT_TIME,
     )
 
@@ -213,7 +213,7 @@ def test_target_has_priority_over_force_exit():
 
     result = manager.check_exit(
         position,
-        Decimal("121"),
+        Decimal(121),
         time(15, 30),
     )
 
@@ -227,7 +227,7 @@ def test_stop_loss_has_priority_over_force_exit():
 
     result = manager.check_exit(
         position,
-        Decimal("94"),
+        Decimal(94),
         time(15, 30),
     )
 
@@ -238,13 +238,13 @@ def test_target_has_priority_when_both_target_and_stop_loss_match():
     manager = ExitManager()
 
     position = create_position(
-        stop_loss=Decimal("120"),
-        target=Decimal("120"),
+        stop_loss=Decimal(120),
+        target=Decimal(120),
     )
 
     result = manager.check_exit(
         position,
-        Decimal("120"),
+        Decimal(120),
         time(10, 0),
     )
 
@@ -258,7 +258,7 @@ def test_before_force_exit_time_returns_none():
 
     result = manager.check_exit(
         position,
-        Decimal("110"),
+        Decimal(110),
         time(15, 14, 59),
     )
 

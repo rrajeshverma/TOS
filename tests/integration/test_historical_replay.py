@@ -1,7 +1,7 @@
 from unittest.mock import Mock
 
-from runtime.replay_runner import ReplayRunner
 from market.replay_market_feed import ReplayMarketFeed
+from runtime.replay_runner import ReplayRunner
 
 
 def test_historical_replay_processes_complete_session():

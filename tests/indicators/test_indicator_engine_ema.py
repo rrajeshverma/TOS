@@ -1,6 +1,6 @@
+from domain.indicator_set import IndicatorSet
 from indicators.indicator_engine import IndicatorEngine
 from market.market_runtime import MarketRuntime
-from domain.indicator_set import IndicatorSet
 
 
 def test_indicator_engine_returns_indicator_set():

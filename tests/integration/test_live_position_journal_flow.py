@@ -52,13 +52,13 @@ def create_trade():
     risk = RiskEngine().evaluate(
         decision,
         trades_today=0,
-        daily_loss=Decimal("0"),
+        daily_loss=Decimal(0),
     )
 
     return TradeFactory().create(
         risk,
-        entry_price=Decimal("100"),
-        stop_loss=Decimal("90"),
+        entry_price=Decimal(100),
+        stop_loss=Decimal(90),
     )
 
 
@@ -69,13 +69,13 @@ def test_order_execution_creates_position():
         trade,
         Broker.DHAN,
         OrderSide.BUY,
-        Decimal("100"),
+        Decimal(100),
     )
 
     position = PositionManager().open_position(
         order,
         order.quantity,
-        Decimal("100"),
+        Decimal(100),
     )
 
     assert position is not None
@@ -104,17 +104,17 @@ def test_position_contains_execution_price():
         trade,
         Broker.DHAN,
         OrderSide.BUY,
-        Decimal("100"),
+        Decimal(100),
     )
 
     position = PositionManager().open_position(
         order,
         order.quantity,
-        Decimal("100"),
+        Decimal(100),
     )
 
-    assert position.average_price == Decimal("100")
-    assert position.last_traded_price == Decimal("100")
+    assert position.average_price == Decimal(100)
+    assert position.last_traded_price == Decimal(100)
 
 
 def test_journal_header_created(

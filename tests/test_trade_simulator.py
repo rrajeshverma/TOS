@@ -108,10 +108,7 @@ def test_open_when_position_already_exists():
         }
     )
 
-    with pytest.raises(
-        RuntimeError,
-        match="Position already open.",
-    ):
+    with pytest.raises(RuntimeError, match=r"Position already open."):
         simulator.open(
             {
                 "action": "BUY",
@@ -123,10 +120,7 @@ def test_open_when_position_already_exists():
 def test_close_without_open_position():
     simulator = TradeSimulator()
 
-    with pytest.raises(
-        RuntimeError,
-        match="No open position.",
-    ):
+    with pytest.raises(RuntimeError, match=r"No open position."):
         simulator.close(100)
 
 

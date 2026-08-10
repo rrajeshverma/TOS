@@ -32,24 +32,24 @@ class TradeStatistics:
 
     @property
     def winning_trades(self) -> int:
-        return sum(1 for trade in self._trades if trade.pnl > Decimal("0"))
+        return sum(1 for trade in self._trades if trade.pnl > Decimal(0))
 
     @property
     def losing_trades(self) -> int:
-        return sum(1 for trade in self._trades if trade.pnl < Decimal("0"))
+        return sum(1 for trade in self._trades if trade.pnl < Decimal(0))
 
     @property
     def gross_profit(self) -> Decimal:
         return sum(
-            (trade.pnl for trade in self._trades if trade.pnl > Decimal("0")),
-            Decimal("0"),
+            (trade.pnl for trade in self._trades if trade.pnl > Decimal(0)),
+            Decimal(0),
         )
 
     @property
     def gross_loss(self) -> Decimal:
         return sum(
-            (trade.pnl for trade in self._trades if trade.pnl < Decimal("0")),
-            Decimal("0"),
+            (trade.pnl for trade in self._trades if trade.pnl < Decimal(0)),
+            Decimal(0),
         )
 
     @property
@@ -66,13 +66,13 @@ class TradeStatistics:
     @property
     def average_win(self) -> Decimal:
         if self.winning_trades == 0:
-            return Decimal("0")
+            return Decimal(0)
 
         return self.gross_profit / self.winning_trades
 
     @property
     def average_loss(self) -> Decimal:
         if self.losing_trades == 0:
-            return Decimal("0")
+            return Decimal(0)
 
         return self.gross_loss / self.losing_trades

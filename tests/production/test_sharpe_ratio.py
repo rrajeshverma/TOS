@@ -1,6 +1,5 @@
 import math
 
-
 from analytics.sharpe_ratio import SharpeRatio
 
 

@@ -55,7 +55,7 @@ class DhanMapper:
             quantity=item["netQty"],
             average_price=Decimal(str(item["costPrice"])),
             last_price=Decimal(str(item["lastTradedPrice"])),
-            pnl=Decimal("0"),
+            pnl=Decimal(0),
         )
 
     @staticmethod

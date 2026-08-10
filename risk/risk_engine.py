@@ -6,10 +6,10 @@ Central risk decision coordinator.
 
 from __future__ import annotations
 
-from risk.risk_decision import RiskDecision
-from risk.position_risk import PositionRiskCalculator
 from risk.exposure_limit import ExposureLimitGuard
 from risk.loss_guard import LossGuard
+from risk.position_risk import PositionRiskCalculator
+from risk.risk_decision import RiskDecision
 
 
 class RiskEngine:

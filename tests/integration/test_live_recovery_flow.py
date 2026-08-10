@@ -3,8 +3,8 @@ Integration test:
 Runtime Failure -> Recovery -> Resume Trading
 """
 
-from monitoring.runtime_status import RuntimeStatus
 from market.websocket_feed import WebSocketFeed
+from monitoring.runtime_status import RuntimeStatus
 from services.exit_manager import ExitManager
 
 

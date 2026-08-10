@@ -11,12 +11,12 @@ def test_open_position():
     position = manager.open_position(
         order=None,
         quantity=65,
-        price=Decimal("25000"),
+        price=Decimal(25000),
     )
 
     assert position.quantity == 65
-    assert position.average_price == Decimal("25000")
-    assert position.last_traded_price == Decimal("25000")
+    assert position.average_price == Decimal(25000)
+    assert position.last_traded_price == Decimal(25000)
     assert position.status == TradeStatus.OPEN
 
 
@@ -26,15 +26,15 @@ def test_update_price():
     position = manager.open_position(
         order=None,
         quantity=65,
-        price=Decimal("25000"),
+        price=Decimal(25000),
     )
 
     updated = manager.update_price(
         position,
-        Decimal("25050"),
+        Decimal(25050),
     )
 
-    assert updated.last_traded_price == Decimal("25050")
+    assert updated.last_traded_price == Decimal(25050)
 
 
 def test_unrealized_pnl():
@@ -43,17 +43,17 @@ def test_unrealized_pnl():
     position = manager.open_position(
         order=None,
         quantity=65,
-        price=Decimal("25000"),
+        price=Decimal(25000),
     )
 
     updated = manager.update_price(
         position,
-        Decimal("25020"),
+        Decimal(25020),
     )
 
     pnl = manager.unrealized_pnl(updated)
 
-    assert pnl == Decimal("1300")
+    assert pnl == Decimal(1300)
 
 
 def test_close_position():
@@ -62,12 +62,12 @@ def test_close_position():
     position = manager.open_position(
         order=None,
         quantity=65,
-        price=Decimal("25000"),
+        price=Decimal(25000),
     )
 
     closed = manager.close_position(
         position,
-        Decimal("25100"),
+        Decimal(25100),
     )
 
     assert closed.status == TradeStatus.CLOSED
@@ -80,8 +80,8 @@ def test_is_position_open():
         position_id="POS001",
         order=None,
         quantity=1,
-        average_price=Decimal("100"),
-        last_traded_price=Decimal("100"),
+        average_price=Decimal(100),
+        last_traded_price=Decimal(100),
         status=TradeStatus.OPEN,
         opened_at=None,
         closed_at=None,

@@ -12,12 +12,10 @@ class Drawdown:
         max_drawdown = 0.0
 
         for equity in equity_curve:
-            if equity > peak:
-                peak = equity
+            peak = max(peak, equity)
 
             drawdown = peak - equity
 
-            if drawdown > max_drawdown:
-                max_drawdown = drawdown
+            max_drawdown = max(max_drawdown, drawdown)
 
         return max_drawdown

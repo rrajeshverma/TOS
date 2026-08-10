@@ -3,9 +3,9 @@ from decimal import Decimal
 from brokers.models import (
     Order,
     OrderSide,
+    OrderStatus,
     OrderType,
     ProductType,
-    OrderStatus,
 )
 from brokers.paper_broker import PaperBroker
 
@@ -99,7 +99,7 @@ def test_get_holdings_initially_empty():
 def test_funds_available_cash():
     broker = PaperBroker()
 
-    assert broker.get_funds().available_cash == Decimal("1000000")
+    assert broker.get_funds().available_cash == Decimal(1000000)
 
 
 def test_connect():

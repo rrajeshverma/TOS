@@ -12,10 +12,10 @@ class FakeCandle:
         self.symbol = "NIFTY"
         self.timeframe = "1m"
         self.timestamp = datetime.now()
-        self.open = Decimal("100")
-        self.high = Decimal("101")
-        self.low = Decimal("99")
-        self.close = Decimal("100")
+        self.open = Decimal(100)
+        self.high = Decimal(101)
+        self.low = Decimal(99)
+        self.close = Decimal(100)
         self.volume = 100
 
 
@@ -28,10 +28,10 @@ def test_pipeline_forwards_market_to_runtime():
         exchange="NSE",
         timeframe="1m",
         timestamp=datetime.now(),
-        open=Decimal("100"),
-        high=Decimal("101"),
-        low=Decimal("99"),
-        close=Decimal("100"),
+        open=Decimal(100),
+        high=Decimal(101),
+        low=Decimal(99),
+        close=Decimal(100),
         volume=100,
     )
 
@@ -53,7 +53,7 @@ def test_pipeline_forwards_market_to_runtime():
 
     tick = MarketTick(
         symbol="NIFTY",
-        ltp=Decimal("100"),
+        ltp=Decimal(100),
     )
 
     result = pipeline.on_tick(tick)

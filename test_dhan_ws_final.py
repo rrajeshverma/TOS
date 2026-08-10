@@ -1,3 +1,4 @@
+# ruff: noqa: E501
 from dhanhq import dhanhq
 from dhanhq.marketfeed import MarketFeed
 

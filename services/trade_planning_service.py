@@ -35,9 +35,7 @@ class TradePlanningService:
     ) -> None:
         self._trade_planning_engine = trade_planning_engine or TradePlanningEngine()
 
-        self._position_sizing_service = (
-            position_sizing_service or PositionSizingService()
-        )
+        self._position_sizing_service = position_sizing_service or PositionSizingService()
 
         self._atr_stop_engine = atr_stop_engine or ATRStopEngine()
 

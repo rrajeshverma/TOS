@@ -6,15 +6,26 @@ Validates trade requests before execution.
 
 from __future__ import annotations
 
+from typing import ClassVar
+
 
 class OrderValidator:
     """
     Validates incoming trade requests.
     """
 
-    VALID_SIDES = {
+    from typing import ClassVar
+
+    VALID_SIDES: ClassVar[set[str]] = {
         "BUY",
         "SELL",
+    }
+
+    VALID_BROKERS: ClassVar[set[str]] = {
+        "DHAN",
+        "DELTA",
+        "ZERODHA",
+        "PAPER",
     }
 
     def validate(

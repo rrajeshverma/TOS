@@ -116,9 +116,7 @@ def test_tick_pipeline_end_to_end():
 
     received = []
 
-    websocket.register_tick_callback(
-        lambda tick: received.append(adapter.convert(tick))
-    )
+    websocket.register_tick_callback(lambda tick: received.append(adapter.convert(tick)))
 
     websocket.connect()
 

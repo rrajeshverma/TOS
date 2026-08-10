@@ -14,7 +14,6 @@ import os
 
 from trading.execution_mode import ExecutionMode
 
-
 DEFAULT_MODE = ExecutionMode.PAPER.value
 
 

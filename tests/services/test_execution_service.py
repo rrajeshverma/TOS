@@ -54,8 +54,8 @@ def test_approval_engine_called():
         service,
         approval_engine,
         execution_engine,
-        tracker,
-        dispatcher,
+        _tracker,
+        _dispatcher,
     ) = create_service()
 
     approval_engine.approve.return_value = approved()
@@ -76,8 +76,8 @@ def test_execution_engine_called_after_approval():
         service,
         approval_engine,
         execution_engine,
-        tracker,
-        dispatcher,
+        _tracker,
+        _dispatcher,
     ) = create_service()
 
     approval_engine.approve.return_value = approved()
@@ -97,8 +97,8 @@ def test_rejected_trade_not_executed():
         service,
         approval_engine,
         execution_engine,
-        tracker,
-        dispatcher,
+        _tracker,
+        _dispatcher,
     ) = create_service()
 
     approval = rejected()
@@ -118,7 +118,7 @@ def test_failed_execution_not_tracked():
         approval_engine,
         execution_engine,
         tracker,
-        dispatcher,
+        _dispatcher,
     ) = create_service()
 
     approval_engine.approve.return_value = approved()
@@ -138,7 +138,7 @@ def test_failed_execution_not_published():
         service,
         approval_engine,
         execution_engine,
-        tracker,
+        _tracker,
         dispatcher,
     ) = create_service()
 
@@ -159,7 +159,7 @@ def test_successful_execution_creates_tracker():
         approval_engine,
         execution_engine,
         tracker,
-        dispatcher,
+        _dispatcher,
     ) = create_service()
 
     approval_engine.approve.return_value = approved()
@@ -181,7 +181,7 @@ def test_successful_execution_submits_tracker():
         approval_engine,
         execution_engine,
         tracker,
-        dispatcher,
+        _dispatcher,
     ) = create_service()
 
     approval_engine.approve.return_value = approved()
@@ -202,7 +202,7 @@ def test_successful_execution_publishes_event():
         service,
         approval_engine,
         execution_engine,
-        tracker,
+        _tracker,
         dispatcher,
     ) = create_service()
 
@@ -227,8 +227,8 @@ def test_execute_returns_execution_result():
         service,
         approval_engine,
         execution_engine,
-        tracker,
-        dispatcher,
+        _tracker,
+        _dispatcher,
     ) = create_service()
 
     approval_engine.approve.return_value = approved()
@@ -247,8 +247,8 @@ def test_risk_decision_forwarded():
         service,
         approval_engine,
         execution_engine,
-        tracker,
-        dispatcher,
+        _tracker,
+        _dispatcher,
     ) = create_service()
 
     approval_engine.approve.return_value = approved()
@@ -274,7 +274,7 @@ def test_tracker_create_called_before_submit():
         approval_engine,
         execution_engine,
         tracker,
-        dispatcher,
+        _dispatcher,
     ) = create_service()
 
     approval_engine.approve.return_value = approved()
@@ -295,8 +295,8 @@ def test_execution_engine_not_called_when_rejected():
         service,
         approval_engine,
         execution_engine,
-        tracker,
-        dispatcher,
+        _tracker,
+        _dispatcher,
     ) = create_service()
 
     approval_engine.approve.return_value = rejected()
@@ -310,9 +310,9 @@ def test_tracker_not_updated_when_rejected():
     (
         service,
         approval_engine,
-        execution_engine,
+        _execution_engine,
         tracker,
-        dispatcher,
+        _dispatcher,
     ) = create_service()
 
     approval_engine.approve.return_value = rejected()
@@ -327,8 +327,8 @@ def test_dispatcher_not_called_when_rejected():
     (
         service,
         approval_engine,
-        execution_engine,
-        tracker,
+        _execution_engine,
+        _tracker,
         dispatcher,
     ) = create_service()
 
@@ -370,7 +370,7 @@ def test_published_event_contains_correct_order_id():
         service,
         approval_engine,
         execution_engine,
-        tracker,
+        _tracker,
         dispatcher,
     ) = create_service()
 
@@ -390,9 +390,9 @@ def test_execute_returns_rejection_object():
     (
         service,
         approval_engine,
-        execution_engine,
-        tracker,
-        dispatcher,
+        _execution_engine,
+        _tracker,
+        _dispatcher,
     ) = create_service()
 
     approval = rejected()
@@ -409,8 +409,8 @@ def test_execution_called_only_once():
         service,
         approval_engine,
         execution_engine,
-        tracker,
-        dispatcher,
+        _tracker,
+        _dispatcher,
     ) = create_service()
 
     approval_engine.approve.return_value = approved()

@@ -1,6 +1,5 @@
 from services.position_manager import PositionManager
 from storage.position_repository import PositionRepository
-
 from tests.services.test_position_manager import create_position
 
 

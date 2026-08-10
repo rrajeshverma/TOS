@@ -60,16 +60,16 @@ def create_closed_trade():
     return Trade(
         trade_id=generate_trade_id(),
         risk=risk,
-        entry_price=Decimal("100"),
-        stop_loss=Decimal("90"),
-        target=Decimal("120"),
+        entry_price=Decimal(100),
+        stop_loss=Decimal(90),
+        target=Decimal(120),
         quantity=65,
         entry_time=datetime.now(),
-        exit_price=Decimal("121"),
+        exit_price=Decimal(121),
         exit_time=datetime.now(),
         exit_reason=ExitReason.TARGET,
         status=TradeStatus.CLOSED,
-        pnl=Decimal("1365"),
+        pnl=Decimal(1365),
     )
 
 

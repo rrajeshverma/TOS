@@ -5,7 +5,6 @@ from domain.order_status_mapper import OrderStatusMapper
 from execution.order_service import OrderStatus as ExecutionOrderStatus
 from shared.enums import OrderStatus as DomainOrderStatus
 
-
 # ---------------------------------------------------------------------
 # Broker -> Execution
 # ---------------------------------------------------------------------
@@ -61,8 +60,7 @@ def test_unknown_broker_status_raises_value_error():
 
 def test_execution_new_maps_to_domain_created():
     assert (
-        OrderStatusMapper.execution_to_domain(ExecutionOrderStatus.NEW)
-        == DomainOrderStatus.CREATED
+        OrderStatusMapper.execution_to_domain(ExecutionOrderStatus.NEW) == DomainOrderStatus.CREATED
     )
 
 

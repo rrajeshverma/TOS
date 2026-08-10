@@ -45,13 +45,11 @@ class EquityAnalytics:
         maximum_drawdown = 0
 
         for equity in self._curve:
-            if equity > peak:
-                peak = equity
+            peak = max(peak, equity)
 
             drawdown = peak - equity
 
-            if drawdown > maximum_drawdown:
-                maximum_drawdown = drawdown
+            maximum_drawdown = max(maximum_drawdown, drawdown)
 
         return maximum_drawdown
 

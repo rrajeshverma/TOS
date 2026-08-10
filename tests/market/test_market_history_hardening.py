@@ -1,6 +1,6 @@
-import pytest
-
 from datetime import datetime
+
+import pytest
 
 from domain.market import Market
 from market.market_history import MarketHistory

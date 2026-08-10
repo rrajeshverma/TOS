@@ -39,15 +39,13 @@ class PositionAggregator:
         Calculate total position exposure.
 
         Exposure =
-        Quantity × Average Entry Price
+        Quantity x Average Entry Price
         """
 
-        total = Decimal("0")
+        total = Decimal(0)
 
         for position in positions:
-            total += Decimal(str(position.quantity)) * Decimal(
-                str(position.average_price)
-            )
+            total += Decimal(str(position.quantity)) * Decimal(str(position.average_price))
 
         return total
 
@@ -59,15 +57,14 @@ class PositionAggregator:
         Calculate unrealized profit/loss.
 
         P&L =
-        (Last Price - Entry Price) × Quantity
+        (Last Price - Entry Price) x Quantity
         """
 
-        total = Decimal("0")
+        total = Decimal(0)
 
         for position in positions:
             total += (
-                Decimal(str(position.last_traded_price))
-                - Decimal(str(position.average_price))
+                Decimal(str(position.last_traded_price)) - Decimal(str(position.average_price))
             ) * Decimal(str(position.quantity))
 
         return total
@@ -76,7 +73,7 @@ class PositionAggregator:
         self,
         positions,
         cash,
-        realized_pnl=Decimal("0"),
+        realized_pnl=Decimal(0),
     ):
         """
         Build portfolio snapshot from active positions.

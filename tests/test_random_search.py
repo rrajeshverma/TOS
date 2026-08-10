@@ -164,8 +164,5 @@ def test_evaluator_returns_invalid_result():
     def evaluator(params):
         return object()
 
-    with pytest.raises(
-        TypeError,
-        match="Evaluator must return an OptimizationResult.",
-    ):
+    with pytest.raises(TypeError, match=r"Evaluator must return an OptimizationResult."):
         search.run(evaluator)

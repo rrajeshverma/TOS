@@ -45,8 +45,8 @@ def create_trade():
 
     trade = TradeFactory().create(
         risk=risk,
-        entry_price=Decimal("25000"),
-        stop_loss=Decimal("24950"),
+        entry_price=Decimal(25000),
+        stop_loss=Decimal(24950),
     )
 
     return trade
@@ -57,11 +57,11 @@ def test_trade_factory():
 
     assert trade.quantity == 65
 
-    assert trade.entry_price == Decimal("25000")
+    assert trade.entry_price == Decimal(25000)
 
-    assert trade.stop_loss == Decimal("24950")
+    assert trade.stop_loss == Decimal(24950)
 
-    assert trade.target == Decimal("25100")
+    assert trade.target == Decimal(25100)
 
     assert trade.risk.is_approved
 
@@ -123,12 +123,9 @@ def test_trade_has_entry_time():
 def test_rejected_risk_raises_value_error():
     risk = create_rejected_risk()
 
-    with pytest.raises(
-        ValueError,
-        match="Cannot create Trade from rejected Risk.",
-    ):
+    with pytest.raises(ValueError, match=r"Cannot create Trade from rejected Risk."):
         TradeFactory().create(
             risk=risk,
-            entry_price=Decimal("25000"),
-            stop_loss=Decimal("24950"),
+            entry_price=Decimal(25000),
+            stop_loss=Decimal(24950),
         )

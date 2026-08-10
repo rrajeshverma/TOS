@@ -1,12 +1,11 @@
+from execution.order_event_dispatcher import (
+    OrderEventDispatcher,
+)
 from execution.order_events import (
     OrderEvent,
     OrderEventType,
 )
-from execution.order_event_dispatcher import (
-    OrderEventDispatcher,
-)
 from execution.order_status import OrderStatus
-
 
 # -------------------------
 # Order Event Tests

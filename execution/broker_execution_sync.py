@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from typing import ClassVar
+
 from execution.execution_status import ExecutionStatus
 from execution.order_events import (
     OrderEvent,
@@ -8,11 +10,7 @@ from execution.order_events import (
 
 
 class BrokerExecutionSync:
-    """
-    Synchronizes broker execution updates with the local execution tracker.
-    """
-
-    _EVENT_TYPES = {
+    _EVENT_TYPES: ClassVar[dict] = {
         ExecutionStatus.SUBMITTED: OrderEventType.SUBMITTED,
         ExecutionStatus.PARTIALLY_FILLED: OrderEventType.PARTIALLY_FILLED,
         ExecutionStatus.FILLED: OrderEventType.FILLED,

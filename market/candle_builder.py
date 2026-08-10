@@ -1,5 +1,5 @@
-from domain.market_tick import MarketTick
 from domain.candle import Candle
+from domain.market_tick import MarketTick
 
 
 class CandleBuilder:

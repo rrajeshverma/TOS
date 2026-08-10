@@ -1,8 +1,10 @@
+from typing import ClassVar
+
 from domain.order_state import OrderState
 
 
 class OrderStateMachine:
-    _TRANSITIONS = {
+    _TRANSITIONS: ClassVar[dict] = {
         OrderState.NEW: {
             OrderState.SUBMITTED,
         },
@@ -34,9 +36,7 @@ class OrderStateMachine:
         allowed = self._TRANSITIONS[self.state]
 
         if new_state not in allowed:
-            raise ValueError(
-                f"Invalid transition: {self.state.value} -> {new_state.value}"
-            )
+            raise ValueError(f"Invalid transition: {self.state.value} -> {new_state.value}")
 
         self.state = new_state
         return self.state

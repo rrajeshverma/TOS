@@ -1,8 +1,8 @@
 import pytest
 
-from strategy.strategy_selector import StrategySelector
-from strategy.strategy_registry import StrategyRegistry
 from strategy.orb_strategy import OrbStrategy
+from strategy.strategy_registry import StrategyRegistry
+from strategy.strategy_selector import StrategySelector
 
 
 def test_can_create_selector():

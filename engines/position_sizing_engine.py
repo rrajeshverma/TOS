@@ -11,7 +11,7 @@ Description : Calculates position size based on
 
 from __future__ import annotations
 
-from decimal import Decimal, ROUND_DOWN
+from decimal import ROUND_DOWN, Decimal
 
 from domain.position_size import PositionSize
 
@@ -44,11 +44,9 @@ class PositionSizingEngine:
         if lot_size <= 0:
             raise ValueError("Lot size must be greater than zero.")
 
-        risk_amount = capital * risk_percent / Decimal("100")
+        risk_amount = capital * risk_percent / Decimal(100)
 
-        quantity = (risk_amount / stop_loss_distance).to_integral_value(
-            rounding=ROUND_DOWN
-        )
+        quantity = (risk_amount / stop_loss_distance).to_integral_value(rounding=ROUND_DOWN)
 
         lots = int(quantity) // lot_size
 

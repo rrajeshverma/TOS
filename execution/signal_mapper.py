@@ -6,6 +6,8 @@ Maps strategy signals to broker order sides.
 
 from __future__ import annotations
 
+from typing import ClassVar
+
 from shared.enums import (
     OrderSide,
     Signal,
@@ -13,9 +15,7 @@ from shared.enums import (
 
 
 class SignalMapper:
-    """Maps trading signals to broker order sides."""
-
-    _MAP = {
+    _MAP: ClassVar[dict] = {
         Signal.BUY_CE: OrderSide.BUY,
         Signal.BUY_PE: OrderSide.BUY,
     }

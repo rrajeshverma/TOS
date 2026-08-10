@@ -1,11 +1,9 @@
 from datetime import datetime
 from decimal import Decimal
+from unittest.mock import Mock
 
 from brokers.dhan.models import BrokerTick
 from domain.market_tick import MarketTick
-
-from unittest.mock import Mock
-
 from services.market_data_service import MarketDataService
 
 
@@ -134,7 +132,7 @@ def test_emit_market_tick():
     market_tick = callback.call_args.args[0]
 
     assert market_tick.symbol == "NIFTY"
-    assert market_tick.ltp == Decimal("25000")
+    assert market_tick.ltp == Decimal(25000)
     assert market_tick.volume == 5
 
 

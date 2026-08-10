@@ -1,7 +1,7 @@
 import pytest
 
-from strategy.strategy_registry import StrategyRegistry
 from strategy.strategy import Strategy
+from strategy.strategy_registry import StrategyRegistry
 
 
 def test_can_create_registry():

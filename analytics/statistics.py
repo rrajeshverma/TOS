@@ -55,9 +55,9 @@ class Statistics:
         win_probability = self.win_rate(trades) / 100
         loss_probability = 1 - win_probability
 
-        return win_probability * self.average_win(
+        return win_probability * self.average_win(trades) - loss_probability * self.average_loss(
             trades
-        ) - loss_probability * self.average_loss(trades)
+        )
 
     def recovery_factor(self, net_profit, max_drawdown):
         if max_drawdown == 0:

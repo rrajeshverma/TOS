@@ -8,8 +8,6 @@ Description : Exports all TOS exception classes.
 =========================================================
 """
 
-from .kill_switch_exception import KillSwitchActiveError
-
 from .base_exception import (
     InvalidPriceError,
     InvalidTimestampError,
@@ -18,22 +16,22 @@ from .base_exception import (
     TOSException,
     ValidationError,
 )
-
 from .configuration_exception import (
     ConfigurationError,
     InvalidConfigurationError,
     MissingConfigurationError,
 )
+from .kill_switch_exception import KillSwitchActiveError
 
 __all__ = [
-    "TOSException",
-    "ValidationError",
-    "MissingFieldError",
-    "InvalidTimestampError",
-    "InvalidPriceError",
-    "InvalidVolumeError",
     "ConfigurationError",
     "InvalidConfigurationError",
-    "MissingConfigurationError",
+    "InvalidPriceError",
+    "InvalidTimestampError",
+    "InvalidVolumeError",
     "KillSwitchActiveError",
+    "MissingConfigurationError",
+    "MissingFieldError",
+    "TOSException",
+    "ValidationError",
 ]

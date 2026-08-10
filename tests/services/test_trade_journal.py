@@ -45,9 +45,7 @@ def test_writes_header(tmp_path: Path):
 
     lines = filename.read_text().splitlines()
 
-    assert lines[0] == (
-        "timestamp,symbol,side,quantity,entry_price,exit_price,pnl,strategy,status"
-    )
+    assert lines[0] == ("timestamp,symbol,side,quantity,entry_price,exit_price,pnl,strategy,status")
 
 
 def test_records_single_trade(tmp_path: Path):

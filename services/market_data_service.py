@@ -1,17 +1,17 @@
 from __future__ import annotations
 
+from collections.abc import Callable
 from decimal import Decimal
-from typing import Callable, Optional, Set
 
 from domain.market_tick import MarketTick
 
 
 class MarketDataService:
-    def __init__(self, websocket=None):
+    def __init__(self, websocket=None):  # ✅ FIXED
         self.websocket = websocket
         self._connected = True
-        self._subscriptions: Set[str] = set()
-        self.tick_callback: Optional[Callable] = None
+        self._subscriptions: set[str] = set()
+        self.tick_callback: Callable | None = None
 
     # ---------------- CONNECTION ----------------
 
@@ -40,7 +40,7 @@ class MarketDataService:
             self.websocket.subscribe(instruments)
 
     def unsubscribe(self, instruments):
-        original = instruments  # ✅ keep original for websocket
+        original = instruments
 
         if isinstance(instruments, str):
             instruments = [instruments]
@@ -50,7 +50,7 @@ class MarketDataService:
             self._subscriptions.discard(symbol)
 
         if self.websocket:
-            self.websocket.unsubscribe(original)  # ✅ NOT list
+            self.websocket.unsubscribe(original)
 
     def clear_subscriptions(self):
         self._subscriptions.clear()
@@ -60,7 +60,6 @@ class MarketDataService:
 
     @property
     def subscriptions(self):
-        # ✅ tests expect websocket value if present
         if self.websocket and hasattr(self.websocket, "subscriptions"):
             return self.websocket.subscriptions
         return self._subscriptions
@@ -79,14 +78,14 @@ class MarketDataService:
         if isinstance(data, dict):
             return MarketTick(
                 symbol=data["symbol"],
-                ltp=Decimal(str(data["ltp"])),  # ✅ strict
+                ltp=Decimal(str(data["ltp"])),
                 timestamp=data.get("timestamp"),
                 volume=data.get("volume"),
             )
 
         return MarketTick(
             symbol=data.symbol,
-            ltp=Decimal(str(data.ltp)),  # ✅ strict
+            ltp=Decimal(str(data.ltp)),
             timestamp=getattr(data, "timestamp", None),
             volume=getattr(data, "volume", None),
         )
@@ -96,15 +95,13 @@ class MarketDataService:
     def emit_market_tick(self, data):
         tick = self.to_market_tick(data)
 
-        # websocket callback (ONLY if callable)
-        if (
-            self.websocket
-            and hasattr(self.websocket, "tick_callback")
-            and callable(self.websocket.tick_callback)
-        ):
-            self.websocket.tick_callback(tick)
-            return
-
-        # fallback to local callback
+        # ✅ FIRST: local callback (tests use this)
         if callable(self.tick_callback):
             self.tick_callback(tick)
+            return
+
+        # ✅ SECOND: websocket callback
+        if self.websocket:
+            callback = getattr(self.websocket, "tick_callback", None)
+            if callable(callback):
+                callback(tick)

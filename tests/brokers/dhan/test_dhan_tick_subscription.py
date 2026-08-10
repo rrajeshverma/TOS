@@ -3,9 +3,9 @@ Tests:
 Dhan WebSocket tick subscription flow
 """
 
+from brokers.dhan.models import BrokerTick
 from brokers.dhan.session import DhanSession
 from brokers.dhan.websocket import WebSocketClient
-from brokers.dhan.models import BrokerTick
 
 
 class DummyTickTransport:

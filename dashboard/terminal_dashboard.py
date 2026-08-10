@@ -54,7 +54,6 @@ class TerminalDashboard:
         """
         Future hook for updating widgets.
         """
-        pass
 
     def render(self, runtime) -> str:
         """

@@ -2,7 +2,6 @@ from portfolio.allocation.allocation_engine import AllocationEngine
 from portfolio.allocation.rebalance_manager import RebalanceManager
 from portfolio.allocation.risk_allocator import RiskAllocator
 
-
 # -------------------------
 # Allocation Engine
 # -------------------------

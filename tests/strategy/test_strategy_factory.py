@@ -1,7 +1,7 @@
 import pytest
 
-from strategy.strategy_factory import StrategyFactory
 from strategy.orb_strategy import OrbStrategy
+from strategy.strategy_factory import StrategyFactory
 
 
 def test_can_create_factory():

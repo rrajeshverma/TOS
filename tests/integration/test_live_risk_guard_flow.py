@@ -13,7 +13,7 @@ class LiveRiskGuard:
     def __init__(
         self,
         max_trades=5,
-        max_daily_loss=Decimal("5000"),
+        max_daily_loss=Decimal(5000),
     ):
         self.max_trades = max_trades
 
@@ -32,10 +32,7 @@ class LiveRiskGuard:
         if trades_today >= self.max_trades:
             return False
 
-        if daily_loss >= self.max_daily_loss:
-            return False
-
-        return True
+        return not daily_loss >= self.max_daily_loss
 
     def activate_emergency_stop(self):
         self.emergency_stop = True
@@ -50,7 +47,7 @@ def test_trade_allowed_within_limits():
 
     result = guard.can_trade(
         trades_today=1,
-        daily_loss=Decimal("500"),
+        daily_loss=Decimal(500),
     )
 
     assert result is True
@@ -61,7 +58,7 @@ def test_trade_blocked_after_max_trades():
 
     result = guard.can_trade(
         trades_today=5,
-        daily_loss=Decimal("0"),
+        daily_loss=Decimal(0),
     )
 
     assert result is False
@@ -72,7 +69,7 @@ def test_trade_blocked_after_daily_loss_limit():
 
     result = guard.can_trade(
         trades_today=1,
-        daily_loss=Decimal("5000"),
+        daily_loss=Decimal(5000),
     )
 
     assert result is False
@@ -85,7 +82,7 @@ def test_emergency_stop_blocks_trading():
 
     result = guard.can_trade(
         trades_today=0,
-        daily_loss=Decimal("0"),
+        daily_loss=Decimal(0),
     )
 
     assert result is False
@@ -97,7 +94,7 @@ def test_risk_guard_allows_recovery_after_new_session():
     assert (
         guard.can_trade(
             trades_today=0,
-            daily_loss=Decimal("0"),
+            daily_loss=Decimal(0),
         )
         is True
     )

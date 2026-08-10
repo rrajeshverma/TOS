@@ -78,11 +78,11 @@ def test_pipeline_returns_market_and_indicators():
     (
         market,
         indicators,
-        decision,
-        quality,
+        _decision,
+        _quality,
         risk,
         position_size,
-        trade_plan,
+        _trade_plan,
         _,
     ) = pipeline.run(["CANDLE"])
 
@@ -119,7 +119,7 @@ def test_pipeline_returns_decision():
         quality,
         risk,
         position_size,
-        trade_plan,
+        _trade_plan,
         _,
     ) = pipeline.run(["CANDLE"])
 

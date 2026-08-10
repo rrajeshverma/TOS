@@ -95,7 +95,7 @@ def test_decision_passes_risk_validation():
     risk = RiskEngine().evaluate(
         decision,
         trades_today=0,
-        daily_loss=Decimal("0"),
+        daily_loss=Decimal(0),
     )
 
     assert risk.approved is True
@@ -148,7 +148,7 @@ def test_complete_live_paper_execution_flow():
     risk = RiskEngine().evaluate(
         decision,
         trades_today=0,
-        daily_loss=Decimal("0"),
+        daily_loss=Decimal(0),
     )
 
     assert risk.approved is True

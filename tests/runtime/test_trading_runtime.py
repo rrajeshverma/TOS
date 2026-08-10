@@ -1,10 +1,10 @@
 from unittest.mock import Mock
 
-from shared.events import Event
-from runtime.trading_runtime import TradingRuntime
-from runtime.session_state import SessionState
-from shared.runtime_status import RuntimeStatus
 from runtime.runtime_mode import RuntimeMode
+from runtime.session_state import SessionState
+from runtime.trading_runtime import TradingRuntime
+from shared.events import Event
+from shared.runtime_status import RuntimeStatus
 
 
 def test_start_registers_market_data_callback():

@@ -6,15 +6,13 @@ Tracks the execution lifecycle of orders.
 
 from __future__ import annotations
 
+from typing import ClassVar
+
 from execution.execution_status import ExecutionStatus
 
 
 class ExecutionTracker:
-    """
-    Tracks execution status and history for orders.
-    """
-
-    _VALID_TRANSITIONS = {
+    _VALID_TRANSITIONS: ClassVar[dict] = {
         ExecutionStatus.PENDING: {
             ExecutionStatus.SUBMITTED,
         },
@@ -70,9 +68,7 @@ class ExecutionTracker:
         current = order["status"]
 
         if status not in self._VALID_TRANSITIONS[current]:
-            raise ValueError(
-                f"Invalid execution state transition: {current.name} -> {status.name}"
-            )
+            raise ValueError(f"Invalid execution state transition: {current.name} -> {status.name}")
 
         order["status"] = status
         order["history"].append(status)

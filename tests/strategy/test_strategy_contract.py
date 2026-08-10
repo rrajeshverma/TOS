@@ -1,7 +1,7 @@
 import pytest
 
-from strategy.strategy import Strategy
 from domain.indicator_set import IndicatorSet
+from strategy.strategy import Strategy
 
 
 def indicators():

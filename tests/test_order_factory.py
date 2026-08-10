@@ -4,7 +4,6 @@ import pytest
 
 from engines.order_factory import OrderFactory
 from shared.enums import Broker, OrderSide, OrderStatus
-
 from tests.test_trade_factory import create_trade
 
 
@@ -15,7 +14,7 @@ def create_order():
         trade=trade,
         broker=Broker.DHAN,
         side=OrderSide.BUY,
-        price=Decimal("25000"),
+        price=Decimal(25000),
     )
 
 
@@ -52,7 +51,7 @@ def test_order_quantity_from_trade():
 def test_order_requested_price():
     order = create_order()
 
-    assert order.requested_price == Decimal("25000")
+    assert order.requested_price == Decimal(25000)
 
 
 def test_order_status_created():
@@ -74,5 +73,5 @@ def test_rejected_trade_not_allowed():
             trade=None,
             broker=Broker.DHAN,
             side=OrderSide.BUY,
-            price=Decimal("25000"),
+            price=Decimal(25000),
         )

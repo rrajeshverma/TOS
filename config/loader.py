@@ -17,7 +17,7 @@ def load_json(filename):
     Load configuration from a JSON file.
     """
     try:
-        with open(filename, "r", encoding="utf-8") as file:
+        with open(filename, encoding="utf-8") as file:
             return json.load(file)
     except FileNotFoundError:
         raise

@@ -12,10 +12,9 @@ import sys
 
 from config.runtime_config_loader import RuntimeConfigLoader
 from runtime.application import Application
-from runtime.startup import Startup
 from runtime.shutdown import Shutdown
 from runtime.signal_handler import SignalHandler
-
+from runtime.startup import Startup
 
 LOGGER = logging.getLogger("tos")
 

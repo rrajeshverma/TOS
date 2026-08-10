@@ -1,12 +1,11 @@
 from __future__ import annotations
 
+from config.config_validator import ConfigValidator
+from config.settings_loader import SettingsLoader
 from config.version import VERSION
 from main import main as application_main
 from runtime.health_monitor import HealthMonitor
 from runtime.runtime_mode import RuntimeMode
-
-from config.config_validator import ConfigValidator
-from config.settings_loader import SettingsLoader
 
 DEFAULT_CONFIG_PATH = "config/default.json"
 

@@ -66,9 +66,9 @@ def test_update_price():
 
     position = service.execute(make_trade())
 
-    updated = service.update_price(position, Decimal("255"))
+    updated = service.update_price(position, Decimal(255))
 
-    assert updated.last_traded_price == Decimal("255")
+    assert updated.last_traded_price == Decimal(255)
 
 
 def test_close_position():
@@ -76,7 +76,7 @@ def test_close_position():
 
     position = service.execute(make_trade())
 
-    closed = service.close(position, Decimal("260"))
+    closed = service.close(position, Decimal(260))
 
     assert closed.status == TradeStatus.CLOSED
 
@@ -86,7 +86,7 @@ def test_close_sets_closed_at():
 
     position = service.execute(make_trade())
 
-    closed = service.close(position, Decimal("260"))
+    closed = service.close(position, Decimal(260))
 
     assert closed.closed_at is not None
 
@@ -102,7 +102,7 @@ def test_open_position():
     position = manager.open_position(
         None,
         25,
-        Decimal("100"),
+        Decimal(100),
     )
 
     assert position.status == TradeStatus.OPEN
@@ -114,15 +114,15 @@ def test_update_position_price():
     position = manager.open_position(
         None,
         25,
-        Decimal("100"),
+        Decimal(100),
     )
 
     updated = manager.update_price(
         position,
-        Decimal("110"),
+        Decimal(110),
     )
 
-    assert updated.last_traded_price == Decimal("110")
+    assert updated.last_traded_price == Decimal(110)
 
 
 def test_close_position_manager():
@@ -131,12 +131,12 @@ def test_close_position_manager():
     position = manager.open_position(
         None,
         25,
-        Decimal("100"),
+        Decimal(100),
     )
 
     closed = manager.close_position(
         position,
-        Decimal("120"),
+        Decimal(120),
     )
 
     assert closed.status == TradeStatus.CLOSED
@@ -148,25 +148,25 @@ def test_unrealized_pnl():
     position = manager.open_position(
         None,
         10,
-        Decimal("100"),
+        Decimal(100),
     )
 
     updated = manager.update_price(
         position,
-        Decimal("105"),
+        Decimal(105),
     )
 
-    assert manager.unrealized_pnl(updated) == Decimal("50")
+    assert manager.unrealized_pnl(updated) == Decimal(50)
 
 
 def test_realized_pnl():
     manager = PositionManager()
 
     assert manager.realized_pnl(
-        Decimal("100"),
-        Decimal("110"),
+        Decimal(100),
+        Decimal(110),
         10,
-    ) == Decimal("100")
+    ) == Decimal(100)
 
 
 def test_position_is_open():
@@ -175,7 +175,7 @@ def test_position_is_open():
     position = manager.open_position(
         None,
         1,
-        Decimal("10"),
+        Decimal(10),
     )
 
     assert manager.is_position_open(position)

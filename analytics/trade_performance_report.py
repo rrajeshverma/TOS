@@ -10,6 +10,4 @@ class TradePerformanceReport:
 
         self.net_profit = self.gross_profit - self.gross_loss
 
-        self.win_rate = (
-            (self.winning_trades / self.total_trades) * 100 if self.total_trades else 0
-        )
+        self.win_rate = (self.winning_trades / self.total_trades) * 100 if self.total_trades else 0

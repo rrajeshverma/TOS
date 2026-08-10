@@ -40,22 +40,14 @@ class TradeReconciliation:
         Trades present locally but missing at broker.
         """
 
-        return [
-            trade_id
-            for trade_id in self.local_trades
-            if trade_id not in self.broker_trades
-        ]
+        return [trade_id for trade_id in self.local_trades if trade_id not in self.broker_trades]
 
     def extra_broker_trades(self):
         """
         Trades present at broker but missing locally.
         """
 
-        return [
-            trade_id
-            for trade_id in self.broker_trades
-            if trade_id not in self.local_trades
-        ]
+        return [trade_id for trade_id in self.broker_trades if trade_id not in self.local_trades]
 
     def reconciliation_report(self):
         """

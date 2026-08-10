@@ -23,8 +23,8 @@ from decimal import Decimal
 class PaperPortfolio:
     def __init__(self):
         self.positions = {}
-        self.cash = Decimal("100000")
-        self.pnl = Decimal("0")
+        self.cash = Decimal(100000)
+        self.pnl = Decimal(0)
 
     def update_position(
         self,
@@ -67,7 +67,7 @@ class PaperExecutionService:
             "symbol": "NIFTY",
             "side": "BUY",
             "quantity": 65,
-            "price": Decimal("25000"),
+            "price": Decimal(25000),
         }
 
 
@@ -110,9 +110,9 @@ def test_portfolio_updates_position():
 def test_portfolio_updates_pnl():
     portfolio = PaperPortfolio()
 
-    portfolio.update_pnl(Decimal("2500"))
+    portfolio.update_pnl(Decimal(2500))
 
-    assert portfolio.pnl == Decimal("2500")
+    assert portfolio.pnl == Decimal(2500)
 
 
 def test_journal_records_portfolio_state():
@@ -136,12 +136,12 @@ def test_complete_portfolio_sync_flow():
 
     portfolio.update_position(trade)
 
-    portfolio.update_pnl(Decimal("3250"))
+    portfolio.update_pnl(Decimal(3250))
 
     journal.record(portfolio)
 
     assert portfolio.positions["NIFTY"] == 65
 
-    assert portfolio.pnl == Decimal("3250")
+    assert portfolio.pnl == Decimal(3250)
 
     assert len(journal.entries) == 1

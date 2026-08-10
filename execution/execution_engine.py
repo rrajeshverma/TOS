@@ -32,10 +32,7 @@ class ExecutionEngine:
             raise ValueError("ExecutionRequest cannot be None")
 
         try:
-            if (
-                self.execution_guard is not None
-                and not self.execution_guard.can_execute()
-            ):
+            if self.execution_guard is not None and not self.execution_guard.can_execute():
                 return ExecutionResult(
                     success=False,
                     error="Execution blocked by safety guard",

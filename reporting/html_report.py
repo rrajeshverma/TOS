@@ -6,8 +6,7 @@ from reporting.report_model import ReportModel
 class HTMLReport:
     def render(self, report: ReportModel) -> str:
         rows = "\n".join(
-            f"<tr><td>{key}</td><td>{value}</td></tr>"
-            for key, value in report.summary.items()
+            f"<tr><td>{key}</td><td>{value}</td></tr>" for key, value in report.summary.items()
         )
 
         summary_html = f"""

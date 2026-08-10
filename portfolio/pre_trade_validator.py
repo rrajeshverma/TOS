@@ -28,12 +28,7 @@ class PreTradeValidator:
         Return True only when all checks pass.
         """
 
-        if self.risk is not None:
-            if not self.risk.can_open_position():
-                return False
+        if self.risk is not None and not self.risk.can_open_position():
+            return False
 
-        if self.risk_guard is not None:
-            if not self.risk_guard.can_trade():
-                return False
-
-        return True
+        return not (self.risk_guard is not None and not self.risk_guard.can_trade())

@@ -1,12 +1,10 @@
+from datetime import datetime
 from decimal import Decimal
 from unittest.mock import Mock
 
 from brokers.dhan.models import BrokerTick
-from services.market_data_service import MarketDataService
-
 from domain.market_tick import MarketTick
-
-from datetime import datetime
+from services.market_data_service import MarketDataService
 
 
 def test_market_tick():
@@ -38,5 +36,5 @@ def test_to_market_tick():
     tick = service.to_market_tick(broker_tick)
 
     assert tick.symbol == "NIFTY"
-    assert tick.ltp == Decimal("25000")
+    assert tick.ltp == Decimal(25000)
     assert tick.volume == 10

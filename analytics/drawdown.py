@@ -16,8 +16,7 @@ class Drawdown:
     def update(self, current_equity, peak_equity):
         drawdown = self.calculate(current_equity, peak_equity)
 
-        if drawdown > self.max_drawdown:
-            self.max_drawdown = drawdown
+        self.max_drawdown = max(self.max_drawdown, drawdown)
 
         if drawdown > 0:
             self.duration += 1

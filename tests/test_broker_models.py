@@ -50,12 +50,12 @@ def test_create_holding():
 
 def test_create_funds():
     funds = Funds(
-        available_cash=Decimal("100000"),
-        utilised_margin=Decimal("15000"),
-        available_margin=Decimal("85000"),
+        available_cash=Decimal(100000),
+        utilised_margin=Decimal(15000),
+        available_margin=Decimal(85000),
     )
 
-    assert funds.available_margin == Decimal("85000")
+    assert funds.available_margin == Decimal(85000)
 
 
 def test_order_side_enum():

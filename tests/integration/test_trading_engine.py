@@ -291,9 +291,9 @@ def test_trading_engine_has_context():
 
         TradingEngine(context).run()
 
-        assert context.mock_calls.index(
-            call.market_engine.run()
-        ) < context.mock_calls.index(call.indicator_engine.run("market"))
+        assert context.mock_calls.index(call.market_engine.run()) < context.mock_calls.index(
+            call.indicator_engine.run("market")
+        )
 
     def test_indicator_called_before_strategy():
         context = create_context()

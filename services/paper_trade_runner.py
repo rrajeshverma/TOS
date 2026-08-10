@@ -6,11 +6,11 @@ from __future__ import annotations
 
 from decimal import Decimal
 
-from engines.trade_planner import TradePlanner
 from domain.indicator_set import IndicatorSet
 from domain.market import Market
 from engines.order_factory import OrderFactory
 from engines.trade_factory import TradeFactory
+from engines.trade_planner import TradePlanner
 from services.position_manager import PositionManager
 from shared.enums import (
     Broker,
@@ -56,7 +56,7 @@ class PaperTradeRunner:
         risk = self.risk_engine.evaluate(
             decision,
             trades_today=0,
-            daily_loss=Decimal("0"),
+            daily_loss=Decimal(0),
         )
 
         if not risk.is_approved:

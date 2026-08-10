@@ -17,7 +17,6 @@ from execution.order_duplicate_guard import (
 from execution.order_validator import (
     OrderValidator,
 )
-
 from trading.execution_mode import (
     ExecutionMode,
     ExecutionModeGuard,

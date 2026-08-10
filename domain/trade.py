@@ -71,7 +71,7 @@ class Trade:
     # Result
     # =====================================================
 
-    pnl: Decimal = Decimal("0")
+    pnl: Decimal = Decimal(0)
 
     @property
     def is_open(self) -> bool:

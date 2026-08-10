@@ -61,11 +61,11 @@ def create_trades():
     return [
         {
             "symbol": "NIFTY",
-            "pnl": Decimal("1500"),
+            "pnl": Decimal(1500),
         },
         {
             "symbol": "NIFTY",
-            "pnl": Decimal("-500"),
+            "pnl": Decimal(-500),
         },
     ]
 
@@ -83,13 +83,13 @@ def test_session_calculates_daily_pnl():
 
     pnl = session.calculate_pnl(create_trades())
 
-    assert pnl == Decimal("1000")
+    assert pnl == Decimal(1000)
 
 
 def test_daily_report_generation():
     report = DailyReport()
 
-    report.generate(Decimal("1000"))
+    report.generate(Decimal(1000))
 
     assert report.generated is True
 
@@ -125,6 +125,6 @@ def test_complete_session_close_flow():
 
     assert session.closed is True
 
-    assert report.data["net_pnl"] == Decimal("1000")
+    assert report.data["net_pnl"] == Decimal(1000)
 
     assert backup.saved is True

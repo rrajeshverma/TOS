@@ -9,14 +9,12 @@ using simplified service wiring.
 
 from decimal import Decimal
 
-
+from engines.decision_engine import DecisionEngine
+from engines.risk_engine import RiskEngine
 from tests.helpers.domain_factory import (
     make_indicator_set,
     make_market,
 )
-
-from engines.decision_engine import DecisionEngine
-from engines.risk_engine import RiskEngine
 
 
 class DummyPaperExecutor:
@@ -34,7 +32,7 @@ class DummyPaperExecutor:
 
 def test_market_object_reaches_strategy():
     market = make_market(
-        close=Decimal("25100"),
+        close=Decimal(25100),
     )
 
     assert market.symbol == "NIFTY"
@@ -42,13 +40,13 @@ def test_market_object_reaches_strategy():
 
 def test_decision_engine_generates_trade_signal():
     market = make_market(
-        close=Decimal("25100"),
+        close=Decimal(25100),
     )
 
     indicators = make_indicator_set(
-        ema_high=Decimal("25000"),
-        ema_low=Decimal("24900"),
-        vwap=Decimal("25000"),
+        ema_high=Decimal(25000),
+        ema_low=Decimal(24900),
+        vwap=Decimal(25000),
         rsi=60,
         volume_average=50000,
     )
@@ -63,13 +61,13 @@ def test_decision_engine_generates_trade_signal():
 
 def test_risk_engine_accepts_trade_decision():
     market = make_market(
-        close=Decimal("25100"),
+        close=Decimal(25100),
     )
 
     indicators = make_indicator_set(
-        ema_high=Decimal("25000"),
-        ema_low=Decimal("24900"),
-        vwap=Decimal("25000"),
+        ema_high=Decimal(25000),
+        ema_low=Decimal(24900),
+        vwap=Decimal(25000),
         rsi=60,
         volume_average=50000,
     )
@@ -84,7 +82,7 @@ def test_risk_engine_accepts_trade_decision():
     result = risk.evaluate(
         decision,
         trades_today=0,
-        daily_loss=Decimal("0"),
+        daily_loss=Decimal(0),
     )
 
     assert result is not None
@@ -110,13 +108,13 @@ def test_trade_pipeline_reaches_executor():
 
 def test_complete_paper_pipeline():
     market = make_market(
-        close=Decimal("25100"),
+        close=Decimal(25100),
     )
 
     indicators = make_indicator_set(
-        ema_high=Decimal("25000"),
-        ema_low=Decimal("24900"),
-        vwap=Decimal("25000"),
+        ema_high=Decimal(25000),
+        ema_low=Decimal(24900),
+        vwap=Decimal(25000),
         rsi=60,
         volume_average=50000,
     )

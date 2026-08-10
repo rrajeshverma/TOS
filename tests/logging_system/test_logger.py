@@ -44,9 +44,7 @@ def test_logger_level():
 def test_console_handler_exists():
     logger = get_logger()
 
-    assert any(
-        isinstance(handler, logging.StreamHandler) for handler in logger.handlers
-    )
+    assert any(isinstance(handler, logging.StreamHandler) for handler in logger.handlers)
 
 
 def test_file_handler_exists():

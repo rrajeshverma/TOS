@@ -22,8 +22,8 @@ IndicatorSet
 from datetime import datetime
 
 from brokers.dhan.models import BrokerTick
-from market.candle_builder import CandleBuilder
 from engines.indicator_engine import IndicatorEngine
+from market.candle_builder import CandleBuilder
 
 
 def create_tick(price):

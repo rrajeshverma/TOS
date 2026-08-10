@@ -1,5 +1,6 @@
-import pytest
 import json
+
+import pytest
 
 from config.config_manager import ConfigManager
 from config.settings_loader import SettingsLoader

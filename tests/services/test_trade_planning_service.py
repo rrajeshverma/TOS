@@ -11,15 +11,15 @@ def test_create_trade_plan():
 
     plan = service.create_trade_plan(
         decision=make_decision(),
-        entry_price=Decimal("250"),
-        stop_loss=Decimal("240"),
-        target_price=Decimal("270"),
-        risk_per_trade=Decimal("2500"),
+        entry_price=Decimal(250),
+        stop_loss=Decimal(240),
+        target_price=Decimal(270),
+        risk_per_trade=Decimal(2500),
         lot_size=65,
     )
 
-    assert plan.entry_price == Decimal("250")
-    assert plan.stop_loss == Decimal("240")
-    assert plan.target_price == Decimal("270")
+    assert plan.entry_price == Decimal(250)
+    assert plan.stop_loss == Decimal(240)
+    assert plan.target_price == Decimal(270)
     assert plan.position_size.lots > 0
     assert plan.position_size.quantity > 0

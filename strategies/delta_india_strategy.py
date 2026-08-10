@@ -77,7 +77,7 @@ class DeltaIndiaStrategy(BaseStrategy):
 
         # Temporary fixed threshold.
         # Will be replaced with ATR / average candle size.
-        average_body = Decimal("100")
+        average_body = Decimal(100)
 
         if not self._big_candle_filter.allowed(
             candle_body,

@@ -5,8 +5,8 @@ Dhan WebSocket authentication lifecycle
 
 import pytest
 
-from brokers.dhan.websocket import WebSocketClient
 from brokers.dhan.session import DhanSession
+from brokers.dhan.websocket import WebSocketClient
 
 
 class DummyWebSocketTransport:

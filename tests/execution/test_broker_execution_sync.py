@@ -79,7 +79,7 @@ def test_cancel():
 
 
 def test_broker_order_id_forwarded():
-    sync, tracker, dispatcher = create_sync()
+    sync, _tracker, dispatcher = create_sync()
 
     sync.process(
         10,

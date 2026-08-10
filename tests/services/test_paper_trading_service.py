@@ -45,8 +45,8 @@ def create_trade():
 
     return TradeFactory().create(
         risk=risk,
-        entry_price=Decimal("25000"),
-        stop_loss=Decimal("24950"),
+        entry_price=Decimal(25000),
+        stop_loss=Decimal(24950),
     )
 
 
@@ -58,8 +58,8 @@ def test_execute_trade():
     position = service.execute(trade)
 
     assert position.quantity == 65
-    assert position.average_price == Decimal("25000")
-    assert position.last_traded_price == Decimal("25000")
+    assert position.average_price == Decimal(25000)
+    assert position.last_traded_price == Decimal(25000)
     assert position.status == TradeStatus.OPEN
 
 
@@ -72,10 +72,10 @@ def test_update_price():
 
     updated = service.update_price(
         position,
-        Decimal("25025"),
+        Decimal(25025),
     )
 
-    assert updated.last_traded_price == Decimal("25025")
+    assert updated.last_traded_price == Decimal(25025)
 
 
 def test_close_position():
@@ -87,7 +87,7 @@ def test_close_position():
 
     closed = service.close(
         position,
-        Decimal("25100"),
+        Decimal(25100),
     )
 
     assert closed.status == TradeStatus.CLOSED
@@ -100,8 +100,8 @@ def test_close_sets_closed_at():
         position_id="POS001",
         order=None,
         quantity=1,
-        average_price=Decimal("100"),
-        last_traded_price=Decimal("100"),
+        average_price=Decimal(100),
+        last_traded_price=Decimal(100),
         status=TradeStatus.OPEN,
         opened_at=datetime.now(),
         closed_at=None,
@@ -109,7 +109,7 @@ def test_close_sets_closed_at():
 
     closed = service.close(
         position,
-        Decimal("110"),
+        Decimal(110),
     )
 
     assert closed.closed_at is not None
@@ -124,7 +124,7 @@ def test_update_price_preserves_position_id():
 
     updated = service.update_price(
         position,
-        Decimal("25050"),
+        Decimal(25050),
     )
 
     assert updated.position_id == position.position_id
@@ -142,14 +142,14 @@ def test_close_preserves_position_data():
 
     closed = service.close(
         position,
-        Decimal("25100"),
+        Decimal(25100),
     )
 
     assert closed.position_id == position.position_id
     assert closed.quantity == position.quantity
     assert closed.average_price == position.average_price
     assert closed.opened_at == position.opened_at
-    assert closed.last_traded_price == Decimal("25100")
+    assert closed.last_traded_price == Decimal(25100)
 
 
 def test_paper_trade_lifecycle():
@@ -161,16 +161,16 @@ def test_paper_trade_lifecycle():
 
     position = service.update_price(
         position,
-        Decimal("25050"),
+        Decimal(25050),
     )
 
     position = service.close(
         position,
-        Decimal("25100"),
+        Decimal(25100),
     )
 
     assert position.status == TradeStatus.CLOSED
-    assert position.last_traded_price == Decimal("25100")
+    assert position.last_traded_price == Decimal(25100)
     assert position.closed_at is not None
 
 
@@ -293,7 +293,7 @@ def test_update_price_returns_new_instance():
 
     position = service.execute(create_trade())
 
-    updated = service.update_price(position, Decimal("25100"))
+    updated = service.update_price(position, Decimal(25100))
 
     assert updated is not position
 
@@ -303,7 +303,7 @@ def test_close_returns_new_instance():
 
     position = service.execute(create_trade())
 
-    closed = service.close(position, Decimal("25200"))
+    closed = service.close(position, Decimal(25200))
 
     assert closed is not position
 
@@ -313,7 +313,7 @@ def test_update_price_preserves_order_reference():
 
     position = service.execute(create_trade())
 
-    updated = service.update_price(position, Decimal("25125"))
+    updated = service.update_price(position, Decimal(25125))
 
     assert updated.order is position.order
 
@@ -323,7 +323,7 @@ def test_close_preserves_order_reference():
 
     position = service.execute(create_trade())
 
-    closed = service.close(position, Decimal("25250"))
+    closed = service.close(position, Decimal(25250))
 
     assert closed.order is position.order
 
@@ -335,10 +335,10 @@ def test_update_price_does_not_modify_original():
 
     original = position.last_traded_price
 
-    updated = service.update_price(position, Decimal("25175"))
+    updated = service.update_price(position, Decimal(25175))
 
     assert position.last_traded_price == original
-    assert updated.last_traded_price == Decimal("25175")
+    assert updated.last_traded_price == Decimal(25175)
 
 
 def test_close_does_not_modify_original():
@@ -346,7 +346,7 @@ def test_close_does_not_modify_original():
 
     position = service.execute(create_trade())
 
-    closed = service.close(position, Decimal("25300"))
+    closed = service.close(position, Decimal(25300))
 
     assert position.status == TradeStatus.OPEN
     assert position.closed_at is None

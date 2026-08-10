@@ -4,15 +4,14 @@ Trading runtime orchestrator.
 
 from __future__ import annotations
 
+from runtime.market_clock import MarketClock
 from runtime.runtime_metrics import RuntimeMetrics
+from runtime.runtime_mode import RuntimeMode
 from runtime.trading_session import TradingSession
 from shared.event_bus import EventBus
 from shared.events import Event
 from shared.logger import get_logger
 from shared.runtime_status import RuntimeStatus
-from runtime.market_clock import MarketClock
-from runtime.runtime_mode import RuntimeMode
-
 
 LOGGER = get_logger(__name__)
 
@@ -93,11 +92,7 @@ class TradingRuntime:
         list[str]
             Names of missing services.
         """
-        return [
-            service
-            for service in REQUIRED_SERVICES
-            if self.services.get(service) is None
-        ]
+        return [service for service in REQUIRED_SERVICES if self.services.get(service) is None]
 
     def start(self) -> None:
         self.runtime_status = RuntimeStatus.STARTING

@@ -1,7 +1,6 @@
 import pytest
 
 from config.runtime_config import RuntimeConfig
-
 from exceptions import InvalidConfigurationError
 
 

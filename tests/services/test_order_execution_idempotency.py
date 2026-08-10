@@ -1,5 +1,5 @@
-from services.order_execution_adapter import OrderExecutionAdapter
 from execution.order_idempotency import OrderIdempotency
+from services.order_execution_adapter import OrderExecutionAdapter
 
 
 class FakeBroker:

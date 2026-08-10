@@ -30,11 +30,7 @@ class InstrumentProvider:
             try:
                 symbol = row[5]
 
-                if (
-                    "NIFTY" in symbol
-                    and option_type in symbol
-                    and str(strike) in symbol
-                ):
+                if "NIFTY" in symbol and option_type in symbol and str(strike) in symbol:
                     results.append(row)
 
             except Exception:

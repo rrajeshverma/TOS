@@ -29,9 +29,7 @@ class StrategySelector:
         self,
         names,
     ):
-        self.selected_strategies = [
-            name for name in names if self.manager.registry.contains(name)
-        ]
+        self.selected_strategies = [name for name in names if self.manager.registry.contains(name)]
 
     def get_selected_many(
         self,

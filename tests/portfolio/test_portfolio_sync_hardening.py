@@ -3,7 +3,6 @@ from portfolio.holdings_sync import HoldingsSync
 from portfolio.position_sync import PositionSync
 from portfolio.sync import BrokerSyncService
 
-
 # -------------------------
 # Account Sync
 # -------------------------

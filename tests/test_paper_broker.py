@@ -116,9 +116,9 @@ def test_get_funds():
 
     funds = broker.get_funds()
 
-    assert funds.available_cash == Decimal("1000000")
-    assert funds.available_margin == Decimal("1000000")
-    assert funds.utilised_margin == Decimal("0")
+    assert funds.available_cash == Decimal(1000000)
+    assert funds.available_margin == Decimal(1000000)
+    assert funds.utilised_margin == Decimal(0)
 
 
 def test_modify_order_unknown_order():

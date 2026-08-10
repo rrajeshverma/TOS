@@ -1,16 +1,6 @@
-"""
-=========================================================
-Trading Operating System (TOS)
-Module      : ID Generator
-Version     : 1.0.0
-Author       : Rajesh Varma
-Description : Generates unique IDs for domain objects.
-=========================================================
-"""
-
 from __future__ import annotations
 
-from datetime import datetime
+from datetime import UTC, datetime
 from itertools import count
 from threading import Lock
 
@@ -31,7 +21,7 @@ def _generate(prefix: str) -> str:
     with _lock:
         sequence = next(_counter)
 
-    return f"{prefix}{datetime.now():%Y%m%d}{sequence:04d}"
+    return f"{prefix}{datetime.now(UTC):%Y%m%d}{sequence:04d}"
 
 
 def generate_decision_id() -> str:

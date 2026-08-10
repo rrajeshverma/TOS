@@ -1,7 +1,8 @@
 import pytest
-from exceptions import InvalidConfigurationError
+
 from config.runtime_config import RuntimeConfig
 from config.runtime_config_loader import RuntimeConfigLoader
+from exceptions import InvalidConfigurationError
 
 
 def test_loader_returns_runtime_config():

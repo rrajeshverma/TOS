@@ -8,10 +8,7 @@ def test_load_returns_market_objects(tmp_path: Path):
     csv_file = tmp_path / "btc.csv"
 
     csv_file.write_text(
-        (
-            "timestamp,open,high,low,close,volume\n"
-            "2026-01-01T00:00:00,100,105,99,104,1000\n"
-        ),
+        ("timestamp,open,high,low,close,volume\n2026-01-01T00:00:00,100,105,99,104,1000\n"),
         encoding="utf-8",
     )
 

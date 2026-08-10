@@ -19,7 +19,7 @@ def create_order():
         quantity=50,
         order_type=OrderType.LIMIT,
         product=ProductType.INTRADAY,
-        price=Decimal("25000"),
+        price=Decimal(25000),
     )
 
 
@@ -29,10 +29,10 @@ def test_modify_price():
 
     modified = broker.modify_order(
         order.broker_order_id,
-        price=Decimal("25100"),
+        price=Decimal(25100),
     )
 
-    assert modified.price == Decimal("25100")
+    assert modified.price == Decimal(25100)
 
 
 def test_modify_quantity():
@@ -53,10 +53,10 @@ def test_modify_trigger_price():
 
     modified = broker.modify_order(
         order.broker_order_id,
-        trigger_price=Decimal("24950"),
+        trigger_price=Decimal(24950),
     )
 
-    assert modified.trigger_price == Decimal("24950")
+    assert modified.trigger_price == Decimal(24950)
 
 
 def test_modify_returns_updated_order():
@@ -141,11 +141,11 @@ def test_multiple_modifications():
     broker.modify_order(order.broker_order_id, quantity=20)
     modified = broker.modify_order(
         order.broker_order_id,
-        price=Decimal("25200"),
+        price=Decimal(25200),
     )
 
     assert modified.quantity == 20
-    assert modified.price == Decimal("25200")
+    assert modified.price == Decimal(25200)
 
 
 def test_modify_price_only():
@@ -154,7 +154,7 @@ def test_modify_price_only():
 
     modified = broker.modify_order(
         order.broker_order_id,
-        price=Decimal("24990"),
+        price=Decimal(24990),
     )
 
     assert modified.quantity == 50
@@ -169,7 +169,7 @@ def test_modify_quantity_only():
         quantity=5,
     )
 
-    assert modified.price == Decimal("25000")
+    assert modified.price == Decimal(25000)
 
 
 def test_modify_preserves_id():

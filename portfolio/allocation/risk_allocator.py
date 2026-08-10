@@ -12,8 +12,7 @@ class RiskAllocator:
         return self.allocations.get(strategy, 0)
 
     def allocate_risk(self, strategy, amount):
-        if amount < 0:
-            amount = 0
+        amount = max(amount, 0)
 
         available = self.remaining_risk()
 

@@ -8,8 +8,7 @@ class StrategyAllocator:
         self.allocations = {}
 
     def allocate(self, strategy, amount):
-        if amount < 0:
-            amount = 0
+        amount = max(amount, 0)
 
         available = self.remaining_capital()
 

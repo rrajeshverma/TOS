@@ -5,7 +5,7 @@ Tracks every live trading enable action.
 """
 
 from dataclasses import dataclass
-from datetime import datetime
+from datetime import UTC, datetime
 
 
 @dataclass(frozen=True)
@@ -31,11 +31,10 @@ class LiveAuditLogger:
         record = LiveAuditRecord(
             operator=operator,
             reason=reason,
-            timestamp=datetime.now(),
+            timestamp=datetime.now(UTC),  # ✅ correct
         )
 
         self._records.append(record)
-
         return record
 
     @property

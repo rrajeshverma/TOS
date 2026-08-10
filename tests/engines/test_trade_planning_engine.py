@@ -28,16 +28,16 @@ def test_create_trade_plan():
     plan = TradePlanningEngine().create_plan(
         decision=decision,
         position_size=position_size,
-        entry_price=Decimal("250"),
-        stop_loss=Decimal("240"),
-        target_price=Decimal("270"),
+        entry_price=Decimal(250),
+        stop_loss=Decimal(240),
+        target_price=Decimal(270),
     )
 
     assert plan.decision == decision
     assert plan.position_size == position_size
-    assert plan.entry_price == Decimal("250")
-    assert plan.stop_loss == Decimal("240")
-    assert plan.target_price == Decimal("270")
+    assert plan.entry_price == Decimal(250)
+    assert plan.stop_loss == Decimal(240)
+    assert plan.target_price == Decimal(270)
 
 
 def test_stop_loss_above_entry_raises_error():
@@ -47,9 +47,9 @@ def test_stop_loss_above_entry_raises_error():
         TradePlanningEngine().create_plan(
             decision=decision,
             position_size=make_position_size(),
-            entry_price=Decimal("250"),
-            stop_loss=Decimal("255"),
-            target_price=Decimal("270"),
+            entry_price=Decimal(250),
+            stop_loss=Decimal(255),
+            target_price=Decimal(270),
         )
 
 
@@ -60,7 +60,7 @@ def test_target_below_entry_raises_error():
         TradePlanningEngine().create_plan(
             decision=decision,
             position_size=make_position_size(),
-            entry_price=Decimal("250"),
-            stop_loss=Decimal("240"),
-            target_price=Decimal("245"),
+            entry_price=Decimal(250),
+            stop_loss=Decimal(240),
+            target_price=Decimal(245),
         )

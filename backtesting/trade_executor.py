@@ -55,8 +55,8 @@ class TradeExecutor:
         entry_price: Decimal,
         quantity: int,
         entry_time: datetime,
-        stop_loss: Decimal = Decimal("0"),
-        target: Decimal = Decimal("0"),
+        stop_loss: Decimal = Decimal(0),
+        target: Decimal = Decimal(0),
     ) -> Trade:
         """
         Open a new trade.

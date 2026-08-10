@@ -16,9 +16,9 @@ class PaperBroker(BaseBroker):
         self._holdings = []
 
         self._funds = Funds(
-            available_cash=Decimal("1000000"),
-            utilised_margin=Decimal("0"),
-            available_margin=Decimal("1000000"),
+            available_cash=Decimal(1000000),
+            utilised_margin=Decimal(0),
+            available_margin=Decimal(1000000),
         )
 
     def connect(self) -> None:

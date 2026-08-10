@@ -1,3 +1,5 @@
+from typing import ClassVar
+
 from config.config_manager import ConfigManager
 from config.validators import (
     validate_required,
@@ -6,7 +8,7 @@ from config.validators import (
 
 
 class LoggingValidator:
-    SUPPORTED_LEVELS = {
+    SUPPORTED_LEVELS: ClassVar[set[str]] = {
         "DEBUG",
         "INFO",
         "WARNING",
@@ -14,7 +16,7 @@ class LoggingValidator:
         "CRITICAL",
     }
 
-    SUPPORTED_ROTATIONS = {
+    SUPPORTED_ROTATIONS: ClassVar[set[str]] = {
         "daily",
         "weekly",
         "monthly",

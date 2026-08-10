@@ -48,9 +48,7 @@ def test_cumulative_return_negative():
 def test_calculate_and_cumulative_are_equal():
     returns = Returns()
 
-    assert returns.calculate(118000, 100000) == returns.cumulative_return(
-        118000, 100000
-    )
+    assert returns.calculate(118000, 100000) == returns.cumulative_return(118000, 100000)
 
 
 def test_cagr_zero_growth():

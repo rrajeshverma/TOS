@@ -1,13 +1,15 @@
 from config.config_manager import ConfigManager
 from config.validators import (
+    validate_range,
     validate_required,
     validate_type,
-    validate_range,
 )
 
 
 class ConfigValidator:
-    VALID_MODES = {"LIVE", "PAPER", "BACKTEST"}
+    from typing import ClassVar
+
+    VALID_MODES: ClassVar[set[str]] = {"LIVE", "PAPER", "BACKTEST"}
 
     def __init__(self, manager: ConfigManager):
         self.manager = manager

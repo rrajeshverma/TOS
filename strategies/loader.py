@@ -5,12 +5,10 @@ Strategy loader.
 from __future__ import annotations
 
 import importlib
+import inspect
 import pkgutil
 
 import strategies.plugins
-
-import inspect
-
 from strategies.base_strategy import BaseStrategy
 
 
@@ -44,10 +42,7 @@ class StrategyLoader:
         Import all discovered strategy plugin modules.
         """
 
-        return [
-            importlib.import_module(f"strategies.plugins.{name}")
-            for name in self.discover()
-        ]
+        return [importlib.import_module(f"strategies.plugins.{name}") for name in self.discover()]
 
     def strategy_classes(self) -> list[type[BaseStrategy]]:
         """

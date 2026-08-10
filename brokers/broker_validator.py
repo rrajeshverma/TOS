@@ -1,3 +1,5 @@
+from typing import ClassVar
+
 from config.config_manager import ConfigManager
 from config.validators import (
     validate_required,
@@ -5,7 +7,7 @@ from config.validators import (
 
 
 class BrokerValidator:
-    VALID_BROKERS = {
+    VALID_BROKERS: ClassVar[set[str]] = {
         "DHAN",
         "DELTA",
         "ZERODHA",

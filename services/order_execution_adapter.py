@@ -9,9 +9,8 @@ Description : Converts and executes orders through broker.
 
 from __future__ import annotations
 
-from execution.order_idempotency import OrderIdempotency
-
 from domain.order import Order
+from execution.order_idempotency import OrderIdempotency
 
 
 class OrderExecutionAdapter:
@@ -75,12 +74,14 @@ class OrderExecutionAdapter:
             return result
 
         if self.broker is not None:
-            if hasattr(
-                self.broker,
-                "is_connected",
+            if (
+                hasattr(
+                    self.broker,
+                    "is_connected",
+                )
+                and not self.broker.is_connected()
             ):
-                if not self.broker.is_connected():
-                    raise RuntimeError("Broker is not connected.")
+                raise RuntimeError("Broker is not connected.")
 
             result = self.broker.place_order(order)
 

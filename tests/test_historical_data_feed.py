@@ -155,10 +155,7 @@ def test_next_after_end_raises_stop_iteration():
 
     feed.next()
 
-    with pytest.raises(
-        StopIteration,
-        match="No more candles available.",
-    ):
+    with pytest.raises(StopIteration, match=r"No more candles available."):
         feed.next()
 
 
@@ -174,8 +171,5 @@ def test_peek_after_end_raises_stop_iteration():
 
     feed.next()
 
-    with pytest.raises(
-        StopIteration,
-        match="No more candles available.",
-    ):
+    with pytest.raises(StopIteration, match=r"No more candles available."):
         feed.peek()

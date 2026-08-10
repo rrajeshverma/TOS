@@ -1,8 +1,8 @@
 import pytest
 
 from paper.paper_order_service import PaperOrderService
-from paper.paper_position_book import PaperPositionBook
 from paper.paper_portfolio import PaperPortfolio
+from paper.paper_position_book import PaperPositionBook
 from paper.paper_trading_pipeline import PaperTradingPipeline
 
 

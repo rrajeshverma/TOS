@@ -1,6 +1,6 @@
-from portfolio.portfolio_snapshot import PortfolioSnapshot
 from portfolio.portfolio_metrics import PortfolioMetrics
 from portfolio.portfolio_risk import PortfolioRisk
+from portfolio.portfolio_snapshot import PortfolioSnapshot
 
 
 def create_snapshot():

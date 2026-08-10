@@ -1,9 +1,8 @@
+from execution.execution_engine import ExecutionEngine
 from trading.execution_mode import (
     ExecutionMode,
     ExecutionModeGuard,
 )
-
-from execution.execution_engine import ExecutionEngine
 
 
 class DummyOrderService:

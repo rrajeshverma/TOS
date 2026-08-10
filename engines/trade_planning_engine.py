@@ -12,8 +12,8 @@ Description : Creates immutable trade execution plans.
 from decimal import Decimal
 
 from domain.decision import Decision
-from domain.trade_plan import TradePlan
 from domain.position_size import PositionSize
+from domain.trade_plan import TradePlan
 
 
 class TradePlanningEngine:

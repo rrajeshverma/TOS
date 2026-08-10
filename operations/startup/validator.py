@@ -13,7 +13,6 @@ class StartupValidator:
     def register(self, check):
         self._checks.append(check)
         # Preserve original API
-        return None
 
     def run(self):
         result = ValidationResult()

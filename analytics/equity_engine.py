@@ -8,7 +8,6 @@ class EquityEngine:
     def record_trade(self, pnl):
         self.current_equity += pnl
 
-        if self.current_equity > self.peak_equity:
-            self.peak_equity = self.current_equity
+        self.peak_equity = max(self.peak_equity, self.current_equity)
 
         self.equity_history.append(self.current_equity)

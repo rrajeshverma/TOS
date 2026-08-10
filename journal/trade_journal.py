@@ -12,17 +12,14 @@ from __future__ import annotations
 
 import csv
 from pathlib import Path
+from typing import ClassVar
 
 from domain.trade import Trade
 from shared.logger import get_logger
 
 
 class TradeJournal:
-    """
-    Records completed trades into a CSV journal.
-    """
-
-    HEADER = [
+    HEADER: ClassVar[list[str]] = [
         "Trade ID",
         "Entry Time",
         "Entry Price",
@@ -107,7 +104,6 @@ class TradeJournal:
 
         with open(
             self.file_path,
-            "r",
             newline="",
             encoding="utf-8",
         ) as file:

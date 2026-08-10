@@ -1,8 +1,9 @@
 import csv
+from typing import ClassVar
 
 
 class CSVTradeExporter:
-    HEADER = ["symbol", "entry", "exit", "qty", "pnl"]
+    HEADER: ClassVar[list[str]] = ["symbol", "entry", "exit", "qty", "pnl"]
 
     def export(self, trades, filename):
         with open(filename, "w", newline="") as file:

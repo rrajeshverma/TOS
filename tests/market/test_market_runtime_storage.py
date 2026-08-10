@@ -1,6 +1,5 @@
 from datetime import datetime
 
-
 from domain.market import Market
 from market.market_runtime import MarketRuntime
 

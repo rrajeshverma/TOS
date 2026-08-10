@@ -14,17 +14,17 @@ from decimal import Decimal
 # Capital
 # =====================================================
 
-CAPITAL = Decimal("100000")
+CAPITAL = Decimal(100000)
 
 # =====================================================
 # Risk
 # =====================================================
 
-RISK_PERCENT = Decimal("2")
+RISK_PERCENT = Decimal(2)
 
-MAX_RISK_PER_TRADE = Decimal("2000")
+MAX_RISK_PER_TRADE = Decimal(2000)
 
-MAX_DAILY_LOSS = Decimal("5000")
+MAX_DAILY_LOSS = Decimal(5000)
 
 MAX_TRADES_PER_DAY = 4
 
@@ -38,4 +38,4 @@ DEFAULT_NIFTY_QTY = 65
 # Target
 # =====================================================
 
-RISK_REWARD_RATIO = Decimal("2")
+RISK_REWARD_RATIO = Decimal(2)

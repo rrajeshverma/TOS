@@ -7,23 +7,15 @@ Description : Maps order statuses between system layers.
 =========================================================
 """
 
+from typing import ClassVar
+
 from brokers.models import OrderStatus as BrokerOrderStatus
 from execution.order_service import OrderStatus as ExecutionOrderStatus
 from shared.enums import OrderStatus as DomainOrderStatus
 
 
 class OrderStatusMapper:
-    """
-    Converts order status between:
-
-    Broker Layer
-        ↓
-    Execution Layer
-        ↓
-    Domain Layer
-    """
-
-    BROKER_TO_EXECUTION = {
+    BROKER_TO_EXECUTION: ClassVar[dict] = {
         BrokerOrderStatus.PENDING: ExecutionOrderStatus.PENDING,
         BrokerOrderStatus.OPEN: ExecutionOrderStatus.SUBMITTED,
         BrokerOrderStatus.COMPLETE: ExecutionOrderStatus.FILLED,
@@ -31,7 +23,7 @@ class OrderStatusMapper:
         BrokerOrderStatus.REJECTED: ExecutionOrderStatus.CANCELLED,
     }
 
-    EXECUTION_TO_DOMAIN = {
+    EXECUTION_TO_DOMAIN: ClassVar[dict] = {
         ExecutionOrderStatus.NEW: DomainOrderStatus.CREATED,
         ExecutionOrderStatus.PENDING: DomainOrderStatus.PENDING,
         ExecutionOrderStatus.SUBMITTED: DomainOrderStatus.PENDING,

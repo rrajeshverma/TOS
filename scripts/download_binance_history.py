@@ -49,14 +49,7 @@ def download():
         for candle in candles:
             timestamp = datetime.utcfromtimestamp(candle[0] / 1000).isoformat()
 
-            f.write(
-                f"{timestamp},"
-                f"{candle[1]},"
-                f"{candle[2]},"
-                f"{candle[3]},"
-                f"{candle[4]},"
-                f"{candle[5]}\n"
-            )
+            f.write(f"{timestamp},{candle[1]},{candle[2]},{candle[3]},{candle[4]},{candle[5]}\n")
 
     print(f"Downloaded {len(candles)} candles.")
     print(f"Saved to {OUTPUT_FILE}")

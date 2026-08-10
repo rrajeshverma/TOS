@@ -1,14 +1,11 @@
 from datetime import datetime
+from decimal import Decimal
+from unittest.mock import Mock
 
 from domain.indicator_set import IndicatorSet
 from domain.market import Market
-
-from unittest.mock import Mock
-
 from services.paper_trade_runner import PaperTradeRunner
 from shared.enums import Signal
-
-from decimal import Decimal
 
 
 class FakeDecision:
@@ -25,7 +22,7 @@ class FakeRisk:
 class FakeTrade:
     def __init__(self):
         self.trade_id = "TRADE001"
-        self.entry_price = Decimal("100")
+        self.entry_price = Decimal(100)
 
 
 class FakeOrder:
@@ -78,7 +75,7 @@ def create_market_and_indicators():
 
 
 def test_run_returns_rejected_when_risk_not_approved():
-    runner, strategy, _, adapter = create_runner()
+    runner, strategy, _, _adapter = create_runner()
 
     strategy.decide.return_value = FakeDecision()
 

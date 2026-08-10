@@ -86,7 +86,7 @@ def test_risk_engine_accepts_live_trade():
     result = risk.evaluate(
         decision,
         trades_today=0,
-        daily_loss=Decimal("0"),
+        daily_loss=Decimal(0),
     )
 
     assert result is not None
@@ -105,13 +105,13 @@ def test_trade_factory_creates_trade():
     risk = RiskEngine().evaluate(
         decision,
         trades_today=0,
-        daily_loss=Decimal("0"),
+        daily_loss=Decimal(0),
     )
 
     trade = TradeFactory().create(
         risk,
-        Decimal("25100"),
-        Decimal("50"),
+        Decimal(25100),
+        Decimal(50),
     )
 
     assert trade is not None
@@ -130,13 +130,13 @@ def test_execution_payload_contains_order_details():
     risk = RiskEngine().evaluate(
         decision,
         trades_today=0,
-        daily_loss=Decimal("0"),
+        daily_loss=Decimal(0),
     )
 
     trade = TradeFactory().create(
         risk,
-        Decimal("25100"),
-        Decimal("50"),
+        Decimal(25100),
+        Decimal(50),
     )
 
     assert trade is not None

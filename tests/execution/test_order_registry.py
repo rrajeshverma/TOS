@@ -1,6 +1,6 @@
-from execution.order_registry import OrderRegistry
-
 import pytest
+
+from execution.order_registry import OrderRegistry
 
 
 def test_register_order():

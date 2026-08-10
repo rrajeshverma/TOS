@@ -7,12 +7,12 @@ from datetime import datetime
 from decimal import Decimal
 
 from brokers.dhan.models import BrokerTick
+from domain.indicator_set import IndicatorSet
 from engines.decision_engine import DecisionEngine
 from engines.risk_engine import RiskEngine
 from market.market_runtime import MarketRuntime
 from market.tick_dispatcher import TickDispatcher
 from market.websocket_feed import WebSocketFeed
-from domain.indicator_set import IndicatorSet
 
 
 def create_indicators():
@@ -106,7 +106,7 @@ def test_risk_engine_receives_decision():
     risk = risk_engine.evaluate(
         decision,
         trades_today=0,
-        daily_loss=Decimal("0"),
+        daily_loss=Decimal(0),
     )
 
     assert risk is not None

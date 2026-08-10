@@ -22,7 +22,6 @@ Tick Pipeline
 
 from datetime import datetime
 
-
 from brokers.dhan.session import DhanSession
 from brokers.dhan.websocket import WebSocketClient
 

@@ -1,7 +1,6 @@
 from config.trading_mode import (
     get_trading_mode,
 )
-
 from trading.execution_mode import (
     ExecutionMode,
 )

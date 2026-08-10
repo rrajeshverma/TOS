@@ -14,7 +14,6 @@ from trading.execution_mode import (
     ExecutionMode,
     ExecutionModeGuard,
 )
-
 from trading.live_audit import (
     LiveAuditLogger,
 )

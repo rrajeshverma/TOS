@@ -1,8 +1,9 @@
+from unittest.mock import Mock
+
 from domain.portfolio import Portfolio
 from services.account_synchronizer import AccountSynchronizer
 from services.portfolio_service import PortfolioService
 from storage.portfolio_repository import PortfolioRepository
-from unittest.mock import Mock
 
 
 class FakeBroker:

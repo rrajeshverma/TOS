@@ -38,7 +38,7 @@ class ATREngine:
 
         atr = sum(
             true_ranges[-period:],
-            Decimal("0"),
+            Decimal(0),
         ) / Decimal(period)
 
         return ATR(

@@ -1,10 +1,9 @@
+from datetime import datetime
 from unittest.mock import MagicMock
 
-from backtesting.replay_runner import ReplayRunner
 from backtesting.historical_data_feed import HistoricalDataFeed
+from backtesting.replay_runner import ReplayRunner
 from domain.market import Market
-
-from datetime import datetime
 
 
 def test_replay_runner_feeds_runtime():

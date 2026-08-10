@@ -10,7 +10,6 @@ from __future__ import annotations
 from dataclasses import dataclass
 from decimal import Decimal
 from enum import Enum
-from typing import Optional
 
 
 class OrderSide(Enum):
@@ -46,10 +45,10 @@ class Order:
     order_type: OrderType
     product: ProductType
 
-    price: Optional[Decimal] = None
-    trigger_price: Optional[Decimal] = None
+    price: Decimal | None = None
+    trigger_price: Decimal | None = None
 
-    broker_order_id: Optional[str] = None
+    broker_order_id: str | None = None
     status: OrderStatus = OrderStatus.PENDING
 
 

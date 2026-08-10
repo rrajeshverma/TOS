@@ -116,8 +116,5 @@ def test_update_status_rejects_invalid_transition():
 def test_submit_none_order_raises_value_error():
     service = OrderService()
 
-    with pytest.raises(
-        ValueError,
-        match="Order cannot be None.",
-    ):
+    with pytest.raises(ValueError, match=r"Order cannot be None."):
         service.submit(None)

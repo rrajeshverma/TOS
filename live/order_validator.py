@@ -26,7 +26,4 @@ class OrderValidator:
         if order["quantity"] <= 0:
             return False
 
-        if order["price"] <= 0:
-            return False
-
-        return True
+        return not order["price"] <= 0

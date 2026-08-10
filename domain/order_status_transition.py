@@ -7,6 +7,8 @@ Description : Defines valid order lifecycle transitions.
 =========================================================
 """
 
+from typing import ClassVar
+
 from shared.enums import OrderStatus
 
 
@@ -15,7 +17,7 @@ class OrderStatusTransition:
     Controls valid transitions between order statuses.
     """
 
-    _TRANSITIONS = {
+    _TRANSITIONS: ClassVar[dict] = {
         OrderStatus.CREATED: {
             OrderStatus.PENDING,
         },

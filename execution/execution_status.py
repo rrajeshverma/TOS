@@ -1,7 +1,7 @@
-from enum import Enum
+from enum import StrEnum
 
 
-class ExecutionStatus(str, Enum):
+class ExecutionStatus(StrEnum):
     PENDING = "PENDING"
     SUBMITTED = "SUBMITTED"
     ACCEPTED = "ACCEPTED"

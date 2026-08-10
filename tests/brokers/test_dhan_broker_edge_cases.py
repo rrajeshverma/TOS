@@ -11,7 +11,6 @@ from brokers.models import (
     ProductType,
 )
 
-
 # ---------------------------------------------------------
 # Empty Response Handling
 # ---------------------------------------------------------
@@ -36,8 +35,8 @@ def test_get_funds_zero_balance():
 
     funds = broker.get_funds()
 
-    assert funds.available_cash == Decimal("0")
-    assert funds.utilised_margin == Decimal("0")
+    assert funds.available_cash == Decimal(0)
+    assert funds.utilised_margin == Decimal(0)
 
 
 class EmptyOrdersClient:

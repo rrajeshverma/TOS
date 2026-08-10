@@ -1,5 +1,6 @@
-import websocket
 import json
+
+import websocket
 
 
 class LiveMarketFeed:
@@ -30,8 +31,7 @@ class LiveMarketFeed:
 
     def run_forever(self):
         url = (
-            f"wss://api-feed.dhan.co?"
-            f"version=2&token={self.access_token}&clientId={self.client_id}"
+            f"wss://api-feed.dhan.co?version=2&token={self.access_token}&clientId={self.client_id}"
         )
 
         ws = websocket.WebSocketApp(

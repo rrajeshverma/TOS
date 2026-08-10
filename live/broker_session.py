@@ -49,9 +49,7 @@ class BrokerSession:
         """Return session status."""
         return {
             "connected": self._connected,
-            "broker": (
-                type(self._broker).__name__ if self._broker is not None else None
-            ),
+            "broker": (type(self._broker).__name__ if self._broker is not None else None),
         }
 
     # ---------------------------------------------------------

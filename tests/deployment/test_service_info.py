@@ -1,5 +1,5 @@
+from config.version import APP_NAME, BUILD, MODE, VERSION
 from deployment.service_info import ServiceInfo
-from config.version import APP_NAME, VERSION, BUILD, MODE
 
 
 def test_service_name():

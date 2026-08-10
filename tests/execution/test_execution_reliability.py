@@ -1,10 +1,10 @@
 import time
+
 import pytest
 
+from execution.dead_letter_queue import DeadLetterQueue
 from execution.retry_policy import RetryPolicy
 from execution.timeout_handler import TimeoutHandler
-from execution.dead_letter_queue import DeadLetterQueue
-
 
 # -------------------------------
 # Retry Policy Tests

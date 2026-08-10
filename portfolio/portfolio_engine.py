@@ -6,8 +6,8 @@ Coordinates portfolio evaluation.
 
 from __future__ import annotations
 
-from portfolio.exposure import ExposureCalculator
 from portfolio.allocation.allocation_engine import AllocationEngine
+from portfolio.exposure import ExposureCalculator
 
 
 class PortfolioEngine:

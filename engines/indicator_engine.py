@@ -11,8 +11,6 @@ Description : Calculates technical indicators from
 
 from __future__ import annotations
 
-from typing import List
-
 import pandas as pd
 
 from config.indicators import (
@@ -48,7 +46,7 @@ class IndicatorEngine:
 
     def calculate(
         self,
-        candles: List[Market],
+        candles: list[Market],
     ) -> IndicatorSet:
         """
         Calculate all indicators from market history.
@@ -78,7 +76,7 @@ class IndicatorEngine:
 
     def _validate_history(
         self,
-        candles: List[Market],
+        candles: list[Market],
     ) -> None:
         if candles is None:
             raise ValueError("Market history is None.")
@@ -88,7 +86,7 @@ class IndicatorEngine:
 
     @staticmethod
     def _to_dataframe(
-        candles: List[Market],
+        candles: list[Market],
     ) -> pd.DataFrame:
         return pd.DataFrame(
             {

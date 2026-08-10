@@ -1,7 +1,7 @@
+from datetime import datetime
+
 from brokers.dhan.models import BrokerTick
 from market.websocket_feed import WebSocketFeed
-
-from datetime import datetime
 
 
 def test_receive_tick_dispatches():

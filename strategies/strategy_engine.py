@@ -5,6 +5,7 @@ Executes registered strategy plugins.
 """
 
 from __future__ import annotations
+
 from strategies.decision import StrategyDecision
 
 

@@ -1,7 +1,7 @@
 import pytest
 
-from config.config_manager import ConfigManager
 from brokers.risk_validator import RiskValidator
+from config.config_manager import ConfigManager
 
 
 def create_valid_config():

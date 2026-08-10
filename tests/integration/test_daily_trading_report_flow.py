@@ -42,11 +42,7 @@ class DailyTradingReport:
             "winning_trades": wins,
             "losing_trades": self.losing_trades(),
             "gross_pnl": self.gross_pnl(),
-            "win_rate": (
-                Decimal(wins) / Decimal(total) * Decimal("100")
-                if total
-                else Decimal("0")
-            ),
+            "win_rate": (Decimal(wins) / Decimal(total) * Decimal(100) if total else Decimal(0)),
         }
 
 
@@ -54,15 +50,15 @@ def create_trades():
     return [
         {
             "symbol": "NIFTY",
-            "pnl": Decimal("1500"),
+            "pnl": Decimal(1500),
         },
         {
             "symbol": "NIFTY",
-            "pnl": Decimal("-500"),
+            "pnl": Decimal(-500),
         },
         {
             "symbol": "NIFTY",
-            "pnl": Decimal("1000"),
+            "pnl": Decimal(1000),
         },
     ]
 
@@ -88,7 +84,7 @@ def test_report_counts_losing_trades():
 def test_report_calculates_gross_pnl():
     report = DailyTradingReport(create_trades())
 
-    assert report.gross_pnl() == Decimal("2000")
+    assert report.gross_pnl() == Decimal(2000)
 
 
 def test_daily_report_generation():
@@ -98,6 +94,6 @@ def test_daily_report_generation():
 
     assert summary["total_trades"] == 3
 
-    assert summary["gross_pnl"] == Decimal("2000")
+    assert summary["gross_pnl"] == Decimal(2000)
 
     assert summary["win_rate"] == Decimal("66.66666666666666666666666667")

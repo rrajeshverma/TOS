@@ -1,6 +1,6 @@
 from portfolio.strategy_allocator import StrategyAllocator
-from portfolio.strategy_registry import StrategyRegistry
 from portfolio.strategy_manager import StrategyManager
+from portfolio.strategy_registry import StrategyRegistry
 from portfolio.strategy_selector import StrategySelector
 
 

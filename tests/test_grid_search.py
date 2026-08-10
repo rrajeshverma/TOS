@@ -1,4 +1,5 @@
 import pytest
+
 from optimizer.grid_search import GridSearch
 from optimizer.optimization_result import OptimizationResult
 from optimizer.parameter_space import ParameterSpace
@@ -135,10 +136,7 @@ def test_store_invalid_result_raises_type_error():
 
     search = GridSearch(space)
 
-    with pytest.raises(
-        TypeError,
-        match="Evaluator must return an OptimizationResult.",
-    ):
+    with pytest.raises(TypeError, match=r"Evaluator must return an OptimizationResult."):
         search._store(object())
 
 
@@ -151,8 +149,5 @@ def test_evaluator_returns_invalid_result():
     def evaluator(params):
         return object()  # Not an OptimizationResult
 
-    with pytest.raises(
-        TypeError,
-        match="Evaluator must return an OptimizationResult.",
-    ):
+    with pytest.raises(TypeError, match=r"Evaluator must return an OptimizationResult."):
         search.run(evaluator)

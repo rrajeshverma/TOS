@@ -5,7 +5,6 @@ from domain.indicator_set import IndicatorSet
 from domain.market import Market
 from domain.portfolio import Portfolio
 from domain.position_size import PositionSize
-
 from engines.decision_engine import DecisionEngine
 from engines.risk_engine import RiskEngine
 from engines.trade_factory import TradeFactory
@@ -14,10 +13,10 @@ from engines.trade_quality_engine import TradeQualityEngine
 
 def make_market(
     *,
-    close=Decimal("25000"),
-    open=Decimal("24990"),
-    high=Decimal("25010"),
-    low=Decimal("24980"),
+    close=Decimal(25000),
+    open=Decimal(24990),
+    high=Decimal(25010),
+    low=Decimal(24980),
     volume=100000,
     symbol="NIFTY",
     exchange="NSE",
@@ -87,8 +86,8 @@ def make_trade():
 
     return TradeFactory().create(
         risk=risk,
-        entry_price=Decimal("25000"),
-        stop_loss=Decimal("24950"),
+        entry_price=Decimal(25000),
+        stop_loss=Decimal(24950),
     )
 
 
@@ -141,5 +140,5 @@ def make_position_size():
     return PositionSize(
         lots=2,
         quantity=130,
-        risk_amount=Decimal("1300"),
+        risk_amount=Decimal(1300),
     )

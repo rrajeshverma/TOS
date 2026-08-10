@@ -21,9 +21,7 @@ class PositionSync:
         self.broker_positions.pop(symbol, None)
 
     def difference(self, symbol):
-        return self.local_positions.get(symbol, 0) - self.broker_positions.get(
-            symbol, 0
-        )
+        return self.local_positions.get(symbol, 0) - self.broker_positions.get(symbol, 0)
 
     def is_in_sync(self):
         return self.local_positions == self.broker_positions
@@ -68,22 +66,14 @@ class PositionSync:
         Positions available locally but missing at broker.
         """
 
-        return [
-            symbol
-            for symbol in self.local_positions
-            if symbol not in self.broker_positions
-        ]
+        return [symbol for symbol in self.local_positions if symbol not in self.broker_positions]
 
     def extra_broker_positions(self):
         """
         Positions available at broker but missing locally.
         """
 
-        return [
-            symbol
-            for symbol in self.broker_positions
-            if symbol not in self.local_positions
-        ]
+        return [symbol for symbol in self.broker_positions if symbol not in self.local_positions]
 
     def sync_report(self):
         """

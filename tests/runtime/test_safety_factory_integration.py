@@ -1,6 +1,7 @@
-from runtime.safety_factory import SafetyFactory
-from execution.execution_engine import ExecutionEngine
 from unittest.mock import Mock
+
+from execution.execution_engine import ExecutionEngine
+from runtime.safety_factory import SafetyFactory
 
 
 def create_engine():

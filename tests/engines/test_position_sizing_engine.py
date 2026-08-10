@@ -13,12 +13,12 @@ def test_calculate_position_size():
     engine = PositionSizingEngine()
 
     result = engine.calculate(
-        capital=Decimal("100000"),
-        risk_percent=Decimal("2"),
-        stop_loss_distance=Decimal("500"),
+        capital=Decimal(100000),
+        risk_percent=Decimal(2),
+        stop_loss_distance=Decimal(500),
     )
 
-    assert result.risk_amount == Decimal("2000")
+    assert result.risk_amount == Decimal(2000)
     assert result.quantity == 4
     assert result.lots == 4
 
@@ -26,9 +26,9 @@ def test_calculate_position_size():
 @pytest.mark.parametrize(
     "capital,risk,sl",
     [
-        (Decimal("0"), Decimal("2"), Decimal("500")),
-        (Decimal("100000"), Decimal("0"), Decimal("500")),
-        (Decimal("100000"), Decimal("2"), Decimal("0")),
+        (Decimal(0), Decimal(2), Decimal(500)),
+        (Decimal(100000), Decimal(0), Decimal(500)),
+        (Decimal(100000), Decimal(2), Decimal(0)),
     ],
 )
 def test_invalid_inputs(
@@ -51,8 +51,8 @@ def test_invalid_lot_size():
 
     with pytest.raises(ValueError):
         engine.calculate(
-            capital=Decimal("100000"),
-            risk_percent=Decimal("2"),
-            stop_loss_distance=Decimal("500"),
+            capital=Decimal(100000),
+            risk_percent=Decimal(2),
+            stop_loss_distance=Decimal(500),
             lot_size=0,
         )

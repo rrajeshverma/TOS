@@ -6,13 +6,13 @@ Manages the lifecycle of orders within the Trading Operating System.
 
 from __future__ import annotations
 
-from enum import Enum
-from typing import Any
+from enum import StrEnum
+from typing import Any, ClassVar
 
 from execution.order_events import OrderEvent, OrderEventType
 
 
-class OrderStatus(str, Enum):
+class OrderStatus(StrEnum):
     """Represents the lifecycle state of an order."""
 
     NEW = "NEW"
@@ -24,7 +24,8 @@ class OrderStatus(str, Enum):
 
 
 class OrderService:
-    """Service responsible for managing and placing orders."""
+    _STATUS_ORDER: ClassVar[dict] = {...}
+    _ALLOWED_TRANSITIONS: ClassVar[dict] = {...}
 
     def __init__(
         self,
@@ -135,9 +136,7 @@ class OrderService:
                 raise ValueError("Quantity must be greater than zero.")
 
             if quantity < self._filled_quantities[order_id]:
-                raise ValueError(
-                    "Modified quantity cannot be less than filled quantity."
-                )
+                raise ValueError("Modified quantity cannot be less than filled quantity.")
 
             self._orders[order_id]["quantity"] = quantity
 
@@ -198,9 +197,7 @@ class OrderService:
         allowed = self._ALLOWED_TRANSITIONS.get(current, set())
 
         if status not in allowed:
-            raise ValueError(
-                f"Invalid status transition: {current.value} -> {status.value}"
-            )
+            raise ValueError(f"Invalid status transition: {current.value} -> {status.value}")
 
         self._statuses[order_id] = status
 
