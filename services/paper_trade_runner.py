@@ -70,20 +70,25 @@ class PaperTradeRunner:
                 "reason": risk.reasons,
             }
 
-        if self.execution_manager is not None:
-            return self.execution_manager.execute(
-                risk,
-            )
+        # -------------------------------------------------
+        # TRADE PLANNING
+        # -------------------------------------------------
 
         plan = self.trade_planner.plan(
             market,
             risk,
         )
 
+        # -------------------------------------------------
+        # POSITION SIZING
+        # -------------------------------------------------
+
         quantity = None
 
         if self.position_sizing_engine is not None:
-            instrument = self.instrument_mapper.get(market.symbol)
+            instrument = self.instrument_mapper.get(
+                market.symbol,
+            )
 
             position_size = self.position_sizing_engine.calculate(
                 capital=CAPITAL,
@@ -93,6 +98,7 @@ class PaperTradeRunner:
                 ),
                 lot_size=instrument.lot_size,
             )
+
             quantity = position_size.quantity
 
             if quantity <= 0:
@@ -100,6 +106,20 @@ class PaperTradeRunner:
                     "status": "REJECTED",
                     "reason": "Position size is zero.",
                 }
+
+        # -------------------------------------------------
+        # NEW EXECUTION PIPELINE
+        # -------------------------------------------------
+
+        if self.execution_manager is not None:
+            return self.execution_manager.execute(
+                risk,
+                quantity=quantity,
+            )
+
+        # -------------------------------------------------
+        # LEGACY PAPER EXECUTION PATH
+        # -------------------------------------------------
 
         trade_kwargs = {
             "entry_price": plan.entry_price,
@@ -121,7 +141,9 @@ class PaperTradeRunner:
             trade.entry_price,
         )
 
-        execution = self.adapter.to_execution_order(order)
+        execution = self.adapter.to_execution_order(
+            order,
+        )
 
         broker_result = self.adapter.execute(
             execution,

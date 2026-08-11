@@ -19,11 +19,15 @@ class ExecutionContextFactory:
     def create(
         cls,
         risk: Risk,
+        quantity: int | None = None,
     ) -> ExecutionContext:
         if risk is None:
             raise ValueError("Risk cannot be None")
 
+        if quantity is not None and quantity <= 0:
+            raise ValueError("Quantity must be greater than zero")
+
         return ExecutionContext(
             risk=risk,
-            quantity=cls.DEFAULT_QUANTITY,
+            quantity=cls.DEFAULT_QUANTITY if quantity is None else quantity,
         )

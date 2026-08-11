@@ -1,11 +1,7 @@
 """
-=========================================================
-Trading Operating System (TOS)
+Execution Manager.
 
-Module      : Execution Manager
-Description : Coordinates execution request creation
-              and order submission.
-=========================================================
+Coordinates the execution pipeline.
 """
 
 from __future__ import annotations
@@ -36,6 +32,7 @@ class ExecutionManager:
     def execute(
         self,
         risk: Risk,
+        quantity: int | None = None,
     ):
         if risk is None:
             raise ValueError("Risk cannot be None")
@@ -43,9 +40,15 @@ class ExecutionManager:
         if not risk.is_approved:
             return risk
 
-        context = ExecutionContextFactory.create(
-            risk,
-        )
+        if quantity is None:
+            context = ExecutionContextFactory.create(
+                risk,
+            )
+        else:
+            context = ExecutionContextFactory.create(
+                risk,
+                quantity=quantity,
+            )
 
         request = ExecutionRequestFactory.create(
             context,
