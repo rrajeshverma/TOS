@@ -1,15 +1,10 @@
 """
-=========================================================
 Trading Operating System (TOS)
-
-Module      : Trading Pipeline
-Version     : 1.0.0
-Author      : Rajesh Varma
-Description : Orchestrates the end-to-end trading flow.
-=========================================================
 """
 
 from __future__ import annotations
+
+from config.risk import CAPITAL, RISK_PERCENT
 
 
 class TradingPipeline:
@@ -54,7 +49,10 @@ class TradingPipeline:
 
         indicators = self._indicator_engine.calculate(candles)
 
-        decision = self._decision_engine.decide(indicators)
+        decision = self._decision_engine.evaluate(
+            market,
+            indicators,
+        )
 
         trade_quality = self._trade_quality_engine.evaluate(
             decision=decision,
@@ -68,8 +66,8 @@ class TradingPipeline:
         )
 
         position_size = self._position_sizing_engine.calculate(
-            capital=100000,
-            risk_percent=2,
+            capital=CAPITAL,
+            risk_percent=RISK_PERCENT,
             stop_loss_distance=100,
         )
 
@@ -97,18 +95,3 @@ class TradingPipeline:
             trade_plan,
             trade_management,
         )
-
-
-class FakePositionSizingEngine:
-    def __init__(self):
-        self.called = False
-
-    def calculate(
-        self,
-        capital,
-        risk_percent,
-        stop_loss_distance,
-        lot_size=1,
-    ):
-        self.called = True
-        return "POSITION_SIZE"

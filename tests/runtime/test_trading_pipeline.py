@@ -96,7 +96,7 @@ class FakeDecisionEngine:
     def __init__(self):
         self.called = False
 
-    def decide(self, indicators):
+    def evaluate(self, market, indicators):
         self.called = True
         return "DECISION"
 
