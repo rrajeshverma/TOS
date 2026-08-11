@@ -1,6 +1,6 @@
-from uuid import uuid4
-import time
 import random
+import time
+from uuid import uuid4
 
 
 class InternalOrder:
@@ -8,6 +8,7 @@ class InternalOrder:
         self.symbol = request.get("symbol")
         self.quantity = request.get("qty") or request.get("quantity", 1)
         self.side = request.get("side")
+
 
 class PaperOrderService:
     def __init__(self):
@@ -19,14 +20,22 @@ class PaperOrderService:
     # SUBMIT ORDER
     # -------------------------------
     def submit(self, request):
+        if request is None:
+            raise ValueError("request cannot be None")
+
         order_id = f"PAPER-{uuid4().hex[:8]}"
 
+        quantity = request.get("qty") or request.get("quantity", 1)
+
         self.orders[order_id] = {
+            "symbol": request["symbol"],
+            "side": request["side"],
+            "quantity": quantity,
             "request": dict(request),
             "status": "OPEN",
             "filled_qty": 0,
-            "total_qty": request.get("qty", 1),
-            "price": request.get("price", 100),
+            "total_qty": quantity,
+            "price": request["price"],
             "created_at": time.time(),
         }
 
@@ -78,9 +87,7 @@ class PaperOrderService:
     # HELPERS
     # -------------------------------
     def get_order_map(self):
-        return {
-            oid: oid for oid in self.orders.keys()
-        }
+        return {oid: oid for oid in self.orders.keys()}
 
     def remove_order(self, order_id):
         self.orders.pop(order_id, None)

@@ -3,13 +3,58 @@ import time
 
 class PaperPositionBook:
     def __init__(self):
-        self.positions = {}
+        # Legacy execution/live position storage.
+        self._positions = {}
+
+        # Paper trading pipeline position storage.
+        self._paper_positions = {}
 
     # -----------------------------------
-    # ADD POSITION
+    # PAPER: RECORD TRADE
+    # -----------------------------------
+    def record(self, trade):
+        if trade is None:
+            raise ValueError("trade cannot be None")
+
+        symbol = trade["symbol"]
+        side = trade["side"]
+        quantity = trade["quantity"]
+        price = trade["price"]
+
+        signed_quantity = quantity if side == "BUY" else -quantity
+
+        position = self._paper_positions.get(symbol)
+
+        if position is None:
+            position = {
+                "symbol": symbol,
+                "quantity": signed_quantity,
+                "price": price,
+            }
+            self._paper_positions[symbol] = position
+        else:
+            position["quantity"] += signed_quantity
+            position["price"] = price
+
+        return position
+
+    # -----------------------------------
+    # PAPER: GET POSITION
+    # -----------------------------------
+    def get(self, symbol):
+        return self._paper_positions.get(symbol)
+
+    # -----------------------------------
+    # PAPER: LIST POSITIONS
+    # -----------------------------------
+    def positions(self):
+        return list(self._paper_positions.values())
+
+    # -----------------------------------
+    # LIVE/EXECUTION: ADD POSITION
     # -----------------------------------
     def add_position(self, position_id, position):
-        self.positions[position_id] = {
+        self._positions[position_id] = {
             "position": position,
             "entry_price": position.average_price,
             "quantity": position.quantity,
@@ -17,18 +62,18 @@ class PaperPositionBook:
         }
 
     # -----------------------------------
-    # GET POSITIONS
+    # LIVE/EXECUTION: GET POSITIONS
     # -----------------------------------
     def get_positions(self):
-        return self.positions
+        return self._positions
 
     # -----------------------------------
-    # CALCULATE TOTAL PnL
+    # LEGACY: CALCULATE TOTAL PnL
     # -----------------------------------
     def calculate_pnl(self):
         total_pnl = 0
 
-        for data in self.positions.values():
+        for data in self._positions.values():
             position = data["position"]
             entry_price = data["entry_price"]
             qty = data["quantity"]
@@ -41,10 +86,10 @@ class PaperPositionBook:
         return total_pnl
 
     # -----------------------------------
-    # CLOSE POSITION
+    # LIVE/EXECUTION: CLOSE POSITION
     # -----------------------------------
     def close_position(self, position_id, exit_price=None, reason="UNKNOWN"):
-        data = self.positions.pop(position_id, None)
+        data = self._positions.pop(position_id, None)
 
         if not data:
             return None

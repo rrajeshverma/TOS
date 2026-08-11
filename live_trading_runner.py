@@ -1,17 +1,15 @@
-import time
-
 import random
+import time
 
 from execution.order_poller import OrderPoller
 from paper.paper_order_service import PaperOrderService
 from paper.paper_position_book import PaperPositionBook
+from portfolio.trade_history import TradeHistory
 from services.position_manager import PositionManager
-
 from strategy.simple_strategy import SimpleStrategy
 
-from portfolio.trade_history import TradeHistory
-
 trade_history = TradeHistory()
+
 
 def main():
     print("🔥 LIVE TRADING RUNNER STARTED")
@@ -21,7 +19,6 @@ def main():
     position_manager = PositionManager()
     strategy = SimpleStrategy()
     price = 100
-    active_position = None
     active_order = None
     cooldown = 0
 
@@ -34,25 +31,26 @@ def main():
             position_book=position_book,
         )
 
-        poller.trade_history = trade_history   # 🔥 IMPORTANT
+        poller.trade_history = trade_history  # 🔥 IMPORTANT
 
         poller.start()
 
         print("🧪 Submitting test order...")
 
-        order_id = order_service.submit({
-            "symbol": "NIFTY",
-            "qty": 1,
-            "side": "BUY",
-        })
+        order_id = order_service.submit(
+            {
+                "symbol": "NIFTY",
+                "qty": 1,
+                "side": "BUY",
+            }
+        )
 
         print(f"✅ Order submitted: {order_id}")
 
         while True:
             print("⏳ System running...")
 
-            for position_id, data in list(position_book.positions.items()):
-
+            for position_id, data in list(position_book.get_positions().items()):
                 position = data["position"]
 
                 if position.is_closed:
@@ -78,7 +76,7 @@ def main():
                 # 🚫 BLOCK if ANY open position exists
                 has_open_position = any(
                     not data["position"].is_closed
-                    for data in position_book.positions.values()
+                    for data in position_book.get_positions().values()
                 )
 
                 if has_open_position:
@@ -93,16 +91,17 @@ def main():
                 if signal:
                     print(f"📢 SIGNAL: {signal} @ {price}")
 
-                    order_id = order_service.submit({
-                        "symbol": "NIFTY",
-                        "qty": 1,
-                        "side": signal,
-                    })
+                    order_id = order_service.submit(
+                        {
+                            "symbol": "NIFTY",
+                            "qty": 1,
+                            "side": signal,
+                        }
+                    )
 
-                    active_order = order_id   # 🔥 IMPORTANT
+                    active_order = order_id  # 🔥 IMPORTANT
 
                     print(f"✅ Order submitted: {order_id}")
-
 
                 # store max profit per position
                 if not hasattr(position, "max_profit"):
@@ -125,9 +124,7 @@ def main():
                         print(f"🔁 TRAILING SL HIT → EXIT {position_id}")
 
                         trade = position_book.close_position(
-                            position_id,
-                            exit_price=current,
-                            reason="TRAILING_SL"
+                            position_id, exit_price=current, reason="TRAILING_SL"
                         )
 
                         if trade:
@@ -135,7 +132,6 @@ def main():
 
                         continue
 
-                       
                 # -----------------------------------
                 # 🎯 TARGET / SL LOGIC
                 # -----------------------------------
@@ -144,9 +140,7 @@ def main():
                     print(f"🎯 TARGET HIT → EXIT {position_id}")
 
                     trade = position_book.close_position(
-                        position_id,
-                        exit_price=current,
-                        reason="TARGET"
+                        position_id, exit_price=current, reason="TARGET"
                     )
 
                     if trade:
@@ -157,9 +151,7 @@ def main():
                     print(f"🛑 STOP LOSS HIT → EXIT {position_id}")
 
                     trade = position_book.close_position(
-                        position_id,
-                        exit_price=current,
-                        reason="STOP_LOSS"
+                        position_id, exit_price=current, reason="STOP_LOSS"
                     )
 
                     if trade:
@@ -170,9 +162,7 @@ def main():
                     print(f"🔁 TRAILING SL HIT → EXIT {position_id}")
 
                     trade = position_book.close_position(
-                        position_id,
-                        exit_price=current,
-                        reason="TRAILING_SL"
+                        position_id, exit_price=current, reason="TRAILING_SL"
                     )
 
                     if trade:
