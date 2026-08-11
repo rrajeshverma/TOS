@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from domain.candle import Candle
 from domain.market_tick import MarketTick
 
@@ -14,6 +16,23 @@ class CandleBuilder:
         self.timeframe = timeframe
         self._candles = {}
 
+    def _bucket_timestamp(
+        self,
+        timestamp: datetime,
+    ) -> datetime:
+        if self.timeframe.endswith("m"):
+            minutes = int(self.timeframe[:-1])
+
+            bucket_minute = (timestamp.minute // minutes) * minutes
+
+            return timestamp.replace(
+                minute=bucket_minute,
+                second=0,
+                microsecond=0,
+            )
+
+        raise ValueError(f"Unsupported timeframe: {self.timeframe}")
+
     def update(
         self,
         tick: MarketTick,
@@ -21,13 +40,25 @@ class CandleBuilder:
         if tick is None:
             raise ValueError("Tick cannot be None.")
 
-        existing = self._candles.get(tick.symbol)
+        if tick.timestamp is None:
+            raise ValueError("Tick timestamp cannot be None.")
+
+        bucket = self._bucket_timestamp(
+            tick.timestamp,
+        )
+
+        key = (
+            tick.symbol,
+            bucket,
+        )
+
+        existing = self._candles.get(key)
 
         if existing is None:
             candle = Candle(
                 symbol=tick.symbol,
                 timeframe=self.timeframe,
-                timestamp=tick.timestamp,
+                timestamp=bucket,
                 open=tick.ltp,
                 high=tick.ltp,
                 low=tick.ltp,
@@ -39,7 +70,7 @@ class CandleBuilder:
             candle = Candle(
                 symbol=existing.symbol,
                 timeframe=existing.timeframe,
-                timestamp=tick.timestamp,
+                timestamp=existing.timestamp,
                 open=existing.open,
                 high=max(
                     existing.high,
@@ -53,6 +84,6 @@ class CandleBuilder:
                 volume=(existing.volume + tick.volume),
             )
 
-        self._candles[tick.symbol] = candle
+        self._candles[key] = candle
 
         return candle
