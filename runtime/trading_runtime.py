@@ -181,7 +181,7 @@ class TradingRuntime:
                 _decision,
                 _quality,
                 risk,
-                _position_size,
+                position_size,
                 _trade_plan,
                 _trade_management,
             ) = self.trading_pipeline.run(history)
@@ -192,7 +192,10 @@ class TradingRuntime:
             if self.execution_manager is None:
                 return risk
 
-            return self.execution_manager.execute(risk)
+            return self.execution_manager.execute(
+                risk,
+                quantity=position_size.quantity,
+            )
 
         indicator_engine = self.indicator_engine
         strategy_engine = self.strategy_engine

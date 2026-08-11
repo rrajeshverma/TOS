@@ -491,10 +491,13 @@ def test_run_cycle_uses_trading_pipeline_when_available():
     assert result == "RISK"
 
 
-def test_run_cycle_executes_pipeline_risk():
+def test_run_cycle_executes_pipeline_risk_with_quantity():
     trading_pipeline = Mock()
 
     risk = Mock()
+
+    position_size = Mock()
+    position_size.quantity = 65
 
     trading_pipeline.run.return_value = (
         "MARKET",
@@ -502,7 +505,7 @@ def test_run_cycle_executes_pipeline_risk():
         "DECISION",
         "QUALITY",
         risk,
-        "POSITION_SIZE",
+        position_size,
         "TRADE_PLAN",
         "TRADE_MANAGEMENT",
     )
@@ -522,5 +525,9 @@ def test_run_cycle_executes_pipeline_risk():
         [Mock()],
     )
 
-    execution_manager.execute.assert_called_once_with(risk)
+    execution_manager.execute.assert_called_once_with(
+        risk,
+        quantity=65,
+    )
+
     assert result == "EXECUTION"
