@@ -259,7 +259,10 @@ def test_execution_manager_called_when_available():
         indicators,
     )
 
-    execution_manager.execute.assert_called_once_with(risk)
+    execution_manager.execute.assert_called_once_with(
+        risk,
+        quantity=None,
+    )
 
     assert result == {
         "status": "EXECUTED",
@@ -271,13 +274,15 @@ def test_runner_uses_execution_manager_when_configured():
     risk_engine = Mock()
     execution_manager = Mock()
 
-    decision = Mock()
-    risk = Mock()
+    decision = FakeDecision()
+    risk = FakeRisk()
     risk.is_approved = True
 
     strategy.decide.return_value = decision
     risk_engine.evaluate.return_value = risk
-    execution_manager.execute.return_value = {"status": "OK"}
+    execution_manager.execute.return_value = {
+        "status": "OK",
+    }
 
     runner = PaperTradeRunner(
         strategy_engine=strategy,
@@ -286,10 +291,21 @@ def test_runner_uses_execution_manager_when_configured():
         execution_manager=execution_manager,
     )
 
-    result = runner.run(Mock(), Mock())
+    market, indicators = create_market_and_indicators()
 
-    execution_manager.execute.assert_called_once_with(risk)
-    assert result == {"status": "OK"}
+    result = runner.run(
+        market,
+        indicators,
+    )
+
+    execution_manager.execute.assert_called_once_with(
+        risk,
+        quantity=None,
+    )
+
+    assert result == {
+        "status": "OK",
+    }
 
 
 def test_trade_factory_receives_position_size_quantity():
