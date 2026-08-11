@@ -1,10 +1,15 @@
 """
-Trading Operating System (TOS)
+Trading Pipeline.
+
+Orchestrates the end-to-end trading flow.
 """
 
 from __future__ import annotations
 
-from config.risk import CAPITAL, RISK_PERCENT
+from decimal import Decimal
+
+from config.risk import CAPITAL, RISK_PERCENT, RISK_REWARD_RATIO
+from engines.stop_loss_engine import StopLossEngine
 
 
 class TradingPipeline:
@@ -22,6 +27,7 @@ class TradingPipeline:
         position_sizing_engine,
         trade_planning_engine,
         trade_management_engine,
+        stop_loss_engine=None,
     ):
         self._market_engine = market_engine
         self._indicator_engine = indicator_engine
@@ -31,19 +37,20 @@ class TradingPipeline:
         self._position_sizing_engine = position_sizing_engine
         self._trade_planning_engine = trade_planning_engine
         self._trade_management_engine = trade_management_engine
+        self._stop_loss_engine = stop_loss_engine or StopLossEngine()
 
     def run(self, candles):
         """
         Execute one trading cycle.
-
-        Returns:
-            tuple[Market, IndicatorSet]
         """
         if candles is None:
             raise ValueError("candles cannot be None")
 
         if not candles:
             raise ValueError("candles cannot be empty")
+
+        if len(candles) < 2:
+            raise ValueError("At least 2 candles are required")
 
         market = self._market_engine.build_market(candles[-1])
 
@@ -62,27 +69,47 @@ class TradingPipeline:
         risk = self._risk_engine.evaluate(
             decision=decision,
             trades_today=0,
-            daily_loss=0,
+            daily_loss=Decimal(0),
+        )
+
+        previous_candle = candles[-2]
+
+        entry_price = Decimal(str(market.close))
+
+        stop = self._stop_loss_engine.calculate(
+            signal=decision.signal,
+            previous_high=Decimal(str(previous_candle.high)),
+            previous_low=Decimal(str(previous_candle.low)),
+            ema_high=Decimal(str(indicators.ema_high)),
+            ema_low=Decimal(str(indicators.ema_low)),
+        )
+
+        stop_loss = stop.price
+
+        stop_loss_distance = abs(
+            entry_price - stop_loss,
         )
 
         position_size = self._position_sizing_engine.calculate(
             capital=CAPITAL,
             risk_percent=RISK_PERCENT,
-            stop_loss_distance=100,
+            stop_loss_distance=stop_loss_distance,
         )
+
+        target_price = entry_price + (stop_loss_distance * RISK_REWARD_RATIO)
 
         trade_plan = self._trade_planning_engine.create_plan(
             decision=decision,
             position_size=position_size,
-            entry_price=250,
-            stop_loss=240,
-            target_price=270,
+            entry_price=entry_price,
+            stop_loss=stop_loss,
+            target_price=target_price,
         )
 
         trade_management = self._trade_management_engine.evaluate(
-            entry_price=250,
-            stop_loss=240,
-            current_price=250,
+            entry_price=entry_price,
+            stop_loss=stop_loss,
+            current_price=entry_price,
         )
 
         return (
