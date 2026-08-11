@@ -130,3 +130,26 @@ def test_execute_passes_execution_request_to_engine():
     assert request.symbol == "NIFTY"
     assert request.side == "BUY"
     assert request.quantity == 1
+
+
+def test_execute_passes_custom_quantity_to_execution_request():
+    engine = Mock()
+
+    engine.execute.return_value = ExecutionResult(
+        success=True,
+        order_id="ORD-65",
+    )
+
+    manager = ExecutionManager(engine)
+
+    manager.execute(
+        create_risk(),
+        quantity=65,
+    )
+
+    request = engine.execute.call_args.args[0]
+
+    assert isinstance(request, ExecutionRequest)
+    assert request.symbol == "NIFTY"
+    assert request.side == "BUY"
+    assert request.quantity == 65
