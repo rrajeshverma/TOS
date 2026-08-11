@@ -60,7 +60,6 @@ class OrderPoller:
                 status = res["orderStatus"]
                 filled_qty = res["filledQty"]
             else:
-
                 # 🧪 PAPER MODE SIMULATION
                 res = {
                     "orderStatus": "TRADED",
@@ -70,7 +69,6 @@ class OrderPoller:
 
                 status = res["orderStatus"]
                 filled_qty = res["filledQty"]
-
 
             prev_filled = self.order_service._fills.get(order_id, 0)
 
@@ -136,6 +134,7 @@ class OrderPoller:
                     if trade and hasattr(self, "trade_history") and self.trade_history:
                         self.trade_history.record_trade(trade)
                     break
+
     # -----------------------------------
     # CLEANUP
     # -----------------------------------

@@ -56,3 +56,18 @@ def test_invalid_lot_size():
             stop_loss_distance=Decimal(500),
             lot_size=0,
         )
+
+
+def test_calculate_position_size_with_instrument_lot_size():
+    engine = PositionSizingEngine()
+
+    result = engine.calculate(
+        capital=Decimal(100000),
+        risk_percent=Decimal(2),
+        stop_loss_distance=Decimal(10),
+        lot_size=65,
+    )
+
+    assert result.risk_amount == Decimal(2000)
+    assert result.lots == 3
+    assert result.quantity == 195

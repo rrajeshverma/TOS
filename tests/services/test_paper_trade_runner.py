@@ -40,11 +40,17 @@ def create_runner():
     strategy = Mock()
     risk_engine = Mock()
     adapter = Mock()
+    instrument_mapper = Mock()
+
+    instrument_mapper.get.return_value = Mock(
+        lot_size=65,
+    )
 
     runner = PaperTradeRunner(
         strategy_engine=strategy,
         risk_engine=risk_engine,
         order_execution_adapter=adapter,
+        instrument_mapper=instrument_mapper,
     )
 
     return runner, strategy, risk_engine, adapter
@@ -284,3 +290,130 @@ def test_runner_uses_execution_manager_when_configured():
 
     execution_manager.execute.assert_called_once_with(risk)
     assert result == {"status": "OK"}
+
+
+def test_trade_factory_receives_position_size_quantity():
+    runner, strategy, _, adapter = create_runner()
+
+    strategy.decide.return_value = FakeDecision()
+
+    runner.risk_engine = Mock()
+    runner.risk_engine.evaluate.return_value = FakeRisk()
+
+    runner.trade_planner = Mock()
+    runner.trade_planner.plan.return_value = Mock(
+        entry_price=Decimal(25000),
+        stop_loss=Decimal(24950),
+    )
+
+    runner.position_sizing_engine = Mock()
+    runner.position_sizing_engine.calculate.return_value = Mock(
+        quantity=195,
+    )
+
+    runner.trade_factory = Mock()
+    runner.trade_factory.create.return_value = FakeTrade()
+
+    runner.order_factory = Mock()
+    runner.order_factory.create.return_value = FakeOrder()
+
+    runner.position_manager = Mock()
+    runner.position_manager.open_position.return_value = FakePosition()
+
+    adapter.to_execution_order.return_value = object()
+    adapter.execute.return_value = "OK"
+
+    market, indicators = create_market_and_indicators()
+
+    runner.run(market, indicators)
+
+    runner.trade_factory.create.assert_called_once_with(
+        runner.risk_engine.evaluate.return_value,
+        entry_price=Decimal(25000),
+        stop_loss=Decimal(24950),
+        quantity=195,
+    )
+
+
+def test_position_sizing_uses_instrument_lot_size():
+    runner, strategy, _, adapter = create_runner()
+
+    strategy.decide.return_value = FakeDecision()
+
+    runner.risk_engine = Mock()
+    runner.risk_engine.evaluate.return_value = FakeRisk()
+
+    runner.trade_planner = Mock()
+    runner.trade_planner.plan.return_value = Mock(
+        entry_price=Decimal(25000),
+        stop_loss=Decimal(24950),
+    )
+
+    runner.position_sizing_engine = Mock()
+    runner.position_sizing_engine.calculate.return_value = Mock(
+        quantity=195,
+    )
+
+    runner.instrument_mapper = Mock()
+    runner.instrument_mapper.get.return_value = Mock(
+        lot_size=65,
+    )
+
+    runner.trade_factory = Mock()
+    runner.trade_factory.create.return_value = FakeTrade()
+
+    runner.order_factory = Mock()
+    runner.order_factory.create.return_value = FakeOrder()
+
+    runner.position_manager = Mock()
+    runner.position_manager.open_position.return_value = FakePosition()
+
+    adapter.to_execution_order.return_value = object()
+    adapter.execute.return_value = "OK"
+
+    market, indicators = create_market_and_indicators()
+
+    runner.run(market, indicators)
+
+    runner.instrument_mapper.get.assert_called_once_with(
+        market.symbol,
+    )
+
+    runner.position_sizing_engine.calculate.assert_called_once_with(
+        capital=Decimal(100000),
+        risk_percent=Decimal(2),
+        stop_loss_distance=Decimal(50),
+        lot_size=65,
+    )
+
+
+def test_rejects_trade_when_position_size_is_zero():
+    runner, strategy, _, _ = create_runner()
+
+    strategy.decide.return_value = FakeDecision()
+
+    runner.risk_engine = Mock()
+    runner.risk_engine.evaluate.return_value = FakeRisk()
+
+    runner.trade_planner = Mock()
+    runner.trade_planner.plan.return_value = Mock(
+        entry_price=Decimal(25000),
+        stop_loss=Decimal(24950),
+    )
+
+    runner.position_sizing_engine = Mock()
+    runner.position_sizing_engine.calculate.return_value = Mock(
+        quantity=0,
+    )
+
+    runner.instrument_mapper = Mock()
+    runner.instrument_mapper.get.return_value = Mock(
+        lot_size=65,
+    )
+
+    result = runner.run(
+        *create_market_and_indicators(),
+    )
+
+    assert result["status"] == "REJECTED"
+    assert result["reason"] == "Position size is zero."

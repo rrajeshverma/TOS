@@ -6,6 +6,7 @@ from __future__ import annotations
 
 from decimal import Decimal
 
+from config.risk import CAPITAL, RISK_PERCENT
 from domain.indicator_set import IndicatorSet
 from domain.market import Market
 from engines.order_factory import OrderFactory
@@ -33,6 +34,8 @@ class PaperTradeRunner:
         order_factory=None,
         position_manager=None,
         execution_manager=None,
+        position_sizing_engine=None,
+        instrument_mapper=None,
     ) -> None:
         self.strategy_engine = strategy_engine
         self.risk_engine = risk_engine
@@ -42,6 +45,8 @@ class PaperTradeRunner:
         self.position_manager = position_manager or PositionManager()
         self.adapter = order_execution_adapter
         self.execution_manager = execution_manager
+        self.position_sizing_engine = position_sizing_engine
+        self.instrument_mapper = instrument_mapper
 
     def run(
         self,
@@ -75,10 +80,38 @@ class PaperTradeRunner:
             risk,
         )
 
+        quantity = None
+
+        if self.position_sizing_engine is not None:
+            instrument = self.instrument_mapper.get(market.symbol)
+
+            position_size = self.position_sizing_engine.calculate(
+                capital=CAPITAL,
+                risk_percent=RISK_PERCENT,
+                stop_loss_distance=abs(
+                    plan.entry_price - plan.stop_loss,
+                ),
+                lot_size=instrument.lot_size,
+            )
+            quantity = position_size.quantity
+
+            if quantity <= 0:
+                return {
+                    "status": "REJECTED",
+                    "reason": "Position size is zero.",
+                }
+
+        trade_kwargs = {
+            "entry_price": plan.entry_price,
+            "stop_loss": plan.stop_loss,
+        }
+
+        if quantity is not None:
+            trade_kwargs["quantity"] = quantity
+
         trade = self.trade_factory.create(
             risk,
-            entry_price=plan.entry_price,
-            stop_loss=plan.stop_loss,
+            **trade_kwargs,
         )
 
         order = self.order_factory.create(

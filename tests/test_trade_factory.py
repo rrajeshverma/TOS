@@ -129,3 +129,14 @@ def test_rejected_risk_raises_value_error():
             entry_price=Decimal(25000),
             stop_loss=Decimal(24950),
         )
+
+
+def test_trade_factory_uses_supplied_quantity():
+    trade = TradeFactory().create(
+        risk=create_trade().risk,
+        entry_price=Decimal(25000),
+        stop_loss=Decimal(24950),
+        quantity=195,
+    )
+
+    assert trade.quantity == 195

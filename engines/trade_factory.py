@@ -38,6 +38,7 @@ class TradeFactory:
         risk: Risk,
         entry_price: Decimal,
         stop_loss: Decimal,
+        quantity: int = DEFAULT_NIFTY_QTY,
     ) -> Trade:
         if not risk.is_approved:
             raise ValueError("Cannot create Trade from rejected Risk.")
@@ -52,7 +53,7 @@ class TradeFactory:
             entry_price=entry_price,
             stop_loss=stop_loss,
             target=target,
-            quantity=DEFAULT_NIFTY_QTY,
+            quantity=quantity,
             entry_time=datetime.now(),
             status=TradeStatus.CREATED,
         )
