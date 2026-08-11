@@ -12,17 +12,25 @@ from brokers.dhan_broker import DhanBroker
 from brokers.paper_broker import PaperBroker
 from config.runtime_config import RuntimeConfig
 from config.version import APP_NAME, BUILD, MODE, VERSION
+from engines.decision_engine import DecisionEngine
 from engines.indicator_engine import IndicatorEngine
 from engines.market_engine import MarketEngine
+from engines.position_sizing_engine import PositionSizingEngine
 from engines.risk_engine import RiskEngine
+from engines.stop_loss_engine import StopLossEngine
 from engines.strategy_engine import StrategyEngine
+from engines.trade_management_engine import TradeManagementEngine
+from engines.trade_planning_engine import TradePlanningEngine
+from engines.trade_quality_engine import TradeQualityEngine
 from execution.execution_engine import ExecutionEngine
 from execution.execution_manager import ExecutionManager
 from execution.order_repository import OrderRepository
 from execution.order_service import OrderService
-from integration.pipeline import TradingPipeline
+from integration.pipeline import TradingPipeline as MarketDataPipeline
 from market.candle_builder import CandleBuilder
+from runtime.runtime_mode import RuntimeMode
 from runtime.safety_factory import SafetyFactory
+from runtime.trading_pipeline import TradingPipeline
 from runtime.trading_runtime import TradingRuntime
 from services.market_data_service import MarketDataService
 from services.order_execution_adapter import OrderExecutionAdapter
@@ -94,9 +102,18 @@ class Startup:
         indicator_engine = IndicatorEngine()
         candle_builder = CandleBuilder()
         strategy_engine = StrategyEngine()
+        decision_engine = DecisionEngine()
+        trade_quality_engine = TradeQualityEngine()
         risk_engine = RiskEngine()
+        stop_loss_engine = StopLossEngine()
+        position_sizing_engine = PositionSizingEngine()
+        trade_planning_engine = TradePlanningEngine()
+        trade_management_engine = TradeManagementEngine()
 
-        runtime = TradingRuntime({})
+        runtime = TradingRuntime(
+            {},
+            mode=RuntimeMode(self.config.mode.lower()),
+        )
 
         paper_service = PaperTradingService()
 
@@ -107,11 +124,22 @@ class Startup:
             execution_manager=execution_manager,
         )
 
-        trading_pipeline = TradingPipeline(
+        market_data_pipeline = MarketDataPipeline(
             candle_builder=candle_builder,
             market_engine=market_engine,
             indicator_engine=indicator_engine,
             runtime=runtime,
+        )
+
+        trading_pipeline = TradingPipeline(
+            indicator_engine=indicator_engine,
+            decision_engine=decision_engine,
+            trade_quality_engine=trade_quality_engine,
+            risk_engine=risk_engine,
+            position_sizing_engine=position_sizing_engine,
+            trade_planning_engine=trade_planning_engine,
+            trade_management_engine=trade_management_engine,
+            stop_loss_engine=stop_loss_engine,
         )
 
         # ---------------- MARKET DATA ----------------
@@ -155,6 +183,7 @@ class Startup:
             "paper_trading_service": paper_service,
             "paper_trade_runner": paper_trade_runner,
             "market_data_service": market_data_service,
+            "market_data_pipeline": market_data_pipeline,
             "trading_runtime": runtime,
             "trading_pipeline": trading_pipeline,
         }

@@ -7,7 +7,6 @@ class Dummy:
 
 def test_constructor():
     pipeline = TradingPipeline(
-        market_engine=Dummy(),
         indicator_engine=Dummy(),
         decision_engine=Dummy(),
         trade_quality_engine=Dummy(),

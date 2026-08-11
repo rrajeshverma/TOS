@@ -2,9 +2,12 @@
 Tests for TradingPipeline.
 """
 
+from datetime import datetime
+
 import pytest
 
 from domain.indicator_set import IndicatorSet
+from domain.market import Market
 from runtime.trading_pipeline import TradingPipeline
 from shared.enums import Signal
 
@@ -76,22 +79,33 @@ class FakeCandle:
 
 def create_candles():
     return [
-        FakeCandle(
+        Market(
+            symbol="NIFTY",
+            exchange="NSE",
+            timeframe="5m",
+            timestamp=datetime(2026, 8, 11, 9, 15),
+            open=100,
             high=108,
             low=96,
             close=104,
+            volume=1000,
         ),
-        FakeCandle(
+        Market(
+            symbol="NIFTY",
+            exchange="NSE",
+            timeframe="5m",
+            timestamp=datetime(2026, 8, 11, 9, 20),
+            open=104,
             high=110,
             low=95,
             close=105,
+            volume=1200,
         ),
     ]
 
 
 def create_pipeline():
     return TradingPipeline(
-        market_engine=FakeMarketEngine(),
         indicator_engine=FakeIndicatorEngine(),
         decision_engine=FakeDecisionEngine(),
         trade_quality_engine=FakeTradeQualityEngine(),
@@ -116,14 +130,6 @@ def test_pipeline_rejects_empty_history():
         pipeline.run([])
 
 
-def test_pipeline_calls_market_engine():
-    pipeline = create_pipeline()
-
-    pipeline.run(create_candles())
-
-    assert pipeline._market_engine.called is True
-
-
 def test_pipeline_calls_indicator_engine():
     pipeline = create_pipeline()
 
@@ -146,7 +152,7 @@ def test_pipeline_returns_market_and_indicators():
         _,
     ) = pipeline.run(create_candles())
 
-    assert isinstance(market, FakeMarket)
+    assert isinstance(market, Market)
     assert isinstance(indicators, IndicatorSet)
     assert risk == "RISK"
     assert position_size == "POSITION_SIZE"
@@ -174,7 +180,7 @@ def test_pipeline_returns_decision():
         _,
     ) = pipeline.run(create_candles())
 
-    assert isinstance(market, FakeMarket)
+    assert isinstance(market, Market)
     assert isinstance(indicators, IndicatorSet)
     assert isinstance(decision, FakeDecision)
     assert quality == "QUALITY"

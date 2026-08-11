@@ -19,7 +19,6 @@ class TradingPipeline:
 
     def __init__(
         self,
-        market_engine,
         indicator_engine,
         decision_engine,
         trade_quality_engine,
@@ -29,7 +28,6 @@ class TradingPipeline:
         trade_management_engine,
         stop_loss_engine=None,
     ):
-        self._market_engine = market_engine
         self._indicator_engine = indicator_engine
         self._decision_engine = decision_engine
         self._trade_quality_engine = trade_quality_engine
@@ -52,7 +50,7 @@ class TradingPipeline:
         if len(candles) < 2:
             raise ValueError("At least 2 candles are required")
 
-        market = self._market_engine.build_market(candles[-1])
+        market = candles[-1]
 
         indicators = self._indicator_engine.calculate(candles)
 
