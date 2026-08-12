@@ -64,19 +64,18 @@ class Startup:
         self.log_banner()
 
         # ---------------- BROKER ----------------
+        instrument_repository = InstrumentRepository()
+        instrument_provider = DhanInstrumentProvider()
+
+        for instrument in instrument_provider.load():
+            instrument_repository.add(instrument)
+
+        instrument_mapper = InstrumentMapper(
+            instrument_repository,
+        )
+
         if self.config.broker == "dhan":
             client = DhanClient()
-
-            instrument_repository = InstrumentRepository()
-
-            instrument_provider = DhanInstrumentProvider()
-
-            for instrument in instrument_provider.load():
-                instrument_repository.add(instrument)
-
-            instrument_mapper = InstrumentMapper(
-                instrument_repository,
-            )
 
             broker = DhanBroker(
                 client=client,

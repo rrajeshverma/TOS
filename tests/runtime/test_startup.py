@@ -99,6 +99,34 @@ def test_initialize_registers_dhan_client(
     assert "dhan_client" in startup.services
 
 
+@patch("runtime.startup.WebSocketClient")
+@patch("runtime.startup.LiveMarketFeed")
+@patch("runtime.startup.DhanInstrumentProvider")
+def test_initialize_uses_dhan_market_data_with_paper_broker(
+    mock_provider,
+    mock_live_feed,
+    mock_websocket,
+):
+    mock_provider.return_value.load.return_value = []
+
+    startup = Startup(
+        RuntimeConfig(
+            broker="paper",
+            market_data="dhan",
+            mode="PAPER",
+        ),
+    )
+
+    startup.initialize_services()
+
+    mock_live_feed.assert_called_once()
+    mock_websocket.assert_called_once()
+
+    market_data_service = startup.services["market_data_service"]
+
+    assert market_data_service.websocket is mock_websocket.return_value
+
+
 def test_startup_initial_state():
     startup = Startup()
 
