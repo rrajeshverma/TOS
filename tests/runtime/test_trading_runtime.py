@@ -7,20 +7,20 @@ from shared.events import Event
 from shared.runtime_status import RuntimeStatus
 
 
-def test_start_registers_market_data_callback():
+def test_start_registers_market_data_pipeline_callback():
     market_data = Mock()
-    trading_pipeline = Mock()
+    market_data_pipeline = Mock()
 
     runtime = TradingRuntime(
         {
             "market_data_service": market_data,
-            "trading_pipeline": trading_pipeline,
+            "market_data_pipeline": market_data_pipeline,
         }
     )
 
     runtime.start()
 
-    market_data.register_tick_callback.assert_called_once_with(trading_pipeline.on_tick)
+    market_data.register_tick_callback.assert_called_once_with(market_data_pipeline.on_tick)
 
 
 def test_start_connects_market_data():

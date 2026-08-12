@@ -25,7 +25,7 @@ def test_dhan_broker_tick_reaches_trading_pipeline():
     runtime = TradingRuntime(
         {
             "market_data_service": market_data,
-            "trading_pipeline": trading_pipeline,
+            "market_data_pipeline": trading_pipeline,
         },
         mode=RuntimeMode.PAPER,
     )
@@ -54,7 +54,7 @@ def test_dhan_tick_pipeline_does_not_execute_without_runtime_start():
     TradingRuntime(
         {
             "market_data_service": market_data,
-            "trading_pipeline": trading_pipeline,
+            "market_data_pipeline": trading_pipeline,
         },
         mode=RuntimeMode.PAPER,
     )

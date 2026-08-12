@@ -1,5 +1,10 @@
+"""
+Dhan live market-feed adapter.
+"""
+
 from __future__ import annotations
 
+import asyncio
 import threading
 from collections.abc import Callable
 
@@ -74,6 +79,7 @@ class LiveMarketFeed:
 
             self._feed.on_ticks = self._on_tick
 
+            # The MarketFeed owns this event loop.
             self._feed.run_forever()
 
             while self._running:
@@ -90,6 +96,9 @@ class LiveMarketFeed:
                 print(
                     f"Dhan market feed error: {exc}",
                 )
+
+        finally:
+            self._running = False
 
     def start(self) -> None:
         if self._running:
@@ -110,18 +119,26 @@ class LiveMarketFeed:
         self._thread.start()
 
     def stop(self) -> None:
+        if not self._running:
+            return
+
         self._running = False
 
-        if self._feed is not None:
+        feed = self._feed
+        thread = self._thread
+
+        if feed is not None:
             try:
-                self._feed.loop.run_until_complete(
-                    self._feed.disconnect(),
+                future = asyncio.run_coroutine_threadsafe(
+                    feed.disconnect(),
+                    feed.loop,
                 )
+                future.result(timeout=5)
             except Exception:
                 pass
 
-        if self._thread is not None:
-            self._thread.join(timeout=2)
+        if thread is not None:
+            thread.join(timeout=5)
 
         self._thread = None
         self._feed = None
