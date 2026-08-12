@@ -79,7 +79,10 @@ def test_loader_can_be_reused():
     assert True
 
 
-def test_loaded_config_defaults_match_runtime_config():
+def test_loaded_config_defaults_match_runtime_config(monkeypatch):
+    monkeypatch.delenv("DHAN_CLIENT_ID", raising=False)
+    monkeypatch.delenv("DHAN_ACCESS_TOKEN", raising=False)
+
     loader = RuntimeConfigLoader()
 
     assert loader.load() == RuntimeConfig()

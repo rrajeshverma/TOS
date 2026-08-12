@@ -43,5 +43,8 @@ def test_loader_configuration_has_slots():
     assert hasattr(RuntimeConfigLoader().load(), "__slots__")
 
 
-def test_loader_produces_same_defaults():
+def test_loader_produces_same_defaults(monkeypatch):
+    monkeypatch.delenv("DHAN_CLIENT_ID", raising=False)
+    monkeypatch.delenv("DHAN_ACCESS_TOKEN", raising=False)
+
     assert RuntimeConfigLoader().load() == RuntimeConfig()

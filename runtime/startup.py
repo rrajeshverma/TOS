@@ -158,7 +158,7 @@ class Startup:
 
         # ---------------- MARKET DATA ----------------
 
-        if self.config.broker == "dhan":
+        if self.config.market_data == "dhan":
             try:
                 live_market_feed = LiveMarketFeed(
                     client_id=self.config.dhan_client_id,

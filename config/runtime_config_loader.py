@@ -17,8 +17,11 @@ class RuntimeConfigLoader:
 
         config = RuntimeConfig(
             broker=os.getenv("TOS_BROKER", "paper"),
+            market_data=os.getenv("TOS_MARKET_DATA", "paper"),
             mode=os.getenv("TOS_MODE", "PAPER"),
             portfolio=os.getenv("TOS_PORTFOLIO", "default"),
+            dhan_client_id=os.getenv("DHAN_CLIENT_ID"),
+            dhan_access_token=os.getenv("DHAN_ACCESS_TOKEN"),
         )
 
         config.validate()

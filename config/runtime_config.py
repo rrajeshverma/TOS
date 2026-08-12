@@ -12,6 +12,7 @@ class RuntimeConfig:
     """Runtime configuration for Trading Operating System."""
 
     broker: str = "paper"
+    market_data: str = "paper"
     mode: str = "PAPER"
     portfolio: str = "default"
 
@@ -21,6 +22,9 @@ class RuntimeConfig:
     def validate(self) -> None:
         if self.broker not in {"paper", "dhan"}:
             raise InvalidConfigurationError(f"Unsupported broker: {self.broker}")
+
+        if self.market_data not in {"paper", "dhan"}:
+            raise InvalidConfigurationError(f"Unsupported market data source: {self.market_data}")
 
         if self.mode not in {"PAPER", "LIVE"}:
             raise InvalidConfigurationError(f"Unsupported mode: {self.mode}")
