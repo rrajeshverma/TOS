@@ -1,7 +1,14 @@
 from datetime import datetime
+from decimal import Decimal
+from unittest.mock import Mock
 
+import pytest
+from dhanhq import MarketFeed
+
+from brokers.dhan.live_market_feed import LiveMarketFeed
 from brokers.dhan.models import BrokerTick
 from brokers.dhan.websocket import WebSocketClient
+from domain.instrument import Instrument
 
 
 def test_websocket_initially_disconnected():
@@ -182,3 +189,79 @@ def test_reset_clears_state():
     assert ws.is_connected is False
     assert ws.subscriptions == set()
     assert ws.tick_callback is None
+
+
+def create_nifty_instrument():
+    return Instrument(
+        symbol="NIFTY",
+        security_id="13",
+        exchange_segment="IDX_I",
+        lot_size=1,
+        tick_size=Decimal("0.05"),
+    )
+
+
+def test_live_feed_subscription_maps_nifty_to_dhan_tuple():
+    live_feed = Mock(spec=LiveMarketFeed)
+    ws = WebSocketClient(
+        live_market_feed=live_feed,
+    )
+
+    instrument = create_nifty_instrument()
+
+    ws.subscribe(instrument)
+
+    live_feed.subscribe.assert_called_once_with(
+        [(MarketFeed.IDX, "13", MarketFeed.Ticker)],
+    )
+
+    assert ws.subscriptions == {"NIFTY"}
+
+
+def test_live_feed_subscription_preserves_security_id_and_segment():
+    live_feed = Mock(spec=LiveMarketFeed)
+    ws = WebSocketClient(
+        live_market_feed=live_feed,
+    )
+
+    instrument = Instrument(
+        symbol="ABB",
+        security_id="13",
+        exchange_segment="NSE_EQ",
+        lot_size=1,
+        tick_size=Decimal("0.05"),
+    )
+
+    ws.subscribe(instrument)
+
+    live_feed.subscribe.assert_called_once_with(
+        [(MarketFeed.NSE, "13", MarketFeed.Ticker)],
+    )
+
+
+def test_live_feed_subscription_rejects_plain_symbol():
+    live_feed = Mock(spec=LiveMarketFeed)
+    ws = WebSocketClient(
+        live_market_feed=live_feed,
+    )
+
+    with pytest.raises(TypeError):
+        ws.subscribe("NIFTY")
+
+
+def test_live_feed_subscription_rejects_unknown_exchange_segment():
+    live_feed = Mock(spec=LiveMarketFeed)
+    ws = WebSocketClient(
+        live_market_feed=live_feed,
+    )
+
+    instrument = Instrument(
+        symbol="TEST",
+        security_id="999",
+        exchange_segment="UNKNOWN",
+        lot_size=1,
+        tick_size=Decimal("0.05"),
+    )
+
+    with pytest.raises(ValueError):
+        ws.subscribe(instrument)

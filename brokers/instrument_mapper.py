@@ -8,3 +8,13 @@ class InstrumentMapper:
 
     def get(self, symbol: str) -> Instrument:
         return self._repository.get_by_symbol(symbol)
+
+    def get_by_security_id(
+        self,
+        security_id: str,
+        exchange_segment: str,
+    ) -> Instrument:
+        return self._repository.get_by_security_id(
+            security_id,
+            exchange_segment,
+        )

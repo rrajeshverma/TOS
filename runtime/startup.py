@@ -9,6 +9,7 @@ from brokers.clients.dhan_client import DhanClient
 from brokers.dhan.live_market_feed import LiveMarketFeed
 from brokers.dhan.websocket import WebSocketClient
 from brokers.dhan_broker import DhanBroker
+from brokers.instrument_mapper import InstrumentMapper
 from brokers.paper_broker import PaperBroker
 from config.runtime_config import RuntimeConfig
 from config.version import APP_NAME, BUILD, MODE, VERSION
@@ -28,6 +29,7 @@ from execution.order_repository import OrderRepository
 from execution.order_service import OrderService
 from integration.pipeline import TradingPipeline as MarketDataPipeline
 from market.candle_builder import CandleBuilder
+from providers.dhan_instrument_provider import DhanInstrumentProvider
 from runtime.runtime_mode import RuntimeMode
 from runtime.safety_factory import SafetyFactory
 from runtime.trading_pipeline import TradingPipeline
@@ -36,6 +38,7 @@ from services.market_data_service import MarketDataService
 from services.order_execution_adapter import OrderExecutionAdapter
 from services.paper_trade_runner import PaperTradeRunner
 from services.paper_trading_service import PaperTradingService
+from storage.instrument_repository import InstrumentRepository
 
 LOGGER = logging.getLogger("tos")
 
@@ -64,9 +67,20 @@ class Startup:
         if self.config.broker == "dhan":
             client = DhanClient()
 
+            instrument_repository = InstrumentRepository()
+
+            instrument_provider = DhanInstrumentProvider()
+
+            for instrument in instrument_provider.load():
+                instrument_repository.add(instrument)
+
+            instrument_mapper = InstrumentMapper(
+                instrument_repository,
+            )
+
             broker = DhanBroker(
                 client=client,
-                instrument_mapper={},
+                instrument_mapper=instrument_mapper,
             )
 
             broker.connect()
@@ -149,6 +163,7 @@ class Startup:
                 live_market_feed = LiveMarketFeed(
                     client_id=self.config.dhan_client_id,
                     access_token=self.config.dhan_access_token,
+                    instrument_mapper=instrument_mapper,
                 )
 
                 websocket = WebSocketClient(

@@ -1,45 +1,151 @@
-import json
+from __future__ import annotations
 
-import websocket
+import threading
+from collections.abc import Callable
+
+from dhanhq import DhanContext, MarketFeed
+
+from brokers.dhan.models import BrokerTick
+from brokers.dhan.tick_mapper import DhanTickMapper
+from brokers.instrument_mapper import InstrumentMapper
 
 
 class LiveMarketFeed:
-    def __init__(self, client_id: str, access_token: str):
-        self.client_id = client_id
-        self.access_token = access_token
+    """Dhan live market-feed adapter."""
 
-    def _on_message(self, ws, message):
-        print("TICK:", message)
-
-    def _on_error(self, ws, error):
-        print("ERROR:", error)
-
-    def _on_close(self, ws, close_status_code, close_msg):
-        print("CLOSED")
-
-    def _on_open(self, ws):
-        print("CONNECTED")
-
-        # ✅ FIXED PAYLOAD (STRING IDS)
-        payload = {
-            "RequestCode": "15",
-            "InstrumentCount": "1",
-            "InstrumentList": [{"ExchangeSegment": "NSE_EQ", "SecurityId": "13"}],
-        }
-
-        ws.send(json.dumps(payload))
-
-    def run_forever(self):
-        url = (
-            f"wss://api-feed.dhan.co?version=2&token={self.access_token}&clientId={self.client_id}"
+    def __init__(
+        self,
+        client_id: str,
+        access_token: str,
+        instrument_mapper: InstrumentMapper,
+    ) -> None:
+        self._context = DhanContext(
+            client_id,
+            access_token,
+        )
+        self._tick_mapper = DhanTickMapper(
+            instrument_mapper,
         )
 
-        ws = websocket.WebSocketApp(
-            url,
-            on_message=self._on_message,
-            on_error=self._on_error,
-            on_close=self._on_close,
-            on_open=self._on_open,
-        )
+        self._feed: MarketFeed | None = None
+        self._thread: threading.Thread | None = None
+        self._running = False
+        self._callback: Callable[[BrokerTick], None] | None = None
 
-        ws.run_forever()
+        self._instruments: set[tuple[int, str, int]] = set()
+
+    @property
+    def is_running(self) -> bool:
+        return self._running
+
+    @property
+    def instruments(self) -> set[tuple[int, str, int]]:
+        return set(self._instruments)
+
+    def register_tick_callback(
+        self,
+        callback: Callable[[BrokerTick], None],
+    ) -> None:
+        self._callback = callback
+
+    def _on_tick(
+        self,
+        _feed: MarketFeed,
+        data: dict,
+    ) -> None:
+        if not isinstance(data, dict):
+            return
+
+        if data.get("type") != "Ticker Data":
+            return
+
+        tick = self._tick_mapper.to_broker_tick(data)
+
+        if self._callback is not None:
+            self._callback(tick)
+
+    def _run(self) -> None:
+        try:
+            self._feed = MarketFeed(
+                dhan_context=self._context,
+                instruments=list(self._instruments),
+                version="v2",
+            )
+
+            self._feed.on_ticks = self._on_tick
+
+            self._feed.run_forever()
+
+            while self._running:
+                data = self._feed.get_data()
+
+                if data is not None:
+                    self._on_tick(
+                        self._feed,
+                        data,
+                    )
+
+        except Exception as exc:
+            if self._running:
+                print(
+                    f"Dhan market feed error: {exc}",
+                )
+
+    def start(self) -> None:
+        if self._running:
+            return
+
+        if not self._instruments:
+            raise RuntimeError(
+                "No instruments subscribed to Dhan market feed.",
+            )
+
+        self._running = True
+
+        self._thread = threading.Thread(
+            target=self._run,
+            name="dhan-market-feed",
+            daemon=True,
+        )
+        self._thread.start()
+
+    def stop(self) -> None:
+        self._running = False
+
+        if self._feed is not None:
+            try:
+                self._feed.loop.run_until_complete(
+                    self._feed.disconnect(),
+                )
+            except Exception:
+                pass
+
+        if self._thread is not None:
+            self._thread.join(timeout=2)
+
+        self._thread = None
+        self._feed = None
+
+    def subscribe(
+        self,
+        instruments: list[tuple[int, str, int]],
+    ) -> None:
+        new_instruments = set(instruments)
+        self._instruments.update(new_instruments)
+
+        if self._feed is not None:
+            self._feed.subscribe_symbols(
+                list(new_instruments),
+            )
+
+    def unsubscribe(
+        self,
+        instruments: list[tuple[int, str, int]],
+    ) -> None:
+        removed = set(instruments)
+        self._instruments.difference_update(removed)
+
+        if self._feed is not None:
+            self._feed.unsubscribe_symbols(
+                list(removed),
+            )

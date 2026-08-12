@@ -2,6 +2,7 @@
 Dhan WebSocket Client
 
 Handles:
+
 - Authentication
 - Connection lifecycle
 - Subscriptions
@@ -12,15 +13,16 @@ from __future__ import annotations
 
 from collections.abc import Callable
 
+from dhanhq import MarketFeed
+
 from brokers.dhan.live_market_feed import LiveMarketFeed
 from brokers.dhan.models import BrokerTick
 from brokers.dhan.session import DhanSession
+from domain.instrument import Instrument
 
 
 class WebSocketClient:
-    """
-    High-level websocket client used by MarketDataService.
-    """
+    """High-level websocket client used by MarketDataService."""
 
     def __init__(
         self,
@@ -53,23 +55,47 @@ class WebSocketClient:
     def tick_callback(self):
         return self._tick_callback
 
+    @staticmethod
+    def _to_dhan_subscription(
+        instrument: Instrument,
+    ) -> tuple[int, str, int]:
+        exchange_map = {
+            "IDX_I": 0,
+            "NSE_EQ": 1,
+            "NSE_FNO": 2,
+            "NSE_CURRENCY": 3,
+            "BSE_EQ": 4,
+            "MCX_COMM": 5,
+            "BSE_CURRENCY": 7,
+            "BSE_FNO": 8,
+        }
+
+        try:
+            exchange = exchange_map[instrument.exchange_segment]
+        except KeyError as exc:
+            raise ValueError(
+                f"Unsupported Dhan exchange segment: {instrument.exchange_segment}",
+            ) from exc
+
+        return (
+            exchange,
+            str(instrument.security_id),
+            MarketFeed.Ticker,
+        )
+
     def connect(self) -> None:
-        """
-        Connect websocket.
-        """
+        """Connect websocket."""
 
         if self.live_market_feed is not None:
             self.live_market_feed.start()
             self._connected = True
             return
 
-        #
-        # Existing implementation
-        #
-
         if self.session is not None:
             if not self.session.is_authenticated:
-                raise RuntimeError("WebSocket requires authentication.")
+                raise RuntimeError(
+                    "WebSocket requires authentication.",
+                )
 
             if self.transport is not None:
                 self.transport.authenticate(
@@ -96,42 +122,65 @@ class WebSocketClient:
         self,
         instrument,
     ) -> None:
-        """
-        Subscribe instrument.
-        """
+        """Subscribe an instrument."""
 
         if self.live_market_feed is not None:
-            self.live_market_feed.subscribe(
-                [instrument],
+            if not isinstance(instrument, Instrument):
+                raise TypeError(
+                    "Dhan live feed subscriptions require an Instrument.",
+                )
+
+            dhan_instrument = self._to_dhan_subscription(
+                instrument,
             )
-            self._subscriptions.add(instrument)
+
+            self.live_market_feed.subscribe(
+                [dhan_instrument],
+            )
+
+            self._subscriptions.add(
+                instrument.symbol,
+            )
             return
 
         if self.session is not None and not self._connected:
-            raise RuntimeError("WebSocket is not connected.")
+            raise RuntimeError(
+                "WebSocket is not connected.",
+            )
 
         if not self._connected:
             self._connected = True
 
-        self._subscriptions.add(
-            instrument,
-        )
+        self._subscriptions.add(instrument)
 
         if self.transport is not None:
-            self.transport.subscribe(
-                instrument,
-            )
+            self.transport.subscribe(instrument)
 
     def unsubscribe(
         self,
         instrument,
     ) -> None:
         self._subscriptions.discard(
-            instrument,
+            instrument.symbol if isinstance(instrument, Instrument) else instrument,
         )
+
+        if self.live_market_feed is not None:
+            if not isinstance(instrument, Instrument):
+                raise TypeError(
+                    "Dhan live feed subscriptions require an Instrument.",
+                )
+
+            self.live_market_feed.unsubscribe(
+                [self._to_dhan_subscription(instrument)],
+            )
 
     def clear_subscriptions(self) -> None:
         self._subscriptions.clear()
+
+        if self.live_market_feed is not None:
+            self.live_market_feed.unsubscribe(
+                list(self.live_market_feed.instruments),
+            )
 
     def register_tick_callback(
         self,
@@ -143,14 +192,10 @@ class WebSocketClient:
         self,
         tick: BrokerTick,
     ) -> None:
-        """
-        Forward BrokerTick to MarketDataService.
-        """
+        """Forward BrokerTick to MarketDataService."""
 
         if self._tick_callback is not None:
-            self._tick_callback(
-                tick,
-            )
+            self._tick_callback(tick)
 
     def reset(self) -> None:
         self.disconnect()
