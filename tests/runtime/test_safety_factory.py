@@ -2,6 +2,7 @@ from runtime.safety_factory import SafetyFactory
 from safety.composite_execution_guard import (
     CompositeExecutionGuard,
 )
+from trading.execution_mode import ExecutionMode
 
 
 def test_factory_returns_composite_guard():
@@ -59,3 +60,15 @@ def test_factory_can_build_many():
     guards = [SafetyFactory.create() for _ in range(10)]
 
     assert len(guards) == 10
+
+
+def test_factory_paper_mode_allows_execution():
+    guard = SafetyFactory.create(ExecutionMode.PAPER)
+
+    assert guard.can_execute() is True
+
+
+def test_factory_live_mode_blocks_by_default():
+    guard = SafetyFactory.create(ExecutionMode.LIVE)
+
+    assert guard.can_execute() is False

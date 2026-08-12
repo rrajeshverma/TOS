@@ -39,6 +39,7 @@ from services.order_execution_adapter import OrderExecutionAdapter
 from services.paper_trade_runner import PaperTradeRunner
 from services.paper_trading_service import PaperTradingService
 from storage.instrument_repository import InstrumentRepository
+from trading.execution_mode import ExecutionMode
 
 LOGGER = logging.getLogger("tos")
 
@@ -100,7 +101,8 @@ class Startup:
             order_service=order_service,
         )
 
-        execution_guard = SafetyFactory.create()
+        execution_mode = ExecutionMode(self.config.mode)
+        execution_guard = SafetyFactory.create(execution_mode)
 
         execution_engine = ExecutionEngine(
             order_service,

@@ -176,3 +176,48 @@ def test_log_health(mock_logger):
     startup.log_health()
 
     assert mock_logger.info.called
+
+
+def test_startup_paper_mode_allows_execution():
+    startup = Startup(
+        RuntimeConfig(
+            broker="paper",
+            market_data="paper",
+            mode="PAPER",
+        ),
+    )
+
+    startup.initialize_services()
+
+    execution_engine = startup.services["execution_engine"]
+
+    assert execution_engine.execution_guard.can_execute() is True
+
+
+@patch("runtime.startup.DhanBroker")
+@patch("runtime.startup.DhanClient")
+@patch("runtime.startup.WebSocketClient")
+@patch("runtime.startup.LiveMarketFeed")
+@patch("runtime.startup.DhanInstrumentProvider")
+def test_startup_live_mode_blocks_execution_by_default(
+    mock_provider,
+    mock_live_feed,
+    mock_websocket,
+    mock_client,
+    mock_broker,
+):
+    mock_provider.return_value.load.return_value = []
+
+    startup = Startup(
+        RuntimeConfig(
+            broker="dhan",
+            market_data="dhan",
+            mode="LIVE",
+        ),
+    )
+
+    startup.initialize_services()
+
+    execution_engine = startup.services["execution_engine"]
+
+    assert execution_engine.execution_guard.can_execute() is False

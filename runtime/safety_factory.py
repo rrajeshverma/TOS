@@ -8,17 +8,21 @@ from safety.composite_execution_guard import CompositeExecutionGuard
 from safety.kill_switch import KillSwitch
 from safety.kill_switch_guard import KillSwitchGuard
 from safety.market_hours_guard import MarketHoursGuard
+from trading.execution_mode import ExecutionMode, ExecutionModeGuard
 
 
 class SafetyFactory:
     """Creates the default execution guard stack."""
 
     @staticmethod
-    def create() -> CompositeExecutionGuard:
+    def create(
+        mode: ExecutionMode = ExecutionMode.PAPER,
+    ) -> CompositeExecutionGuard:
         """Build the production execution guard."""
 
         return CompositeExecutionGuard(
             [
+                ExecutionModeGuard(mode),
                 KillSwitchGuard(KillSwitch()),
                 MarketHoursGuard(),
             ]
