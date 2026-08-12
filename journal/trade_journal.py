@@ -1,20 +1,13 @@
-"""
-=========================================================
-Trading Operating System (TOS)
-Module      : Trade Journal
-Version     : 1.0.0
-Author      : Rajesh Varma
-Description : Records completed paper trades.
-=========================================================
-"""
-
 from __future__ import annotations
 
 import csv
+from datetime import date, datetime
+from decimal import Decimal
 from pathlib import Path
 from typing import ClassVar
 
 from domain.trade import Trade
+from shared.enums import TradeStatus
 from shared.logger import get_logger
 
 
@@ -108,3 +101,77 @@ class TradeJournal:
             encoding="utf-8",
         ) as file:
             return max(sum(1 for _ in file) - 1, 0)
+
+    # ADD THE TWO NEW METHODS HERE
+
+    def count_today(
+        self,
+        trade_date: date | None = None,
+    ) -> int:
+        """
+        Return the number of closed trades for the given date.
+        """
+
+        if trade_date is None:
+            trade_date = date.today()
+
+        if not self.file_path.exists():
+            return 0
+
+        count = 0
+
+        with open(
+            self.file_path,
+            newline="",
+            encoding="utf-8",
+        ) as file:
+            reader = csv.DictReader(file)
+
+            for row in reader:
+                if row["Status"] != TradeStatus.CLOSED.value:
+                    continue
+
+                exit_time = datetime.fromisoformat(
+                    row["Exit Time"],
+                )
+
+                if exit_time.date() == trade_date:
+                    count += 1
+
+        return count
+
+    def daily_pnl(
+        self,
+        trade_date: date | None = None,
+    ) -> Decimal:
+        """
+        Return realized P&L for closed trades on the given date.
+        """
+
+        if trade_date is None:
+            trade_date = date.today()
+
+        if not self.file_path.exists():
+            return Decimal("0")
+
+        total = Decimal("0")
+
+        with open(
+            self.file_path,
+            newline="",
+            encoding="utf-8",
+        ) as file:
+            reader = csv.DictReader(file)
+
+            for row in reader:
+                if row["Status"] != TradeStatus.CLOSED.value:
+                    continue
+
+                exit_time = datetime.fromisoformat(
+                    row["Exit Time"],
+                )
+
+                if exit_time.date() == trade_date:
+                    total += Decimal(row["PnL"])
+
+        return total

@@ -2,7 +2,7 @@
 Tests for completed trade journal flow.
 """
 
-from datetime import datetime
+from datetime import date, datetime
 from decimal import Decimal
 
 from domain.decision import Decision
@@ -133,3 +133,100 @@ def test_trade_journal_creates_header(tmp_path):
     assert "Trade ID" in content
     assert "PnL" in content
     assert "Status" in content
+
+
+def test_count_today_counts_only_closed_trades(tmp_path):
+    journal_file = tmp_path / "trade_journal.csv"
+
+    journal = TradeJournal(
+        file_path=str(journal_file),
+    )
+
+    today = date(2026, 8, 12)
+
+    trade = create_closed_trade()
+    trade = Trade(
+        trade_id=trade.trade_id,
+        risk=trade.risk,
+        entry_price=trade.entry_price,
+        stop_loss=trade.stop_loss,
+        target=trade.target,
+        quantity=trade.quantity,
+        entry_time=datetime(2026, 8, 12, 9, 20),
+        exit_price=trade.exit_price,
+        exit_time=datetime(2026, 8, 12, 9, 25),
+        exit_reason=trade.exit_reason,
+        status=trade.status,
+        pnl=trade.pnl,
+    )
+
+    journal.record(trade)
+
+    assert journal.count_today(today) == 1
+
+
+def test_count_today_excludes_other_dates(tmp_path):
+    journal_file = tmp_path / "trade_journal.csv"
+
+    journal = TradeJournal(
+        file_path=str(journal_file),
+    )
+
+    trade = create_closed_trade()
+    trade = Trade(
+        trade_id=trade.trade_id,
+        risk=trade.risk,
+        entry_price=trade.entry_price,
+        stop_loss=trade.stop_loss,
+        target=trade.target,
+        quantity=trade.quantity,
+        entry_time=datetime(2026, 8, 11, 9, 20),
+        exit_price=trade.exit_price,
+        exit_time=datetime(2026, 8, 11, 9, 25),
+        exit_reason=trade.exit_reason,
+        status=trade.status,
+        pnl=trade.pnl,
+    )
+
+    journal.record(trade)
+
+    assert journal.count_today(date(2026, 8, 12)) == 0
+
+
+def test_daily_pnl_returns_realized_pnl(tmp_path):
+    journal_file = tmp_path / "trade_journal.csv"
+
+    journal = TradeJournal(
+        file_path=str(journal_file),
+    )
+
+    trade = create_closed_trade()
+
+    trade = Trade(
+        trade_id=trade.trade_id,
+        risk=trade.risk,
+        entry_price=trade.entry_price,
+        stop_loss=trade.stop_loss,
+        target=trade.target,
+        quantity=trade.quantity,
+        entry_time=datetime(2026, 8, 12, 9, 20),
+        exit_price=trade.exit_price,
+        exit_time=datetime(2026, 8, 12, 9, 25),
+        exit_reason=trade.exit_reason,
+        status=trade.status,
+        pnl=Decimal("1365"),
+    )
+
+    journal.record(trade)
+
+    assert journal.daily_pnl(date(2026, 8, 12)) == Decimal("1365")
+
+
+def test_daily_pnl_returns_zero_when_no_trades(tmp_path):
+    journal_file = tmp_path / "trade_journal.csv"
+
+    journal = TradeJournal(
+        file_path=str(journal_file),
+    )
+
+    assert journal.daily_pnl(date(2026, 8, 12)) == Decimal("0")

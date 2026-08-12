@@ -3,6 +3,7 @@ Tests for TradingPipeline.
 """
 
 from datetime import datetime
+from decimal import Decimal
 
 import pytest
 
@@ -36,13 +37,22 @@ class FakeMarket:
     volume = 1000
 
 
-class FakeMarketEngine:
+class FakeRiskEngine:
     def __init__(self):
         self.called = False
+        self.trades_today = None
+        self.daily_loss = None
 
-    def build_market(self, candle):
+    def evaluate(
+        self,
+        decision,
+        trades_today,
+        daily_loss,
+    ):
         self.called = True
-        return FakeMarket()
+        self.trades_today = trades_today
+        self.daily_loss = daily_loss
+        return "RISK"
 
 
 class FakeIndicatorEngine:
@@ -59,6 +69,26 @@ class FakeIndicatorEngine:
             rsi=60.0,
             volume_average=1000.0,
         )
+
+
+class FakeTradeJournal:
+    def __init__(
+        self,
+        trades_today=0,
+        daily_pnl=Decimal("0"),
+    ):
+        self.trades_today = trades_today
+        self.daily_pnl_value = daily_pnl
+        self.count_called = False
+        self.pnl_called = False
+
+    def count_today(self):
+        self.count_called = True
+        return self.trades_today
+
+    def daily_pnl(self):
+        self.pnl_called = True
+        return self.daily_pnl_value
 
 
 class Dummy:
@@ -104,7 +134,7 @@ def create_candles():
     ]
 
 
-def create_pipeline():
+def create_pipeline(trade_journal=None):
     return TradingPipeline(
         indicator_engine=FakeIndicatorEngine(),
         decision_engine=FakeDecisionEngine(),
@@ -113,6 +143,7 @@ def create_pipeline():
         position_sizing_engine=FakePositionSizingEngine(),
         trade_planning_engine=FakeTradePlanningEngine(),
         trade_management_engine=FakeTradeManagementEngine(),
+        trade_journal=trade_journal,
     )
 
 
@@ -211,11 +242,6 @@ def test_pipeline_returns_trade_quality():
     _, _, _, quality, _, _, _, _ = pipeline.run(create_candles())
 
     assert quality == "QUALITY"
-
-
-class FakeRiskEngine:
-    def __init__(self):
-        self.called = False
 
     def evaluate(
         self,
@@ -361,3 +387,66 @@ def test_pipeline_returns_trade_management():
     ) = pipeline.run(create_candles())
 
     assert trade_management == "TRADE_MANAGEMENT"
+
+
+def test_pipeline_uses_trade_journal_for_daily_risk():
+    journal = FakeTradeJournal(
+        trades_today=2,
+        daily_pnl=Decimal("-1500"),
+    )
+
+    pipeline = create_pipeline(
+        trade_journal=journal,
+    )
+
+    pipeline.run(create_candles())
+
+    assert journal.count_called is True
+    assert journal.pnl_called is True
+
+
+def test_pipeline_passes_journal_risk_values_to_risk_engine():
+    journal = FakeTradeJournal(
+        trades_today=2,
+        daily_pnl=Decimal("-1500"),
+    )
+
+    pipeline = create_pipeline(
+        trade_journal=journal,
+    )
+
+    pipeline.run(create_candles())
+
+    # We'll inspect the fake RiskEngine after the test run.
+
+
+def test_pipeline_passes_journal_values_to_risk_engine():
+    journal = FakeTradeJournal(
+        trades_today=2,
+        daily_pnl=Decimal("-1500"),
+    )
+
+    pipeline = create_pipeline(
+        trade_journal=journal,
+    )
+
+    pipeline.run(create_candles())
+
+    assert pipeline._risk_engine.trades_today == 2
+    assert pipeline._risk_engine.daily_loss == Decimal("1500")
+
+
+def test_pipeline_does_not_treat_profit_as_daily_loss():
+    journal = FakeTradeJournal(
+        trades_today=1,
+        daily_pnl=Decimal("2500"),
+    )
+
+    pipeline = create_pipeline(
+        trade_journal=journal,
+    )
+
+    pipeline.run(create_candles())
+
+    assert pipeline._risk_engine.trades_today == 1
+    assert pipeline._risk_engine.daily_loss == Decimal("0")

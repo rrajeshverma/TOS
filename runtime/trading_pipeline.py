@@ -10,6 +10,7 @@ from decimal import Decimal
 
 from config.risk import CAPITAL, RISK_PERCENT, RISK_REWARD_RATIO
 from engines.stop_loss_engine import StopLossEngine
+from journal.trade_journal import TradeJournal
 
 
 class TradingPipeline:
@@ -27,6 +28,7 @@ class TradingPipeline:
         trade_planning_engine,
         trade_management_engine,
         stop_loss_engine=None,
+        trade_journal=None,
     ):
         self._indicator_engine = indicator_engine
         self._decision_engine = decision_engine
@@ -36,6 +38,7 @@ class TradingPipeline:
         self._trade_planning_engine = trade_planning_engine
         self._trade_management_engine = trade_management_engine
         self._stop_loss_engine = stop_loss_engine or StopLossEngine()
+        self._trade_journal = trade_journal or TradeJournal()
 
     def run(self, candles):
         """
@@ -59,15 +62,24 @@ class TradingPipeline:
             indicators,
         )
 
+        trades_today = self._trade_journal.count_today()
+
+        daily_pnl = self._trade_journal.daily_pnl()
+
+        daily_loss = max(
+            -daily_pnl,
+            Decimal("0"),
+        )
+
         trade_quality = self._trade_quality_engine.evaluate(
             decision=decision,
-            trades_today=0,
+            trades_today=trades_today,
         )
 
         risk = self._risk_engine.evaluate(
             decision=decision,
-            trades_today=0,
-            daily_loss=Decimal(0),
+            trades_today=trades_today,
+            daily_loss=daily_loss,
         )
 
         previous_candle = candles[-2]
