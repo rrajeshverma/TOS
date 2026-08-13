@@ -1,3 +1,4 @@
+from execution.execution_request import ExecutionRequest
 from execution.order_event_dispatcher import OrderEventDispatcher
 from execution.order_events import OrderEventType
 from execution.order_service import OrderService, OrderStatus
@@ -196,3 +197,22 @@ def test_cancel_order_event_contains_registered_broker_id():
     service.cancel_order(order_id)
 
     assert received[0].broker_order_id == "BRK-XYZ"
+
+
+def test_submit_accepts_execution_request():
+    service = OrderService()
+
+    request = ExecutionRequest(
+        symbol="NIFTY",
+        side="BUY",
+        quantity=65,
+    )
+
+    order_id = service.submit(request)
+
+    assert order_id == 1
+    assert service.get(order_id) == {
+        "symbol": "NIFTY",
+        "side": "BUY",
+        "quantity": 65,
+    }

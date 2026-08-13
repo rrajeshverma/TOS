@@ -61,7 +61,16 @@ class OrderService:
         """
         order_id = self._next_order_id
 
-        self._orders[order_id] = dict(order)
+        if hasattr(order, "symbol") and hasattr(order, "side") and hasattr(order, "quantity"):
+            stored_order = {
+                "symbol": order.symbol,
+                "side": order.side,
+                "quantity": order.quantity,
+            }
+        else:
+            stored_order = dict(order)
+
+        self._orders[order_id] = stored_order
         self._statuses[order_id] = OrderStatus.NEW
         self._filled_quantities[order_id] = 0
         self._filled_values[order_id] = 0.0
