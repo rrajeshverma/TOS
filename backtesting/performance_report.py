@@ -44,6 +44,7 @@ class PerformanceReport:
         print(f"Average Loss    : {self._statistics.average_loss}")
         print(f"Profit Factor   : {self._statistics.profit_factor}")
         print(f"Expectancy      : {self._statistics.expectancy}")
+        print(f"Maximum Drawdown: {self._statistics.maximum_drawdown}")
 
         print(f"Net Profit      : {self._statistics.net_profit}")
 

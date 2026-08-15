@@ -39,3 +39,21 @@ def test_report_includes_performance_metrics(capsys):
     assert "Average Loss    : -25" in output
     assert "Profit Factor   : 3" in output
     assert "Expectancy      : 25" in output
+
+
+def test_report_includes_maximum_drawdown(capsys):
+    statistics = TradeStatistics(
+        [
+            Mock(pnl=Decimal("100")),
+            Mock(pnl=Decimal("50")),
+            Mock(pnl=Decimal("-80")),
+            Mock(pnl=Decimal("-100")),
+            Mock(pnl=Decimal("40")),
+        ]
+    )
+
+    PerformanceReport(statistics).print()
+
+    output = capsys.readouterr().out
+
+    assert "Maximum Drawdown: 180" in output

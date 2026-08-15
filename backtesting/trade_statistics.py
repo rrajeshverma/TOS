@@ -94,3 +94,22 @@ class TradeStatistics:
             return Decimal(0)
 
         return self.net_profit / self.total_trades
+
+    @property
+    def maximum_drawdown(self) -> Decimal:
+        equity = Decimal("0")
+        peak = Decimal("0")
+        maximum_drawdown = Decimal("0")
+
+        for trade in self._trades:
+            equity += trade.pnl
+
+            if equity > peak:
+                peak = equity
+
+            drawdown = peak - equity
+
+            if drawdown > maximum_drawdown:
+                maximum_drawdown = drawdown
+
+        return maximum_drawdown

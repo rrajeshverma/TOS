@@ -160,3 +160,35 @@ def test_expectancy_empty_statistics():
     statistics = TradeStatistics([])
 
     assert statistics.expectancy == Decimal("0")
+
+
+def test_maximum_drawdown():
+    statistics = TradeStatistics(
+        [
+            make_trade(Decimal("100")),
+            make_trade(Decimal("50")),
+            make_trade(Decimal("-80")),
+            make_trade(Decimal("-100")),
+            make_trade(Decimal("40")),
+        ]
+    )
+
+    assert statistics.maximum_drawdown == Decimal("180")
+
+
+def test_maximum_drawdown_empty_statistics():
+    statistics = TradeStatistics([])
+
+    assert statistics.maximum_drawdown == Decimal("0")
+
+
+def test_maximum_drawdown_with_only_profit():
+    statistics = TradeStatistics(
+        [
+            make_trade(Decimal("100")),
+            make_trade(Decimal("50")),
+            make_trade(Decimal("25")),
+        ]
+    )
+
+    assert statistics.maximum_drawdown == Decimal("0")
