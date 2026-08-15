@@ -12,6 +12,8 @@ from __future__ import annotations
 
 from decimal import Decimal
 
+from backtesting.drawdown import Drawdown
+from backtesting.equity_curve import EquityCurve
 from domain.trade import Trade
 
 
@@ -97,19 +99,6 @@ class TradeStatistics:
 
     @property
     def maximum_drawdown(self) -> Decimal:
-        equity = Decimal("0")
-        peak = Decimal("0")
-        maximum_drawdown = Decimal("0")
+        equity = EquityCurve(self._trades).values()
 
-        for trade in self._trades:
-            equity += trade.pnl
-
-            if equity > peak:
-                peak = equity
-
-            drawdown = peak - equity
-
-            if drawdown > maximum_drawdown:
-                maximum_drawdown = drawdown
-
-        return maximum_drawdown
+        return Drawdown(equity).maximum
