@@ -4,8 +4,10 @@ Backtest application entry point.
 
 from __future__ import annotations
 
+from decimal import Decimal
 from pathlib import Path
 
+from backtesting.backtest_config import BacktestConfig
 from backtesting.backtest_trade_journal import BacktestTradeJournal
 from backtesting.csv_data_source import CSVDataSource
 from backtesting.historical_backtest_engine import HistoricalBacktestEngine
@@ -24,6 +26,12 @@ class BacktestApplication:
     DEFAULT_DATA_FILE = Path(
         "data/historical/btc/BTCUSDT_30m.csv",
     )
+
+    def __init__(
+        self,
+        config: BacktestConfig | None = None,
+    ) -> None:
+        self._config = config
 
     def run(self) -> int:
         startup = Startup(
@@ -61,9 +69,16 @@ class BacktestApplication:
             feed=feed,
         )
 
+        initial_capital = (
+            Decimal(str(self._config.initial_capital))
+            if self._config is not None
+            else Decimal("100000")
+        )
+
         engine = HistoricalBacktestEngine(
             runtime=runtime,
             replay_runner=runner,
+            initial_capital=initial_capital,
         )
 
         engine.run()

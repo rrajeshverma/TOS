@@ -42,3 +42,24 @@ def test_engine_builds_equity_curve_from_completed_trades():
         Decimal("60"),
         Decimal("120"),
     ]
+
+
+def test_engine_passes_initial_capital_to_statistics():
+    runner = Mock()
+    runner.run.return_value = 5
+    runner.context.trade_ledger.trades = [
+        make_trade(Decimal("100")),
+        make_trade(Decimal("-40")),
+        make_trade(Decimal("-100")),
+    ]
+
+    engine = HistoricalBacktestEngine(
+        runtime=Mock(),
+        replay_runner=runner,
+        initial_capital=Decimal("1000"),
+    )
+
+    engine.run()
+
+    assert engine.statistics.maximum_drawdown == Decimal("140")
+    assert engine.statistics.maximum_drawdown_percentage == Decimal("14")
