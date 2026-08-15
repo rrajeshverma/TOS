@@ -29,7 +29,6 @@ class TradeLedger:
         Add a completed trade.
         """
         self._trades.append(trade)
-        print(f"LEDGER ADD: {trade.trade_id}")
 
     @property
     def trades(self) -> list[Trade]:
