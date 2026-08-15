@@ -93,3 +93,70 @@ def test_empty_statistics():
     assert statistics.losing_trades == 0
     assert statistics.breakeven_trades == 0
     assert statistics.win_rate == 0.0
+
+
+def test_average_win():
+    statistics = TradeStatistics(
+        [
+            make_trade(Decimal("100")),
+            make_trade(Decimal("50")),
+            make_trade(Decimal("-25")),
+        ]
+    )
+
+    assert statistics.average_win == Decimal("75")
+
+
+def test_average_loss():
+    statistics = TradeStatistics(
+        [
+            make_trade(Decimal("100")),
+            make_trade(Decimal("-50")),
+            make_trade(Decimal("-25")),
+        ]
+    )
+
+    assert statistics.average_loss == Decimal("-37.5")
+
+
+def test_profit_factor():
+    statistics = TradeStatistics(
+        [
+            make_trade(Decimal("100")),
+            make_trade(Decimal("50")),
+            make_trade(Decimal("-25")),
+            make_trade(Decimal("-25")),
+        ]
+    )
+
+    assert statistics.profit_factor == Decimal("3")
+
+
+def test_profit_factor_with_no_losses():
+    statistics = TradeStatistics(
+        [
+            make_trade(Decimal("100")),
+            make_trade(Decimal("50")),
+        ]
+    )
+
+    assert statistics.profit_factor == Decimal("0")
+
+
+def test_expectancy():
+    statistics = TradeStatistics(
+        [
+            make_trade(Decimal("100")),
+            make_trade(Decimal("50")),
+            make_trade(Decimal("-25")),
+            make_trade(Decimal("-25")),
+        ]
+    )
+
+    assert statistics.expectancy == Decimal("25")
+
+
+def test_expectancy_empty_statistics():
+    statistics = TradeStatistics([])
+
+    assert statistics.expectancy == Decimal("0")

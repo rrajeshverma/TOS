@@ -80,3 +80,17 @@ class TradeStatistics:
             return Decimal(0)
 
         return self.gross_loss / self.losing_trades
+
+    @property
+    def profit_factor(self) -> Decimal:
+        if self.gross_loss == Decimal(0):
+            return Decimal(0)
+
+        return self.gross_profit / abs(self.gross_loss)
+
+    @property
+    def expectancy(self) -> Decimal:
+        if self.total_trades == 0:
+            return Decimal(0)
+
+        return self.net_profit / self.total_trades

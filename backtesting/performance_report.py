@@ -40,6 +40,11 @@ class PerformanceReport:
         print(f"Gross Profit    : {self._statistics.gross_profit}")
         print(f"Gross Loss      : {self._statistics.gross_loss}")
 
+        print(f"Average Win     : {self._statistics.average_win}")
+        print(f"Average Loss    : {self._statistics.average_loss}")
+        print(f"Profit Factor   : {self._statistics.profit_factor}")
+        print(f"Expectancy      : {self._statistics.expectancy}")
+
         print(f"Net Profit      : {self._statistics.net_profit}")
 
         print("=" * 56)
