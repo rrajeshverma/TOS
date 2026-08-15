@@ -16,6 +16,7 @@ from decimal import Decimal
 
 from domain.risk import Risk
 from domain.trade import Trade
+from engines.trade_management_engine import TradeManagementEngine
 from shared.enums import ExitReason, TradeStatus
 from utils.id_generator import generate_trade_id
 
@@ -38,6 +39,7 @@ class TradeExecutor:
 
     def __init__(self) -> None:
         self._current_trade: Trade | None = None
+        self._trade_management_engine = TradeManagementEngine()
 
     @property
     def current_trade(self) -> Trade | None:
@@ -79,6 +81,82 @@ class TradeExecutor:
         self._current_trade = trade
 
         return trade
+
+    def evaluate_candle(
+        self,
+        *,
+        high: Decimal,
+        low: Decimal,
+        timestamp: datetime,
+    ) -> Trade | None:
+        """
+        Evaluate the current candle against the open trade.
+
+        Existing stop-loss and target are evaluated first.
+        A breakeven stop moved during this candle becomes effective
+        from the next candle.
+        """
+
+        if self._current_trade is None:
+            return None
+
+        trade = self._current_trade
+
+        # -------------------------------------------------
+        # Existing SL / Target
+        # -------------------------------------------------
+
+        if trade.risk.decision.signal.value == "BUY_CE":
+            if low <= trade.stop_loss:
+                return self.close_trade(
+                    exit_price=trade.stop_loss,
+                    exit_time=timestamp,
+                    exit_reason=ExitReason.STOP_LOSS,
+                )
+
+            if high >= trade.target:
+                return self.close_trade(
+                    exit_price=trade.target,
+                    exit_time=timestamp,
+                    exit_reason=ExitReason.TARGET,
+                )
+
+            current_price = high
+
+        else:
+            if low <= trade.target:
+                return self.close_trade(
+                    exit_price=trade.target,
+                    exit_time=timestamp,
+                    exit_reason=ExitReason.TARGET,
+                )
+
+            if high >= trade.stop_loss:
+                return self.close_trade(
+                    exit_price=trade.stop_loss,
+                    exit_time=timestamp,
+                    exit_reason=ExitReason.STOP_LOSS,
+                )
+
+            current_price = low
+
+        # -------------------------------------------------
+        # Trade management
+        # -------------------------------------------------
+
+        management = self._trade_management_engine.evaluate(
+            entry_price=trade.entry_price,
+            stop_loss=trade.stop_loss,
+            current_price=current_price,
+        )
+
+        if management.move_stop_loss:
+            self._current_trade = replace(
+                trade,
+                stop_loss=management.new_stop_loss,
+            )
+
+        return None
 
     def close_trade(
         self,

@@ -39,6 +39,14 @@ class ReplayRunner:
             history.append(market)
 
             try:
+                had_open_trade = self.context.trade_executor.has_open_trade
+
+                self.context.on_market(market)
+
+                closed_existing_trade = (
+                    had_open_trade and not self.context.trade_executor.has_open_trade
+                )
+
                 risk = self._runtime.on_market_tick(
                     market,
                     history,
@@ -49,10 +57,15 @@ class ReplayRunner:
                     type(risk).__name__,
                 )
 
-                if risk is not None:
+                if (
+                    risk is not None
+                    and self._runtime.last_trade_plan is not None
+                    and not closed_existing_trade
+                ):
                     self.context.on_risk(
                         risk=risk,
                         market=market,
+                        trade_plan=self._runtime.last_trade_plan,
                     )
 
                 processed += 1
@@ -66,7 +79,7 @@ class ReplayRunner:
             except ValueError as exc:
                 skipped += 1
 
-                LOGGER.debug(
+                LOGGER.warning(
                     "Skipping candle: %s",
                     exc,
                 )

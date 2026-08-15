@@ -118,3 +118,15 @@ def test_dispatch_paper(mock_application_main):
     assert result == 0
 
     mock_application_main.assert_called_once_with()
+
+
+@patch("runtime.dispatcher.BacktestApplication")
+def test_dispatch_backtest(mock_backtest_application):
+    mock_backtest_application.return_value.run.return_value = 0
+
+    dispatcher = CommandDispatcher()
+
+    result = dispatcher.dispatch(RuntimeMode.BACKTEST)
+
+    assert result == 0
+    mock_backtest_application.return_value.run.assert_called_once_with()

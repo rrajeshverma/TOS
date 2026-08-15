@@ -14,6 +14,7 @@ from decimal import Decimal
 from domain.decision import Decision
 from domain.position_size import PositionSize
 from domain.trade_plan import TradePlan
+from shared.enums import Signal
 
 
 class TradePlanningEngine:
@@ -33,11 +34,19 @@ class TradePlanningEngine:
         Create a fully validated trade plan.
         """
 
-        if stop_loss >= entry_price:
-            raise ValueError("Stop loss must be below entry price.")
+        if decision.signal == Signal.BUY_CE:
+            if stop_loss >= entry_price:
+                raise ValueError("Stop loss must be below entry price.")
 
-        if target_price <= entry_price:
-            raise ValueError("Target price must be above entry price.")
+            if target_price <= entry_price:
+                raise ValueError("Target price must be above entry price.")
+
+        elif decision.signal == Signal.BUY_PE:
+            if stop_loss <= entry_price:
+                raise ValueError("Stop loss must be above entry price.")
+
+            if target_price >= entry_price:
+                raise ValueError("Target price must be below entry price.")
 
         return TradePlan(
             decision=decision,

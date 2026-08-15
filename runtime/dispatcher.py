@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from backtesting.backtest_application import BacktestApplication
 from config.config_validator import ConfigValidator
 from config.settings_loader import SettingsLoader
 from config.version import VERSION
@@ -18,6 +19,7 @@ class CommandDispatcher:
             RuntimeMode.VALIDATE: self._validate,
             RuntimeMode.PAPER: self._paper,
             RuntimeMode.LIVE: self._live,
+            RuntimeMode.BACKTEST: self._backtest,
         }
 
     def dispatch(self, mode: RuntimeMode) -> int:
@@ -58,3 +60,6 @@ class CommandDispatcher:
     def _live(self) -> int:
         print("Live mode not yet implemented.")
         return 0
+
+    def _backtest(self) -> int:
+        return BacktestApplication().run()

@@ -41,6 +41,7 @@ class TradingRuntime:
         self.runtime_status = RuntimeStatus.INITIALIZING
         self.metrics = RuntimeMetrics()
         self.event_bus = EventBus()
+        self._last_trade_plan = None
 
         self.trading_session = TradingSession()
         self.market_clock = MarketClock()
@@ -82,6 +83,11 @@ class TradingRuntime:
     def state(self) -> RuntimeStatus:
         """Current runtime state."""
         return self.runtime_status
+
+    @property
+    def last_trade_plan(self):
+        """Return the most recent trade plan produced by the trading pipeline."""
+        return self._last_trade_plan
 
     def validate(self) -> list[str]:
         """
@@ -182,9 +188,11 @@ class TradingRuntime:
                 _quality,
                 risk,
                 position_size,
-                _trade_plan,
+                trade_plan,
                 _trade_management,
             ) = self.trading_pipeline.run(history)
+
+            self._last_trade_plan = trade_plan
 
             if self.mode == RuntimeMode.BACKTEST:
                 return risk

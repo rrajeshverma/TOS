@@ -149,3 +149,158 @@ def test_close_without_open_trade():
             exit_price=Decimal(100),
             exit_time=datetime.now(),
         )
+
+
+def test_open_trade_preserves_stop_loss_and_target():
+    executor = TradeExecutor()
+
+    trade = executor.open_trade(
+        risk=create_risk(),
+        entry_price=Decimal("100"),
+        quantity=65,
+        entry_time=datetime.now(),
+        stop_loss=Decimal("90"),
+        target=Decimal("120"),
+    )
+
+    assert trade.stop_loss == Decimal("90")
+    assert trade.target == Decimal("120")
+
+
+def test_open_trade_preserves_position_quantity():
+    executor = TradeExecutor()
+
+    trade = executor.open_trade(
+        risk=create_risk(),
+        entry_price=Decimal("100"),
+        quantity=65,
+        entry_time=datetime.now(),
+        stop_loss=Decimal("90"),
+        target=Decimal("120"),
+    )
+
+    assert trade.quantity == 65
+
+
+def test_close_trade_on_target_from_candle():
+    executor = TradeExecutor()
+
+    executor.open_trade(
+        risk=create_risk(Signal.BUY_CE),
+        entry_price=Decimal("100"),
+        quantity=1,
+        entry_time=datetime.now(),
+        stop_loss=Decimal("90"),
+        target=Decimal("120"),
+    )
+
+    trade = executor.evaluate_candle(
+        high=Decimal("121"),
+        low=Decimal("99"),
+        timestamp=datetime.now(),
+    )
+
+    assert trade is not None
+    assert trade.status == TradeStatus.CLOSED
+    assert trade.exit_price == Decimal("120")
+    assert trade.exit_reason == ExitReason.TARGET
+
+
+def test_close_trade_on_stop_loss_from_candle():
+    executor = TradeExecutor()
+
+    executor.open_trade(
+        risk=create_risk(Signal.BUY_CE),
+        entry_price=Decimal("100"),
+        quantity=1,
+        entry_time=datetime.now(),
+        stop_loss=Decimal("90"),
+        target=Decimal("120"),
+    )
+
+    trade = executor.evaluate_candle(
+        high=Decimal("105"),
+        low=Decimal("89"),
+        timestamp=datetime.now(),
+    )
+
+    assert trade is not None
+    assert trade.status == TradeStatus.CLOSED
+    assert trade.exit_price == Decimal("90")
+    assert trade.exit_reason == ExitReason.STOP_LOSS
+
+
+def test_evaluate_candle_keeps_trade_open_when_no_exit():
+    executor = TradeExecutor()
+
+    executor.open_trade(
+        risk=create_risk(Signal.BUY_CE),
+        entry_price=Decimal("100"),
+        quantity=1,
+        entry_time=datetime.now(),
+        stop_loss=Decimal("90"),
+        target=Decimal("120"),
+    )
+
+    result = executor.evaluate_candle(
+        high=Decimal("110"),
+        low=Decimal("95"),
+        timestamp=datetime.now(),
+    )
+
+    assert result is None
+    assert executor.has_open_trade
+
+
+def test_move_stop_loss_to_breakeven_at_one_r():
+    executor = TradeExecutor()
+
+    executor.open_trade(
+        risk=create_risk(Signal.BUY_CE),
+        entry_price=Decimal("100"),
+        quantity=1,
+        entry_time=datetime.now(),
+        stop_loss=Decimal("90"),
+        target=Decimal("120"),
+    )
+
+    result = executor.evaluate_candle(
+        high=Decimal("110"),
+        low=Decimal("105"),
+        timestamp=datetime.now(),
+    )
+
+    assert result is None
+    assert executor.current_trade is not None
+    assert executor.current_trade.stop_loss == Decimal("100")
+
+
+def test_breakeven_stop_can_close_trade():
+    executor = TradeExecutor()
+
+    executor.open_trade(
+        risk=create_risk(Signal.BUY_CE),
+        entry_price=Decimal("100"),
+        quantity=1,
+        entry_time=datetime.now(),
+        stop_loss=Decimal("90"),
+        target=Decimal("120"),
+    )
+
+    executor.evaluate_candle(
+        high=Decimal("110"),
+        low=Decimal("105"),
+        timestamp=datetime.now(),
+    )
+
+    trade = executor.evaluate_candle(
+        high=Decimal("105"),
+        low=Decimal("99"),
+        timestamp=datetime.now(),
+    )
+
+    assert trade is not None
+    assert trade.status == TradeStatus.CLOSED
+    assert trade.exit_price == Decimal("100")
+    assert trade.exit_reason == ExitReason.STOP_LOSS
+    assert trade.pnl == Decimal("0")

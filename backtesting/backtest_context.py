@@ -34,6 +34,7 @@ class BacktestContext:
         self,
         risk,
         market,
+        trade_plan=None,
     ) -> None:
         """
         Process a completed Risk evaluation.
@@ -49,11 +50,16 @@ class BacktestContext:
         # -------------------------------------------------
 
         if not executor.has_open_trade:
+            if trade_plan is None:
+                raise ValueError("Trade plan is required for backtest execution")
+
             trade = executor.open_trade(
                 risk=risk,
-                entry_price=Decimal(str(market.close)),
-                quantity=1,
+                entry_price=trade_plan.entry_price,
+                quantity=trade_plan.position_size.quantity,
                 entry_time=market.timestamp,
+                stop_loss=trade_plan.stop_loss,
+                target=trade_plan.target_price,
             )
 
             self.trade_recorder.record(trade)
@@ -80,11 +86,16 @@ class BacktestContext:
         self.trade_recorder.record(closed_trade)
         self.trade_ledger.add(closed_trade)
 
+        if trade_plan is None:
+            raise ValueError("Trade plan is required for backtest execution")
+
         new_trade = executor.open_trade(
             risk=risk,
-            entry_price=Decimal(str(market.close)),
-            quantity=1,
+            entry_price=trade_plan.entry_price,
+            quantity=trade_plan.position_size.quantity,
             entry_time=market.timestamp,
+            stop_loss=trade_plan.stop_loss,
+            target=trade_plan.target_price,
         )
 
         self.trade_recorder.record(new_trade)
@@ -110,3 +121,24 @@ class BacktestContext:
 
         self.trade_recorder.record(closed_trade)
         self.trade_ledger.add(closed_trade)
+
+    def on_market(
+        self,
+        market,
+    ) -> None:
+        """
+        Evaluate an existing trade against the current candle.
+        """
+
+        if not self.trade_executor.has_open_trade:
+            return
+
+        closed_trade = self.trade_executor.evaluate_candle(
+            high=Decimal(str(market.high)),
+            low=Decimal(str(market.low)),
+            timestamp=market.timestamp,
+        )
+
+        if closed_trade is not None:
+            self.trade_recorder.record(closed_trade)
+            self.trade_ledger.add(closed_trade)

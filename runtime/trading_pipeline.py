@@ -11,6 +11,7 @@ from decimal import Decimal
 from config.risk import CAPITAL, RISK_PERCENT, RISK_REWARD_RATIO
 from engines.stop_loss_engine import StopLossEngine
 from journal.trade_journal import TradeJournal
+from shared.enums import Signal
 
 
 class TradingPipeline:
@@ -82,6 +83,18 @@ class TradingPipeline:
             daily_loss=daily_loss,
         )
 
+        if decision.signal == Signal.NONE:
+            return (
+                market,
+                indicators,
+                decision,
+                trade_quality,
+                risk,
+                None,
+                None,
+                None,
+            )
+
         previous_candle = candles[-2]
 
         entry_price = Decimal(str(market.close))
@@ -96,6 +109,30 @@ class TradingPipeline:
 
         stop_loss = stop.price
 
+        if decision.signal == Signal.BUY_CE and stop_loss >= entry_price:
+            return (
+                market,
+                indicators,
+                decision,
+                trade_quality,
+                risk,
+                None,
+                None,
+                None,
+            )
+
+        if decision.signal == Signal.BUY_PE and stop_loss <= entry_price:
+            return (
+                market,
+                indicators,
+                decision,
+                trade_quality,
+                risk,
+                None,
+                None,
+                None,
+            )
+
         stop_loss_distance = abs(
             entry_price - stop_loss,
         )
@@ -106,7 +143,12 @@ class TradingPipeline:
             stop_loss_distance=stop_loss_distance,
         )
 
-        target_price = entry_price + (stop_loss_distance * RISK_REWARD_RATIO)
+        if decision.signal == Signal.BUY_CE:
+            target_price = entry_price + (stop_loss_distance * RISK_REWARD_RATIO)
+        elif decision.signal == Signal.BUY_PE:
+            target_price = entry_price - (stop_loss_distance * RISK_REWARD_RATIO)
+        else:
+            raise ValueError(f"Unsupported signal for trade planning: {decision.signal}")
 
         trade_plan = self._trade_planning_engine.create_plan(
             decision=decision,
