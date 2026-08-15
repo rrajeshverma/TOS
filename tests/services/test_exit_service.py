@@ -291,6 +291,7 @@ def test_position_manager_called_once():
     closed_position = create_position()
 
     manager.close_position.return_value = closed_position
+    manager.update_stop_loss.side_effect = lambda position, new_stop_loss: position
 
     service = ExitService(
         position_manager=manager,
@@ -304,6 +305,10 @@ def test_position_manager_called_once():
         time(10, 0),
     )
 
+    manager.update_stop_loss.assert_called_once_with(
+        position,
+        Decimal(100),
+    )
     manager.close_position.assert_called_once_with(
         position,
         Decimal(121),
@@ -313,30 +318,42 @@ def test_position_manager_called_once():
 def test_position_manager_not_called_when_no_exit():
     manager = Mock()
 
+    manager.update_stop_loss.side_effect = lambda position, new_stop_loss: position
+
     service = ExitService(
         position_manager=manager,
     )
 
     position = create_position()
 
-    service.evaluate(
+    result = service.evaluate(
         position,
         Decimal(110),
         time(10, 0),
     )
 
+    manager.update_stop_loss.assert_called_once_with(
+        position,
+        Decimal(100),
+    )
     manager.close_position.assert_not_called()
+    assert result["closed"] is False
 
 
 def test_exit_manager_called_once():
     exit_manager = Mock()
     exit_manager.check_exit.return_value = ExitReason.NONE
 
+    position = create_position()
+
+    updated_position = create_position()
+    position_manager = Mock()
+    position_manager.update_stop_loss.return_value = updated_position
+
     service = ExitService(
         exit_manager=exit_manager,
+        position_manager=position_manager,
     )
-
-    position = create_position()
 
     service.evaluate(
         position,
@@ -344,8 +361,12 @@ def test_exit_manager_called_once():
         time(10, 0),
     )
 
-    exit_manager.check_exit.assert_called_once_with(
+    position_manager.update_stop_loss.assert_called_once_with(
         position,
+        Decimal(100),
+    )
+    exit_manager.check_exit.assert_called_once_with(
+        updated_position,
         Decimal(110),
         time(10, 0),
     )
@@ -363,3 +384,45 @@ def test_closed_result_contains_trade():
     )
 
     assert "trade" in result
+
+
+def test_exit_service_moves_stop_loss_to_breakeven_at_one_r():
+    service = ExitService()
+
+    position = create_position()
+
+    result = service.evaluate(
+        position,
+        Decimal(110),
+        time(10, 0),
+    )
+
+    assert result["closed"] is False
+    assert result["position"].order.trade.stop_loss == Decimal(100)
+
+
+def test_exit_service_uses_moved_stop_loss_for_exit():
+    position = create_position()
+
+    management_engine = Mock()
+
+    from domain.trade_management import TradeManagement
+
+    management_engine.evaluate.return_value = TradeManagement(
+        move_stop_loss=True,
+        new_stop_loss=Decimal(100),
+        exit_trade=False,
+    )
+
+    service = ExitService(
+        trade_management_engine=management_engine,
+    )
+
+    result = service.evaluate(
+        position,
+        Decimal(99),
+        time(10, 0),
+    )
+
+    assert result["closed"] is True
+    assert result["reason"] == ExitReason.STOP_LOSS

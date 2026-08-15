@@ -13,6 +13,7 @@ from dataclasses import replace
 from datetime import datetime, time
 from decimal import Decimal
 
+from engines.trade_management_engine import TradeManagementEngine
 from journal.trade_journal import TradeJournal
 from services.exit_manager import ExitManager
 from services.position_manager import PositionManager
@@ -29,12 +30,14 @@ class ExitService:
         exit_manager: ExitManager | None = None,
         position_manager: PositionManager | None = None,
         trade_journal: TradeJournal | None = None,
+        trade_management_engine: TradeManagementEngine | None = None,
     ) -> None:
         self.exit_manager = exit_manager or ExitManager()
 
         self.position_manager = position_manager or PositionManager()
 
         self.trade_journal = trade_journal or TradeJournal()
+        self.trade_management_engine = trade_management_engine or TradeManagementEngine()
 
     def evaluate(
         self,
@@ -45,6 +48,20 @@ class ExitService:
         """
         Evaluate exit condition and close position.
         """
+
+        trade = position.order.trade
+
+        management = self.trade_management_engine.evaluate(
+            entry_price=trade.entry_price,
+            stop_loss=trade.stop_loss,
+            current_price=current_price,
+        )
+
+        if management.move_stop_loss:
+            position = self.position_manager.update_stop_loss(
+                position,
+                management.new_stop_loss,
+            )
 
         reason = self.exit_manager.check_exit(
             position,

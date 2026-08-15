@@ -10,6 +10,7 @@ Description : Manages paper trading positions.
 
 from __future__ import annotations
 
+from dataclasses import replace
 from datetime import datetime
 from decimal import Decimal
 
@@ -65,6 +66,26 @@ class PositionManager:
             status=position.status,
             opened_at=position.opened_at,
             closed_at=position.closed_at,
+        )
+
+    @staticmethod
+    def update_stop_loss(
+        position: Position,
+        new_stop_loss: Decimal,
+    ) -> Position:
+        updated_trade = replace(
+            position.order.trade,
+            stop_loss=new_stop_loss,
+        )
+
+        updated_order = replace(
+            position.order,
+            trade=updated_trade,
+        )
+
+        return replace(
+            position,
+            order=updated_order,
         )
 
     @staticmethod

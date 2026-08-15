@@ -438,3 +438,49 @@ def test_open_position_initializes_average_price():
     )
 
     assert position.average_price == Decimal(100)
+
+
+def test_update_stop_loss_updates_position_trade():
+    from decimal import Decimal
+
+    from domain.order import Order
+    from domain.trade import Trade
+    from shared.enums import Broker, OrderSide, OrderStatus, TradeStatus
+
+    trade = Trade(
+        trade_id="TRADE-1",
+        risk=None,
+        entry_price=Decimal("100"),
+        stop_loss=Decimal("90"),
+        target=Decimal("120"),
+        quantity=1,
+        entry_time=None,
+        status=TradeStatus.OPEN,
+    )
+
+    order = Order(
+        order_id="ORDER-1",
+        broker_order_id="BROKER-1",
+        trade=trade,
+        broker=Broker.DHAN,
+        side=OrderSide.BUY,
+        quantity=1,
+        requested_price=Decimal("100"),
+        status=OrderStatus.EXECUTED,
+    )
+
+    manager = PositionManager()
+
+    position = manager.open_position(
+        order=order,
+        quantity=1,
+        price=Decimal("100"),
+    )
+
+    updated = manager.update_stop_loss(
+        position,
+        Decimal("100"),
+    )
+
+    assert updated.order.trade.stop_loss == Decimal("100")
+    assert position.order.trade.stop_loss == Decimal("90")
