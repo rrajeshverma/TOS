@@ -33,6 +33,7 @@ class PerformanceReport:
         print(f"Trades          : {self._statistics.total_trades}")
         print(f"Wins            : {self._statistics.winning_trades}")
         print(f"Losses          : {self._statistics.losing_trades}")
+        print(f"Breakeven       : {self._statistics.breakeven_trades}")
 
         print(f"Win Rate        : {self._statistics.win_rate:.2f}%")
 

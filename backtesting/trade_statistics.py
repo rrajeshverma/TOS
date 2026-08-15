@@ -39,6 +39,10 @@ class TradeStatistics:
         return sum(1 for trade in self._trades if trade.pnl < Decimal(0))
 
     @property
+    def breakeven_trades(self) -> int:
+        return sum(1 for trade in self._trades if trade.pnl == Decimal(0))
+
+    @property
     def gross_profit(self) -> Decimal:
         return sum(
             (trade.pnl for trade in self._trades if trade.pnl > Decimal(0)),
