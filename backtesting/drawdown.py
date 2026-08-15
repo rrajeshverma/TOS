@@ -38,3 +38,16 @@ class Drawdown:
                 maximum_drawdown = drawdown
 
         return maximum_drawdown
+
+    def maximum_percentage(
+        self,
+        initial_capital: Decimal,
+    ) -> Decimal:
+        """
+        Return maximum drawdown as a percentage of initial capital.
+        """
+
+        if initial_capital <= Decimal("0"):
+            return Decimal("0")
+
+        return (self.maximum / initial_capital) * Decimal("100")

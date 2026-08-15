@@ -57,3 +57,22 @@ def test_report_includes_maximum_drawdown(capsys):
     output = capsys.readouterr().out
 
     assert "Maximum Drawdown: 180" in output
+
+
+def test_report_includes_maximum_drawdown_percentage(capsys):
+    statistics = TradeStatistics(
+        [
+            Mock(pnl=Decimal("100")),
+            Mock(pnl=Decimal("50")),
+            Mock(pnl=Decimal("-80")),
+            Mock(pnl=Decimal("-100")),
+            Mock(pnl=Decimal("40")),
+        ],
+        initial_capital=Decimal("1000"),
+    )
+
+    PerformanceReport(statistics).print()
+
+    output = capsys.readouterr().out
+
+    assert "Maximum Drawdown %: 18" in output

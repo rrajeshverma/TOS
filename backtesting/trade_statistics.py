@@ -25,8 +25,10 @@ class TradeStatistics:
     def __init__(
         self,
         trades: list[Trade],
+        initial_capital: Decimal = Decimal("100000"),
     ) -> None:
         self._trades = trades
+        self._initial_capital = initial_capital
 
     @property
     def total_trades(self) -> int:
@@ -102,3 +104,11 @@ class TradeStatistics:
         equity = EquityCurve(self._trades).values()
 
         return Drawdown(equity).maximum
+
+    @property
+    def maximum_drawdown_percentage(self) -> Decimal:
+        equity = EquityCurve(self._trades).values()
+
+        return Drawdown(equity).maximum_percentage(
+            self._initial_capital,
+        )

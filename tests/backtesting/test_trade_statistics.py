@@ -192,3 +192,39 @@ def test_maximum_drawdown_with_only_profit():
     )
 
     assert statistics.maximum_drawdown == Decimal("0")
+
+
+def test_maximum_drawdown_percentage():
+    statistics = TradeStatistics(
+        [
+            make_trade(Decimal("100")),
+            make_trade(Decimal("50")),
+            make_trade(Decimal("-80")),
+            make_trade(Decimal("-100")),
+            make_trade(Decimal("40")),
+        ],
+        initial_capital=Decimal("1000"),
+    )
+
+    assert statistics.maximum_drawdown_percentage == Decimal("18")
+
+
+def test_maximum_drawdown_percentage_empty_statistics():
+    statistics = TradeStatistics(
+        [],
+        initial_capital=Decimal("1000"),
+    )
+
+    assert statistics.maximum_drawdown_percentage == Decimal("0")
+
+
+def test_maximum_drawdown_percentage_with_zero_capital():
+    statistics = TradeStatistics(
+        [
+            make_trade(Decimal("100")),
+            make_trade(Decimal("-50")),
+        ],
+        initial_capital=Decimal("0"),
+    )
+
+    assert statistics.maximum_drawdown_percentage == Decimal("0")

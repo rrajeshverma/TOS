@@ -45,7 +45,7 @@ class PerformanceReport:
         print(f"Profit Factor   : {self._statistics.profit_factor}")
         print(f"Expectancy      : {self._statistics.expectancy}")
         print(f"Maximum Drawdown: {self._statistics.maximum_drawdown}")
-
+        print(f"Maximum Drawdown %: {self._statistics.maximum_drawdown_percentage}")
         print(f"Net Profit      : {self._statistics.net_profit}")
 
         print("=" * 56)
