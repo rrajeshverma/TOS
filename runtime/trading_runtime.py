@@ -4,6 +4,8 @@ Trading runtime orchestrator.
 
 from __future__ import annotations
 
+from decimal import Decimal
+
 from runtime.market_clock import MarketClock
 from runtime.runtime_metrics import RuntimeMetrics
 from runtime.runtime_mode import RuntimeMode
@@ -194,7 +196,19 @@ class TradingRuntime:
 
             self._last_trade_plan = trade_plan
 
+            if self.mode == RuntimeMode.PAPER:
+                lifecycle = self.services.get("paper_position_lifecycle")
+
+                if lifecycle is not None:
+                    lifecycle.update_positions(
+                        current_price=Decimal(str(market.close)),
+                        current_time=market.timestamp.time(),
+                    )
+
             if self.mode == RuntimeMode.BACKTEST:
+                return risk
+
+            if hasattr(risk, "is_approved") and not risk.is_approved:
                 return risk
 
             if position_size is None:

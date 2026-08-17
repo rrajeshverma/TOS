@@ -28,6 +28,7 @@ from execution.execution_manager import ExecutionManager
 from execution.order_repository import OrderRepository
 from execution.order_service import OrderService
 from integration.pipeline import TradingPipeline as MarketDataPipeline
+from journal.trade_journal import TradeJournal
 from market.candle_builder import CandleBuilder
 from providers.dhan_instrument_provider import DhanInstrumentProvider
 from runtime.runtime_mode import RuntimeMode
@@ -132,6 +133,7 @@ class Startup:
         )
 
         paper_service = PaperTradingService()
+        trade_journal = TradeJournal()
 
         paper_trade_runner = PaperTradeRunner(
             strategy_engine=strategy_engine,
@@ -140,7 +142,11 @@ class Startup:
             execution_manager=execution_manager,
         )
 
-        paper_position_lifecycle = PaperPositionLifecycle()
+        paper_position_lifecycle = PaperPositionLifecycle(
+            trade_journal=trade_journal,
+            order_service=order_service,
+            broker=broker,
+        )
 
         market_data_pipeline = MarketDataPipeline(
             candle_builder=candle_builder,
@@ -158,6 +164,7 @@ class Startup:
             trade_planning_engine=trade_planning_engine,
             trade_management_engine=trade_management_engine,
             stop_loss_engine=stop_loss_engine,
+            trade_journal=trade_journal,
         )
 
         # ---------------- MARKET DATA ----------------
