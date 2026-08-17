@@ -238,3 +238,29 @@ def test_runtime_config_loader_validates_before_return(monkeypatch):
     monkeypatch.setenv("TOS_MODE", "PAPER")
 
     RuntimeConfigLoader().load().validate()
+
+
+def test_loader_reads_dhan_client_id(monkeypatch):
+    monkeypatch.setenv("DHAN_CLIENT_ID", "TEST_CLIENT")
+
+    config = RuntimeConfigLoader().load()
+
+    assert config.dhan_client_id == "TEST_CLIENT"
+
+
+def test_loader_reads_dhan_access_token(monkeypatch):
+    monkeypatch.setenv("DHAN_ACCESS_TOKEN", "TEST_TOKEN")
+
+    config = RuntimeConfigLoader().load()
+
+    assert config.dhan_access_token == "TEST_TOKEN"
+
+
+def test_loader_reads_dhan_credentials(monkeypatch):
+    monkeypatch.setenv("DHAN_CLIENT_ID", "TEST_CLIENT")
+    monkeypatch.setenv("DHAN_ACCESS_TOKEN", "TEST_TOKEN")
+
+    config = RuntimeConfigLoader().load()
+
+    assert config.dhan_client_id == "TEST_CLIENT"
+    assert config.dhan_access_token == "TEST_TOKEN"

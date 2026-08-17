@@ -1,3 +1,4 @@
+from datetime import time
 from decimal import Decimal
 from types import SimpleNamespace
 
@@ -85,8 +86,8 @@ def test_update_positions_keeps_open_position_and_updates_price(tmp_path):
 
     results = lifecycle.update_positions(
         current_price=Decimal("25050"),
+        current_time=time(14, 30),
     )
-
     assert results[0]["closed"] is False
 
     updated = lifecycle.position_book.get_position(position.position_id)
