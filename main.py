@@ -9,12 +9,14 @@ from __future__ import annotations
 import logging
 import signal
 import sys
+import time
 
 from config.runtime_config_loader import RuntimeConfigLoader
 from runtime.application import Application
 from runtime.shutdown import Shutdown
 from runtime.signal_handler import SignalHandler
 from runtime.startup import Startup
+from services.telegram_notifier import TelegramNotifier
 
 LOGGER = logging.getLogger("tos")
 
@@ -27,8 +29,7 @@ def configure_logging() -> None:
 
 
 def create_application() -> Application:
-    app = Application()
-    return app
+    return Application()
 
 
 def startup(app: Application) -> Startup:
@@ -49,7 +50,10 @@ def startup(app: Application) -> Startup:
     return startup
 
 
-def graceful_shutdown(app: Application) -> None:
+def graceful_shutdown(
+    app: Application,
+    notifier: TelegramNotifier,
+) -> None:
     LOGGER.info("Shutting down application...")
 
     shutdown = Shutdown()
@@ -60,16 +64,24 @@ def graceful_shutdown(app: Application) -> None:
 
     app.shutdown()
 
+    notifier.send("🔴 TOS STOPPED\nTOS shutdown completed.")
+
     LOGGER.info("Shutdown complete.")
 
 
 def register_signal_handlers(
     app: Application,
     handler: SignalHandler,
+    notifier: TelegramNotifier,
 ) -> None:
     def _shutdown(signum, frame):
         handler.register(signal.Signals(signum).name)
-        graceful_shutdown(app)
+
+        graceful_shutdown(
+            app,
+            notifier,
+        )
+
         sys.exit(0)
 
     signal.signal(signal.SIGINT, _shutdown)
@@ -79,28 +91,35 @@ def register_signal_handlers(
 def main() -> int:
     configure_logging()
 
+    notifier = TelegramNotifier()
+
     LOGGER.info("Starting Trading Operating System...")
 
     app = create_application()
-
     signal_handler = SignalHandler()
 
-    register_signal_handlers(app, signal_handler)
+    register_signal_handlers(
+        app,
+        signal_handler,
+        notifier,
+    )
 
     startup(app)
 
+    notifier.send("🟢 TOS STARTED\nMarket: NIFTY\nMode: PAPER")
+
     trading_runtime = app.services["trading_runtime"]
-
     trading_runtime.start()
-
-    import time
 
     try:
         while app.running:
             time.sleep(0.1)
 
     except KeyboardInterrupt:
-        graceful_shutdown(app)
+        graceful_shutdown(
+            app,
+            notifier,
+        )
 
     return 0
 
