@@ -153,3 +153,42 @@ def test_stop_without_start():
     feed.stop()
 
     assert feed.is_running is False
+
+
+@patch("brokers.dhan.live_market_feed.MarketFeed")
+def test_run_consumes_sdk_data_and_forwards_ticker(mock_market_feed):
+    feed = create_feed()
+    callback = Mock()
+
+    feed.register_tick_callback(callback)
+    feed.subscribe([(0, "13", 15)])
+
+    instance = mock_market_feed.return_value
+
+    packets = iter(
+        [
+            {
+                "type": "Ticker Data",
+                "exchange_segment": 0,
+                "security_id": 13,
+                "LTP": "24330.60",
+                "LTT": "12:53:04",
+            },
+        ]
+    )
+
+    def get_data():
+        try:
+            return next(packets)
+        except StopIteration:
+            feed._running = False
+            return None
+
+    instance.get_data.side_effect = get_data
+
+    feed._running = True
+    feed._run()
+
+    mock_market_feed.assert_called_once()
+    instance.run_forever.assert_called_once()
+    assert callback.call_count == 1

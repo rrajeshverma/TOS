@@ -32,12 +32,21 @@ class MarketDataService:
     # ---------------- SUBSCRIPTIONS ----------------
 
     def subscribe(self, instruments):
-        for i in instruments:
-            symbol = i[1] if isinstance(i, tuple) else i
+        if isinstance(instruments, (str, tuple)):
+            instruments = [instruments]
+
+        for instrument in instruments:
+            symbol = (
+                instrument.symbol
+                if hasattr(instrument, "symbol")
+                else instrument[1]
+                if isinstance(instrument, tuple)
+                else instrument
+            )
             self._subscriptions.add(symbol)
 
-        if self.websocket:
-            self.websocket.subscribe(instruments)
+            if self.websocket:
+                self.websocket.subscribe(instrument)
 
     def unsubscribe(self, instruments):
         original = instruments

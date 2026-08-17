@@ -62,3 +62,25 @@ def test_unknown_security_id_raises_keyerror():
         assert False
     except KeyError:
         assert True
+
+
+def test_dhan_string_ltt_maps_to_datetime():
+    mapper = create_mapper()
+
+    data = {
+        "type": "Ticker Data",
+        "exchange_segment": 0,
+        "security_id": 13,
+        "LTP": "24367.75",
+        "LTT": "14:44:23",
+    }
+
+    tick = mapper.to_broker_tick(data)
+
+    assert tick.symbol == "NIFTY"
+    assert tick.ltp == 24367.75
+    assert tick.volume == 0
+    assert isinstance(tick.timestamp, datetime)
+    assert tick.timestamp.hour == 14
+    assert tick.timestamp.minute == 44
+    assert tick.timestamp.second == 23

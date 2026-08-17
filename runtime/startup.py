@@ -187,11 +187,26 @@ class Startup:
 
             except Exception:
                 # Fallback for safety (important for tests)
-                market_data_service = MarketDataService(websocket=None)
+                market_data_service = MarketDataService(
+                    websocket=None,
+                )
+
+            else:
+                try:
+                    nifty = instrument_repository.get_by_symbol("NIFTY")
+                except KeyError:
+                    LOGGER.warning(
+                        "NIFTY instrument not available; "
+                        "Dhan market feed will remain unsubscribed.",
+                    )
+                else:
+                    market_data_service.subscribe([nifty])
 
         else:
-            # Paper mode → no live market dependency
-            market_data_service = MarketDataService(websocket=None)
+            # Paper market-data mode → no live market dependency
+            market_data_service = MarketDataService(
+                websocket=None,
+            )
 
         # ---------------- SERVICE REGISTRY ----------------
         self.services = {

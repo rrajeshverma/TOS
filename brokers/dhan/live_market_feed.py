@@ -4,7 +4,6 @@ Dhan live market-feed adapter.
 
 from __future__ import annotations
 
-import asyncio
 import threading
 from collections.abc import Callable
 
@@ -70,35 +69,44 @@ class LiveMarketFeed:
             self._callback(tick)
 
     def _run(self) -> None:
+        feed = None
+
         try:
-            self._feed = MarketFeed(
+            feed = MarketFeed(
                 dhan_context=self._context,
                 instruments=list(self._instruments),
                 version="v2",
             )
 
-            self._feed.on_ticks = self._on_tick
+            self._feed = feed
 
-            # The MarketFeed owns this event loop.
-            self._feed.run_forever()
+            feed.run_forever()
 
             while self._running:
-                data = self._feed.get_data()
+                data = feed.get_data()
 
                 if data is not None:
-                    self._on_tick(
-                        self._feed,
-                        data,
-                    )
+                    self._on_tick(feed, data)
 
         except Exception as exc:
             if self._running:
                 print(
-                    f"Dhan market feed error: {exc}",
+                    f"Dhan market feed error: {type(exc).__name__}: {exc}",
                 )
 
         finally:
             self._running = False
+
+            if feed is not None:
+                try:
+                    if not feed.loop.is_closed():
+                        feed.loop.run_until_complete(
+                            feed.disconnect(),
+                        )
+                except Exception:
+                    pass
+
+            self._feed = None
 
     def start(self) -> None:
         if self._running:
@@ -119,29 +127,14 @@ class LiveMarketFeed:
         self._thread.start()
 
     def stop(self) -> None:
-        if not self._running:
-            return
-
         self._running = False
 
-        feed = self._feed
         thread = self._thread
 
-        if feed is not None:
-            try:
-                future = asyncio.run_coroutine_threadsafe(
-                    feed.disconnect(),
-                    feed.loop,
-                )
-                future.result(timeout=5)
-            except Exception:
-                pass
-
-        if thread is not None:
+        if thread is not None and thread is not threading.current_thread():
             thread.join(timeout=5)
 
         self._thread = None
-        self._feed = None
 
     def subscribe(
         self,
