@@ -86,3 +86,22 @@ def test_remove_unknown_order_is_safe():
     repo.remove("UNKNOWN")
 
     assert repo.count == 0
+
+
+def test_add_broker_order_uses_broker_order_id():
+    from brokers.models import Order, OrderSide, OrderType, ProductType
+
+    repo = OrderRepository()
+
+    order = Order(
+        symbol="NIFTY",
+        side=OrderSide.BUY,
+        quantity=15,
+        order_type=OrderType.MARKET,
+        product=ProductType.INTRADAY,
+        broker_order_id="BROKER001",
+    )
+
+    repo.add(order)
+
+    assert repo.get("BROKER001") is order

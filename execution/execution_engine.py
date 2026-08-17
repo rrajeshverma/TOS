@@ -79,6 +79,16 @@ class ExecutionEngine:
                         OrderStatus.SUBMITTED,
                     )
 
+                if self.execution_guard is not None:
+                    record = getattr(
+                        self.execution_guard,
+                        "record_execution",
+                        None,
+                    )
+
+                    if record is not None:
+                        record()
+
             return ExecutionResult(
                 success=True,
                 order_id=order_id,

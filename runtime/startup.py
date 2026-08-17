@@ -36,6 +36,7 @@ from runtime.trading_pipeline import TradingPipeline
 from runtime.trading_runtime import TradingRuntime
 from services.market_data_service import MarketDataService
 from services.order_execution_adapter import OrderExecutionAdapter
+from services.paper_position_lifecycle import PaperPositionLifecycle
 from services.paper_trade_runner import PaperTradeRunner
 from services.paper_trading_service import PaperTradingService
 from storage.instrument_repository import InstrumentRepository
@@ -139,6 +140,8 @@ class Startup:
             execution_manager=execution_manager,
         )
 
+        paper_position_lifecycle = PaperPositionLifecycle()
+
         market_data_pipeline = MarketDataPipeline(
             candle_builder=candle_builder,
             market_engine=market_engine,
@@ -198,6 +201,7 @@ class Startup:
             "risk_engine": risk_engine,
             "paper_trading_service": paper_service,
             "paper_trade_runner": paper_trade_runner,
+            "paper_position_lifecycle": paper_position_lifecycle,
             "market_data_service": market_data_service,
             "market_data_pipeline": market_data_pipeline,
             "trading_runtime": runtime,

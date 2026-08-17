@@ -132,11 +132,22 @@ class IndicatorEngine:
             adjust=False,
         ).mean()
 
-        rs = avg_gain / avg_loss.replace(0, float("nan"))
+        rsi = pd.Series(
+            50.0,
+            index=series.index,
+            dtype=float,
+        )
 
-        rsi = 100 - (100 / (1 + rs))
+        normal = avg_loss > 0
+        rs = avg_gain[normal] / avg_loss[normal]
 
-        return float(rsi.fillna(50).iloc[-1])
+        rsi.loc[normal] = 100 - (100 / (1 + rs))
+
+        rsi.loc[(avg_loss == 0) & (avg_gain > 0)] = 100.0
+
+        rsi.loc[(avg_gain == 0) & (avg_loss > 0)] = 0.0
+
+        return float(rsi.iloc[-1])
 
     @staticmethod
     def _vwap(df: pd.DataFrame) -> float:

@@ -8,6 +8,7 @@ from safety.composite_execution_guard import CompositeExecutionGuard
 from safety.kill_switch import KillSwitch
 from safety.kill_switch_guard import KillSwitchGuard
 from safety.market_hours_guard import MarketHoursGuard
+from safety.trade_limit_guard import TradeLimitGuard
 from trading.execution_mode import ExecutionMode, ExecutionModeGuard
 
 
@@ -25,5 +26,6 @@ class SafetyFactory:
                 ExecutionModeGuard(mode),
                 KillSwitchGuard(KillSwitch()),
                 MarketHoursGuard(),
+                TradeLimitGuard(),
             ]
         )

@@ -7,6 +7,8 @@ class OrderRepository:
     def add(self, order):
         if hasattr(order, "order_id"):
             order_id = order.order_id
+        elif hasattr(order, "broker_order_id"):
+            order_id = order.broker_order_id
         elif isinstance(order, dict):
             order_id = order["order_id"]
         else:

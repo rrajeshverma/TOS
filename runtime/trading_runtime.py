@@ -197,13 +197,28 @@ class TradingRuntime:
             if self.mode == RuntimeMode.BACKTEST:
                 return risk
 
+            if position_size is None:
+                return risk
+
             if self.execution_manager is None:
                 return risk
 
-            return self.execution_manager.execute(
+            execution_result = self.execution_manager.execute(
                 risk,
                 quantity=position_size.quantity,
             )
+
+            if self.mode == RuntimeMode.PAPER:
+                lifecycle = self.services.get("paper_position_lifecycle")
+
+                if lifecycle is not None:
+                    lifecycle.open_from_execution(
+                        risk=risk,
+                        trade_plan=trade_plan,
+                        execution_result=execution_result,
+                    )
+
+            return execution_result
 
         indicator_engine = self.indicator_engine
         strategy_engine = self.strategy_engine
