@@ -153,3 +153,91 @@ def test_on_risk_signal_reversal_uses_new_trade_plan():
     assert trade.quantity == 130
     assert trade.stop_loss == Decimal("120")
     assert trade.target == Decimal("90")
+
+
+def test_on_risk_signal_reversal_records_closed_trade_once():
+    context = BacktestContext()
+
+    buy_risk = create_risk(Signal.BUY_CE)
+
+    buy_plan = TradePlan(
+        decision=buy_risk.decision,
+        position_size=PositionSize(
+            quantity=65,
+            lots=1,
+            risk_amount=Decimal("650"),
+        ),
+        entry_price=Decimal("100"),
+        stop_loss=Decimal("90"),
+        target_price=Decimal("120"),
+    )
+
+    context.on_risk(
+        risk=buy_risk,
+        market=create_market(
+            datetime(2026, 1, 1, 0, 0),
+            100,
+        ),
+        trade_plan=buy_plan,
+    )
+
+    sell_risk = create_risk(Signal.BUY_PE)
+
+    sell_plan = TradePlan(
+        decision=sell_risk.decision,
+        position_size=PositionSize(
+            quantity=130,
+            lots=2,
+            risk_amount=Decimal("1300"),
+        ),
+        entry_price=Decimal("110"),
+        stop_loss=Decimal("120"),
+        target_price=Decimal("90"),
+    )
+
+    context.on_risk(
+        risk=sell_risk,
+        market=create_market(
+            datetime(2026, 1, 1, 0, 30),
+            110,
+        ),
+        trade_plan=sell_plan,
+    )
+
+    assert context.trade_ledger.total_trades == 1
+    assert context.trade_ledger.trades[0].status.value == "CLOSED"
+
+
+def test_finalize_does_not_duplicate_closed_trade():
+    context = BacktestContext()
+
+    risk = create_risk()
+
+    trade_plan = TradePlan(
+        decision=risk.decision,
+        position_size=PositionSize(
+            quantity=65,
+            lots=1,
+            risk_amount=Decimal("650"),
+        ),
+        entry_price=Decimal("100"),
+        stop_loss=Decimal("90"),
+        target_price=Decimal("120"),
+    )
+
+    market = create_market(
+        datetime(2026, 1, 1, 0, 0),
+        100,
+    )
+
+    context.on_risk(
+        risk=risk,
+        market=market,
+        trade_plan=trade_plan,
+    )
+
+    context.finalize(market)
+    context.finalize(market)
+
+    assert context.trade_ledger.total_trades == 1
+    assert context.trade_ledger.trades[0].exit_reason.value == "END_OF_DATA"
