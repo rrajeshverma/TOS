@@ -531,3 +531,41 @@ def test_run_cycle_executes_pipeline_risk_with_quantity():
     )
 
     assert result == "EXECUTION"
+
+
+def test_run_cycle_does_not_execute_rejected_risk():
+    trading_pipeline = Mock()
+
+    risk = Mock()
+    risk.is_approved = False
+
+    position_size = Mock()
+    position_size.quantity = 65
+
+    trading_pipeline.run.return_value = (
+        "MARKET",
+        "INDICATORS",
+        "DECISION",
+        "QUALITY",
+        risk,
+        position_size,
+        "TRADE_PLAN",
+        "TRADE_MANAGEMENT",
+    )
+
+    execution_manager = Mock()
+
+    runtime = TradingRuntime(
+        {
+            "trading_pipeline": trading_pipeline,
+            "execution_manager": execution_manager,
+        }
+    )
+
+    result = runtime.run_cycle(
+        Mock(),
+        [Mock()],
+    )
+
+    execution_manager.execute.assert_not_called()
+    assert result is risk
