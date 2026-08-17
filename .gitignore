@@ -29,3 +29,7 @@ journal/trade_journal.csv
 
 backups/
 *.zip
+
+# Local trading journals
+journal/trade_journal.csv
+journal/trade_journal_*.csv
