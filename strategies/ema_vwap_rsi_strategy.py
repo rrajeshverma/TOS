@@ -71,6 +71,11 @@ class EMAVWAPRSIStrategy(BaseStrategy):
         """
         Analyze the current market and return a StrategyResult.
         """
+        if not self._time_filter.allow(market.timestamp.time()):
+            return StrategyResult(
+                signal=Signal.NONE,
+                reasons=("Outside trading window",),
+            )
 
         close = market.close
 

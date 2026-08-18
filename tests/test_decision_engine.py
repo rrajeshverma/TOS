@@ -11,7 +11,7 @@ def create_market(close: float) -> Market:
         symbol="NIFTY",
         exchange="NSE",
         timeframe="5m",
-        timestamp=datetime.now(),
+        timestamp=datetime(2026, 8, 18, 11, 0),
         open=close - 5,
         high=close + 10,
         low=close - 10,

@@ -16,7 +16,7 @@ def create_trade():
         symbol="NIFTY",
         exchange="NSE",
         timeframe="5m",
-        timestamp=datetime.now(),
+        timestamp=datetime(2026, 8, 18, 11, 0),
         open=24990,
         high=25010,
         low=24980,

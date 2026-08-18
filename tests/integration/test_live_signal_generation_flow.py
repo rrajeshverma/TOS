@@ -34,7 +34,7 @@ def create_tick(price: float):
         symbol="NIFTY",
         ltp=price,
         volume=1000,
-        timestamp=datetime.now(),
+        timestamp=datetime(2026, 8, 18, 11, 0),
     )
 
 

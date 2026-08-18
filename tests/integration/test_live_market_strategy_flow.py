@@ -30,7 +30,7 @@ def create_tick():
         symbol="NIFTY",
         ltp=22500.0,
         volume=100000,
-        timestamp=datetime.now(),
+        timestamp=datetime(2026, 8, 18, 11, 0),
     )
 
 

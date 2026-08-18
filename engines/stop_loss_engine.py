@@ -27,15 +27,17 @@ class StopLossEngine:
         ema_low: Decimal,
     ) -> StopLoss:
         if signal == Signal.BUY_CE:
+            price = min(previous_low, ema_low)
             return StopLoss(
-                price=previous_low,
-                reason="Previous Candle Low",
+                price=price,
+                reason="Minimum of Previous Candle Low and EMA Low",
             )
 
         if signal == Signal.BUY_PE:
+            price = max(previous_high, ema_high)
             return StopLoss(
-                price=previous_high,
-                reason="Previous Candle High",
+                price=price,
+                reason="Maximum of Previous Candle High and EMA High",
             )
 
         raise ValueError("Cannot calculate stop-loss.")

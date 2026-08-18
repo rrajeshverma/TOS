@@ -26,7 +26,7 @@ MAX_RISK_PER_TRADE = Decimal(2000)
 
 MAX_DAILY_LOSS = Decimal(5000)
 
-MAX_TRADES_PER_DAY = 4
+MAX_TRADES_PER_DAY = 2
 
 # =====================================================
 # Position

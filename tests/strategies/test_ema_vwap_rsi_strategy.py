@@ -1,12 +1,14 @@
+from datetime import datetime
 from unittest.mock import Mock
 
 from shared.enums import Signal
 from strategies.ema_vwap_rsi_strategy import EMAVWAPRSIStrategy
 
 
-def market(close):
+def market(close, hour=11, minute=0):
     obj = Mock()
     obj.close = close
+    obj.timestamp = datetime(2026, 8, 18, hour, minute)
     return obj
 
 
@@ -126,3 +128,49 @@ def test_strategy_returns_reasons():
 
     assert isinstance(result.reasons, tuple)
     assert len(result.reasons) > 0
+
+
+def test_hold_before_entry_window():
+    strategy = EMAVWAPRSIStrategy()
+
+    result = strategy.analyze(
+        market(110, hour=10, minute=14),
+        indicators(),
+    )
+
+    assert result.signal == Signal.NONE
+    assert result.reasons == ("Outside trading window",)
+
+
+def test_entry_allowed_at_window_start():
+    strategy = EMAVWAPRSIStrategy()
+
+    result = strategy.analyze(
+        market(110, hour=10, minute=15),
+        indicators(),
+    )
+
+    assert result.signal == Signal.BUY_CE
+
+
+def test_entry_allowed_at_window_end():
+    strategy = EMAVWAPRSIStrategy()
+
+    result = strategy.analyze(
+        market(110, hour=14, minute=30),
+        indicators(),
+    )
+
+    assert result.signal == Signal.BUY_CE
+
+
+def test_hold_after_entry_window():
+    strategy = EMAVWAPRSIStrategy()
+
+    result = strategy.analyze(
+        market(110, hour=14, minute=31),
+        indicators(),
+    )
+
+    assert result.signal == Signal.NONE
+    assert result.reasons == ("Outside trading window",)

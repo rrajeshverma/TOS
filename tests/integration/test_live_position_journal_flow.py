@@ -22,7 +22,7 @@ def create_market():
         symbol="NIFTY",
         exchange="NSE",
         timeframe="5m",
-        timestamp=datetime.now(),
+        timestamp=datetime(2026, 8, 18, 11, 0),
         open=22500,
         high=22550,
         low=22490,

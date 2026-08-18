@@ -27,7 +27,7 @@ def make_market(
         symbol=symbol,
         exchange=exchange,
         timeframe=timeframe,
-        timestamp=timestamp or datetime.now(),
+        timestamp=timestamp or datetime(2026, 8, 18, 11, 0),
         open=open,
         high=high,
         low=low,
