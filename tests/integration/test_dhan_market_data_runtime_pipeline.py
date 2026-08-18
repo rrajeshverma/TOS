@@ -92,7 +92,7 @@ def test_dhan_tick_reaches_full_trading_pipeline():
 
     candles = []
 
-    for index in range(33):
+    for index in range(34):
         timestamp = datetime(
             2026,
             8,
@@ -130,7 +130,7 @@ def test_dhan_tick_reaches_full_trading_pipeline():
         market_data_pipeline.on_tick,
     )
 
-    for index in range(33):
+    for index in range(34):
         tick = BrokerTick(
             symbol="NIFTY",
             ltp=24367.75 + index,
@@ -175,9 +175,36 @@ def test_dhan_market_data_reaches_runtime_through_real_pipeline():
 
     market_data.register_tick_callback(pipeline.on_tick)
 
-    tick = create_broker_tick()
+    tick = BrokerTick(
+        symbol="NIFTY",
+        ltp=Decimal("24367.75"),
+        volume=0,
+        timestamp=datetime(
+            2026,
+            8,
+            18,
+            10,
+            40,
+            1,
+        ),
+    )
+
+    next_tick = BrokerTick(
+        symbol="NIFTY",
+        ltp=Decimal("24368.25"),
+        volume=0,
+        timestamp=datetime(
+            2026,
+            8,
+            18,
+            10,
+            45,
+            1,
+        ),
+    )
 
     market_data.emit_market_tick(tick)
+    market_data.emit_market_tick(next_tick)
 
     runtime.on_market_tick.assert_called_once()
 

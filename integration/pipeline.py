@@ -1,8 +1,8 @@
 """
 Trading integration pipeline.
 
-Receives live broker ticks, builds Market history and forwards
-completed market updates to TradingRuntime.
+Receives live broker ticks, builds completed Market history and
+forwards completed market updates to TradingRuntime.
 """
 
 from __future__ import annotations
@@ -30,14 +30,10 @@ class TradingPipeline:
         self._exchange = exchange
 
         self._history: dict[str, list] = defaultdict(list)
+        self._active_candles: dict[str, object] = {}
 
-    def on_tick(self, tick: MarketTick):
-        candle = self._candle_builder.update(tick)
-
-        if candle is None:
-            return None
-
-        market = self._market_engine.build_market(
+    def _build_market(self, candle):
+        return self._market_engine.build_market(
             {
                 "symbol": candle.symbol,
                 "exchange": self._exchange,
@@ -50,6 +46,9 @@ class TradingPipeline:
                 "volume": candle.volume,
             }
         )
+
+    def _process_completed_candle(self, candle):
+        market = self._build_market(candle)
 
         history = self._history[market.symbol]
         history.append(market)
@@ -64,3 +63,24 @@ class TradingPipeline:
             market,
             history,
         )
+
+    def on_tick(self, tick: MarketTick):
+        candle = self._candle_builder.update(tick)
+
+        if candle is None:
+            return None
+
+        symbol = candle.symbol
+        previous_candle = self._active_candles.get(symbol)
+
+        if previous_candle is None:
+            self._active_candles[symbol] = candle
+            return None
+
+        if candle.timestamp == previous_candle.timestamp:
+            self._active_candles[symbol] = candle
+            return None
+
+        self._active_candles[symbol] = candle
+
+        return self._process_completed_candle(previous_candle)
