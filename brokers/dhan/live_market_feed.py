@@ -4,6 +4,8 @@ Dhan live market-feed adapter.
 
 from __future__ import annotations
 
+import asyncio
+import logging
 import threading
 from collections.abc import Callable
 
@@ -12,6 +14,8 @@ from dhanhq import DhanContext, MarketFeed
 from brokers.dhan.models import BrokerTick
 from brokers.dhan.tick_mapper import DhanTickMapper
 from brokers.instrument_mapper import InstrumentMapper
+
+LOGGER = logging.getLogger("brokers.dhan.live_market_feed")
 
 
 class LiveMarketFeed:
@@ -71,6 +75,16 @@ class LiveMarketFeed:
     def _run(self) -> None:
         feed = None
 
+        # Dhan MarketFeed creates and uses an asyncio event loop.
+        # Create and bind a fresh loop inside the dedicated feed thread.
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+
+        LOGGER.info(
+            "Dhan market feed thread started | instruments=%s",
+            self._instruments,
+        )
+
         try:
             feed = MarketFeed(
                 dhan_context=self._context,
@@ -80,21 +94,30 @@ class LiveMarketFeed:
 
             self._feed = feed
 
+            LOGGER.info("Connecting to Dhan market feed...")
+
+            # Establish WebSocket connection and subscribe.
             feed.run_forever()
 
+            LOGGER.info("Dhan market feed connected successfully.")
+
+            # MarketFeed.run_forever() only connects in the installed
+            # dhanhq version. Continuously receive data here.
             while self._running:
                 data = feed.get_data()
 
                 if data is not None:
+                    LOGGER.debug(
+                        "Dhan market data received: %s",
+                        data.get("type"),
+                    )
                     self._on_tick(feed, data)
 
-        except Exception as exc:
-            if self._running:
-                print(
-                    f"Dhan market feed error: {type(exc).__name__}: {exc}",
-                )
+        except Exception:
+            LOGGER.exception("Dhan market feed thread failed.")
 
         finally:
+            LOGGER.info("Dhan market feed thread stopping.")
             self._running = False
 
             if feed is not None:
@@ -122,7 +145,6 @@ class LiveMarketFeed:
         self._thread = threading.Thread(
             target=self._run,
             name="dhan-market-feed",
-            daemon=True,
         )
         self._thread.start()
 
