@@ -16,6 +16,7 @@ from datetime import time
 
 from domain.strategy_result import StrategyResult
 from shared.enums import Signal
+from shared.logger import get_logger
 from strategies.base_strategy import BaseStrategy
 from strategies.filters.confirmation_filter import (
     ConfirmationFilter,
@@ -45,6 +46,7 @@ class EMAVWAPRSIStrategy(BaseStrategy):
     """
 
     def __init__(self) -> None:
+        self._logger = get_logger(__name__)
         self._time_filter = TimeFilter(
             time(10, 15),
             time(14, 30),
@@ -93,6 +95,44 @@ class EMAVWAPRSIStrategy(BaseStrategy):
             indicators.ema_low,
         )
 
+        buy_rsi = self._rsi_filter.buy_allowed(
+            indicators.rsi,
+        )
+
+        sell_rsi = self._rsi_filter.sell_allowed(
+            indicators.rsi,
+        )
+
+        buy_vwap = self._vwap_filter.buy_allowed(
+            close,
+            indicators.vwap,
+        )
+
+        sell_vwap = self._vwap_filter.sell_allowed(
+            close,
+            indicators.vwap,
+        )
+
+        self._logger.info(
+            "Strategy check | time=%s | close=%.2f | "
+            "ema_high=%.2f | ema_low=%.2f | "
+            "rsi=%.2f | vwap=%.2f | "
+            "BUY[EMA=%s RSI=%s VWAP=%s] | "
+            "SELL[EMA=%s RSI=%s VWAP=%s]",
+            market.timestamp,
+            close,
+            indicators.ema_high,
+            indicators.ema_low,
+            indicators.rsi,
+            indicators.vwap,
+            buy_ema,
+            buy_rsi,
+            buy_vwap,
+            sell_ema,
+            sell_rsi,
+            sell_vwap,
+        )
+
         if not buy_ema and not sell_ema:
             return StrategyResult(
                 signal=Signal.NONE,
@@ -103,16 +143,7 @@ class EMAVWAPRSIStrategy(BaseStrategy):
         # BUY
         # ------------------------------------------
 
-        if (
-            buy_ema
-            and self._rsi_filter.buy_allowed(
-                indicators.rsi,
-            )
-            and self._vwap_filter.buy_allowed(
-                close,
-                indicators.vwap,
-            )
-        ):
+        if buy_ema and buy_rsi and buy_vwap:
             return StrategyResult(
                 signal=Signal.BUY_CE,
                 reasons=(
@@ -126,16 +157,7 @@ class EMAVWAPRSIStrategy(BaseStrategy):
         # SELL
         # ------------------------------------------
 
-        if (
-            sell_ema
-            and self._rsi_filter.sell_allowed(
-                indicators.rsi,
-            )
-            and self._vwap_filter.sell_allowed(
-                close,
-                indicators.vwap,
-            )
-        ):
+        if sell_ema and sell_rsi and sell_vwap:
             return StrategyResult(
                 signal=Signal.BUY_PE,
                 reasons=(
