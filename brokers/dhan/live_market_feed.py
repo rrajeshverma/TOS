@@ -7,9 +7,11 @@ from __future__ import annotations
 import asyncio
 import logging
 import threading
+import time
 from collections.abc import Callable
 
 from dhanhq import DhanContext, MarketFeed
+from websockets.exceptions import ConnectionClosed
 
 from brokers.dhan.models import BrokerTick
 from brokers.dhan.tick_mapper import DhanTickMapper
@@ -73,10 +75,6 @@ class LiveMarketFeed:
             self._callback(tick)
 
     def _run(self) -> None:
-        feed = None
-
-        # Dhan MarketFeed creates and uses an asyncio event loop.
-        # Create and bind a fresh loop inside the dedicated feed thread.
         loop = asyncio.new_event_loop()
         asyncio.set_event_loop(loop)
 
@@ -86,50 +84,74 @@ class LiveMarketFeed:
         )
 
         try:
-            feed = MarketFeed(
-                dhan_context=self._context,
-                instruments=list(self._instruments),
-                version="v2",
-            )
-
-            self._feed = feed
-
-            LOGGER.info("Connecting to Dhan market feed...")
-
-            # Establish WebSocket connection and subscribe.
-            feed.run_forever()
-
-            LOGGER.info("Dhan market feed connected successfully.")
-
-            # MarketFeed.run_forever() only connects in the installed
-            # dhanhq version. Continuously receive data here.
             while self._running:
-                data = feed.get_data()
+                feed = None
 
-                if data is not None:
-                    LOGGER.debug(
-                        "Dhan market data received: %s",
-                        data.get("type"),
+                try:
+                    feed = MarketFeed(
+                        dhan_context=self._context,
+                        instruments=list(self._instruments),
+                        version="v2",
                     )
-                    self._on_tick(feed, data)
 
-        except Exception:
-            LOGGER.exception("Dhan market feed thread failed.")
+                    self._feed = feed
+
+                    LOGGER.info("Connecting to Dhan market feed...")
+
+                    feed.run_forever()
+
+                    LOGGER.info("Dhan market feed connected successfully.")
+
+                    while self._running:
+                        data = feed.get_data()
+
+                        if data is not None:
+                            LOGGER.debug(
+                                "Dhan market data received: %s",
+                                data.get("type"),
+                            )
+
+                            self._on_tick(
+                                feed,
+                                data,
+                            )
+
+                except ConnectionClosed:
+                    if self._running:
+                        LOGGER.warning(
+                            "Dhan market feed connection closed. Reconnecting in 5 seconds..."
+                        )
+                        time.sleep(5)
+
+                except Exception:
+                    LOGGER.exception("Dhan market feed connection failed.")
+
+                    if self._running:
+                        LOGGER.info("Retrying Dhan market feed connection in 5 seconds...")
+                        time.sleep(5)
+
+                finally:
+                    self._feed = None
+
+                    if feed is not None:
+                        try:
+                            if not feed.loop.is_closed():
+                                feed.loop.run_until_complete(
+                                    feed.disconnect(),
+                                )
+                        except Exception:
+                            pass
 
         finally:
             LOGGER.info("Dhan market feed thread stopping.")
+
             self._running = False
 
-            if feed is not None:
-                try:
-                    if not feed.loop.is_closed():
-                        feed.loop.run_until_complete(
-                            feed.disconnect(),
-                        )
-                except Exception:
-                    pass
-
-            self._feed = None
+            try:
+                if not loop.is_closed():
+                    loop.close()
+            except Exception:
+                pass
 
     def start(self) -> None:
         if self._running:
