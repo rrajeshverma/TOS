@@ -75,14 +75,15 @@ def register_signal_handlers(
     notifier: TelegramNotifier,
 ) -> None:
     def _shutdown(signum, frame):
+        if handler.is_shutdown_requested():
+            return
+
         handler.register(signal.Signals(signum).name)
 
         graceful_shutdown(
             app,
             notifier,
         )
-
-        sys.exit(0)
 
     signal.signal(signal.SIGINT, _shutdown)
     signal.signal(signal.SIGTERM, _shutdown)

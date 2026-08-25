@@ -7,7 +7,6 @@ from __future__ import annotations
 import asyncio
 import logging
 import threading
-import time
 from collections.abc import Callable
 
 from dhanhq import DhanContext, MarketFeed
@@ -40,6 +39,7 @@ class LiveMarketFeed:
         self._feed: MarketFeed | None = None
         self._thread: threading.Thread | None = None
         self._running = False
+        self._stop_event = threading.Event()
         self._callback: Callable[[BrokerTick], None] | None = None
 
         self._instruments: set[tuple[int, str, int]] = set()
@@ -84,7 +84,7 @@ class LiveMarketFeed:
         )
 
         try:
-            while self._running:
+            while self._running and not self._stop_event.is_set():
                 feed = None
 
                 try:
@@ -102,33 +102,27 @@ class LiveMarketFeed:
 
                     LOGGER.info("Dhan market feed connected successfully.")
 
-                    while self._running:
+                    while self._running and not self._stop_event.is_set():
                         data = feed.get_data()
 
                         if data is not None:
-                            LOGGER.debug(
-                                "Dhan market data received: %s",
-                                data.get("type"),
-                            )
-
-                            self._on_tick(
-                                feed,
-                                data,
-                            )
+                            self._on_tick(feed, data)
 
                 except ConnectionClosed:
-                    if self._running:
+                    if self._running and not self._stop_event.is_set():
                         LOGGER.warning(
                             "Dhan market feed connection closed. Reconnecting in 5 seconds..."
                         )
-                        time.sleep(5)
+                        self._stop_event.wait(5)
 
                 except Exception:
+                    if not self._running or self._stop_event.is_set():
+                        break
+
                     LOGGER.exception("Dhan market feed connection failed.")
 
-                    if self._running:
-                        LOGGER.info("Retrying Dhan market feed connection in 5 seconds...")
-                        time.sleep(5)
+                    LOGGER.info("Retrying Dhan market feed connection in 5 seconds...")
+                    self._stop_event.wait(5)
 
                 finally:
                     self._feed = None
@@ -141,7 +135,6 @@ class LiveMarketFeed:
                                 )
                         except Exception:
                             pass
-
         finally:
             LOGGER.info("Dhan market feed thread stopping.")
 
@@ -162,23 +155,49 @@ class LiveMarketFeed:
                 "No instruments subscribed to Dhan market feed.",
             )
 
+        self._stop_event.clear()
         self._running = True
 
         self._thread = threading.Thread(
             target=self._run,
             name="dhan-market-feed",
+            daemon=True,
         )
         self._thread.start()
 
     def stop(self) -> None:
         self._running = False
+        self._stop_event.set()
+
+        feed = self._feed
+
+        if feed is not None:
+            try:
+                loop = feed.loop
+
+                if not loop.is_closed():
+                    future = asyncio.run_coroutine_threadsafe(
+                        feed.disconnect(),
+                        loop,
+                    )
+
+                    try:
+                        future.result(timeout=5)
+                    except Exception:
+                        pass
+            except Exception:
+                pass
 
         thread = self._thread
 
         if thread is not None and thread is not threading.current_thread():
             thread.join(timeout=5)
 
+            if thread.is_alive():
+                LOGGER.warning("Dhan market feed thread did not stop within timeout.")
+
         self._thread = None
+        self._feed = None
 
     def subscribe(
         self,
