@@ -4,8 +4,11 @@ Application startup manager.
 
 import logging
 from dataclasses import replace
+from datetime import datetime, timedelta
+from zoneinfo import ZoneInfo
 
 from brokers.clients.dhan_client import DhanClient
+from brokers.dhan.historical_data import DhanHistoricalData
 from brokers.dhan.live_market_feed import LiveMarketFeed
 from brokers.dhan.websocket import WebSocketClient
 from brokers.dhan_broker import DhanBroker
@@ -154,6 +157,41 @@ class Startup:
             indicator_engine=indicator_engine,
             runtime=runtime,
         )
+
+        # ---------------- HISTORICAL MARKET DATA ----------------
+
+        if self.config.market_data == "dhan":
+            try:
+                ist = ZoneInfo("Asia/Kolkata")
+                now = datetime.now(ist)
+
+                # Load enough completed candles to warm up indicators.
+                history_loader = DhanHistoricalData(
+                    client_id=self.config.dhan_client_id,
+                    access_token=self.config.dhan_access_token,
+                )
+
+                history = history_loader.load_nifty_5m(
+                    from_date=(now - timedelta(days=5)).date().isoformat(),
+                    to_date=now.date().isoformat(),
+                    limit=50,
+                    now=now,
+                )
+
+                market_data_pipeline.seed_history(
+                    "NIFTY",
+                    history,
+                )
+
+                LOGGER.info(
+                    "Seeded NIFTY historical candles | count=%s",
+                    len(history),
+                )
+
+            except Exception:
+                LOGGER.exception(
+                    "Failed to seed NIFTY historical candles; continuing with live market data."
+                )
 
         trading_pipeline = TradingPipeline(
             indicator_engine=indicator_engine,
