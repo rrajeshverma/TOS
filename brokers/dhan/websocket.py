@@ -80,7 +80,7 @@ class WebSocketClient:
         return (
             exchange,
             str(instrument.security_id),
-            MarketFeed.Ticker,
+            MarketFeed.Quote,
         )
 
     def connect(self) -> None:

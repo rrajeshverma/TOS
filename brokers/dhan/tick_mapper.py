@@ -51,9 +51,20 @@ class DhanTickMapper:
             exchange_segment,
         )
 
+        raw_volume = data.get("volume")
+
+        if raw_volume is None:
+            raw_volume = data.get("last_quantity")
+
+        if raw_volume is None:
+            raw_volume = data.get("LTQ")
+
+        if raw_volume is None:
+            raw_volume = 0
+
         return BrokerTick(
             symbol=instrument.symbol,
             ltp=float(Decimal(str(data["LTP"]))),
-            volume=0,
+            volume=int(raw_volume),
             timestamp=self._parse_timestamp(data["LTT"]),
         )

@@ -212,7 +212,7 @@ def test_live_feed_subscription_maps_nifty_to_dhan_tuple():
     ws.subscribe(instrument)
 
     live_feed.subscribe.assert_called_once_with(
-        [(MarketFeed.IDX, "13", MarketFeed.Ticker)],
+        [(MarketFeed.IDX, "13", MarketFeed.Quote)],
     )
 
     assert ws.subscriptions == {"NIFTY"}
@@ -235,7 +235,7 @@ def test_live_feed_subscription_preserves_security_id_and_segment():
     ws.subscribe(instrument)
 
     live_feed.subscribe.assert_called_once_with(
-        [(MarketFeed.NSE, "13", MarketFeed.Ticker)],
+        [(MarketFeed.NSE, "13", MarketFeed.Quote)],
     )
 
 

@@ -84,3 +84,25 @@ def test_dhan_string_ltt_maps_to_datetime():
     assert tick.timestamp.hour == 14
     assert tick.timestamp.minute == 44
     assert tick.timestamp.second == 23
+
+def test_dhan_quote_data_maps_volume():
+    mapper = create_mapper()
+
+    timestamp = datetime.now()
+
+    data = {
+        "type": "Quote Data",
+        "exchange_segment": 0,
+        "security_id": 13,
+        "LTP": "24367.75",
+        "LTT": timestamp,
+        "LTQ": 25,
+        "volume": 123456,
+    }
+
+    tick = mapper.to_broker_tick(data)
+
+    assert tick.symbol == "NIFTY"
+    assert tick.ltp == 24367.75
+    assert tick.volume == 123456
+    assert tick.timestamp == timestamp

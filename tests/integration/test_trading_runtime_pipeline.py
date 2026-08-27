@@ -201,3 +201,41 @@ def test_pipeline_processes_same_5m_candle_only_once():
 
     assert runtime_market == market_1040
     assert runtime_history == [market_1040]
+
+
+def test_pipeline_can_seed_history():
+    pipeline = TradingPipeline(
+        candle_builder=Mock(),
+        market_engine=Mock(),
+        indicator_engine=Mock(),
+        runtime=Mock(),
+    )
+
+    history = [
+        Market(
+            symbol="NIFTY",
+            exchange="NSE",
+            timeframe="5m",
+            timestamp=datetime(2026, 8, 18, 10, 40),
+            open=Decimal(100),
+            high=Decimal(101),
+            low=Decimal(99),
+            close=Decimal(100),
+            volume=100,
+        ),
+        Market(
+            symbol="NIFTY",
+            exchange="NSE",
+            timeframe="5m",
+            timestamp=datetime(2026, 8, 18, 10, 45),
+            open=Decimal(101),
+            high=Decimal(102),
+            low=Decimal(100),
+            close=Decimal(101),
+            volume=110,
+        ),
+    ]
+
+    pipeline.seed_history("NIFTY", history)
+
+    assert pipeline._history["NIFTY"] == history

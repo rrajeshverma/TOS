@@ -84,3 +84,15 @@ class TradingPipeline:
         self._active_candles[symbol] = candle
 
         return self._process_completed_candle(previous_candle)
+
+    def seed_history(
+        self,
+        symbol: str,
+        history: list,
+    ) -> None:
+        """Seed completed market history before live processing."""
+
+        if not history:
+            return
+
+        self._history[symbol] = list(history[-self.MAX_HISTORY :])

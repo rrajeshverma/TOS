@@ -82,6 +82,10 @@ def test_loader_can_be_reused():
 def test_loaded_config_defaults_match_runtime_config(monkeypatch):
     monkeypatch.delenv("DHAN_CLIENT_ID", raising=False)
     monkeypatch.delenv("DHAN_ACCESS_TOKEN", raising=False)
+    monkeypatch.delenv("TOS_BROKER", raising=False)
+    monkeypatch.delenv("TOS_MARKET_DATA", raising=False)
+    monkeypatch.delenv("TOS_MODE", raising=False)
+    monkeypatch.delenv("TOS_PORTFOLIO", raising=False)
 
     loader = RuntimeConfigLoader()
 

@@ -46,5 +46,9 @@ def test_loader_configuration_has_slots():
 def test_loader_produces_same_defaults(monkeypatch):
     monkeypatch.delenv("DHAN_CLIENT_ID", raising=False)
     monkeypatch.delenv("DHAN_ACCESS_TOKEN", raising=False)
+    monkeypatch.delenv("TOS_BROKER", raising=False)
+    monkeypatch.delenv("TOS_MARKET_DATA", raising=False)
+    monkeypatch.delenv("TOS_MODE", raising=False)
+    monkeypatch.delenv("TOS_PORTFOLIO", raising=False)
 
     assert RuntimeConfigLoader().load() == RuntimeConfig()

@@ -42,10 +42,10 @@ def test_subscribe_before_start():
     feed = create_feed()
 
     feed.subscribe(
-        [(0, "13", 15)],
+        [(0, "13", 17)],
     )
 
-    assert (0, "13", 15) in feed.instruments
+    assert (0, "13", 17) in feed.instruments
 
 
 def test_unsubscribe_before_start():
@@ -71,11 +71,12 @@ def test_tick_is_mapped_and_forwarded():
     timestamp = datetime.now()
 
     data = {
-        "type": "Ticker Data",
+        "type": "Quote Data",
         "exchange_segment": 0,
         "security_id": 13,
         "LTP": "24367.75",
         "LTT": timestamp,
+        "last_quantity": 250,
     }
 
     feed._on_tick(Mock(), data)
@@ -87,7 +88,7 @@ def test_tick_is_mapped_and_forwarded():
     assert isinstance(tick, BrokerTick)
     assert tick.symbol == "NIFTY"
     assert tick.ltp == 24367.75
-    assert tick.volume == 0
+    assert tick.volume == 250
     assert tick.timestamp == timestamp
 
 
@@ -100,7 +101,7 @@ def test_non_ticker_data_is_ignored():
     feed._on_tick(
         Mock(),
         {
-            "type": "Quote Data",
+            "type": "Ticker Data",
         },
     )
 
@@ -167,26 +168,20 @@ def test_run_consumes_sdk_data_and_forwards_ticker(mock_market_feed):
 
     instance = mock_market_feed.return_value
 
-    packets = iter(
-        [
-            {
-                "type": "Ticker Data",
-                "exchange_segment": 0,
-                "security_id": 13,
-                "LTP": "24330.60",
-                "LTT": "12:53:04",
-            },
-        ]
-    )
+    packet = {
+        "type": "Quote Data",
+        "exchange_segment": 0,
+        "security_id": 13,
+        "LTP": "24330.60",
+        "LTT": "12:53:04",
+        "last_quantity": 100,
+    }
 
-    def get_data():
-        try:
-            return next(packets)
-        except StopIteration:
-            feed._running = False
-            return None
+    def run_forever():
+        feed._handle_sdk_tick(instance, packet)
+        feed._running = False
 
-    instance.get_data.side_effect = get_data
+    instance.run_forever.side_effect = run_forever
 
     feed._running = True
     feed._run()
@@ -201,9 +196,7 @@ def test_run_reconnects_after_connection_closed(
     mock_market_feed,
 ):
     feed = create_feed()
-    callback = Mock()
 
-    feed.register_tick_callback(callback)
     feed.subscribe([(0, "13", 15)])
 
     first_instance = Mock()
@@ -214,31 +207,22 @@ def test_run_reconnects_after_connection_closed(
         second_instance,
     ]
 
-    first_instance.get_data.side_effect = ConnectionClosedError(
-        None,
-        None,
-        None,
-    )
+    def first_run_forever():
+        raise ConnectionClosedError(
+            None,
+            None,
+            None,
+        )
 
-    packet = {
-        "type": "Ticker Data",
-        "exchange_segment": 0,
-        "security_id": 13,
-        "LTP": "24330.60",
-        "LTT": "12:53:04",
-    }
-
-    def get_data_after_reconnect():
+    def second_run_forever():
         feed._running = False
-        return packet
 
-    second_instance.get_data.side_effect = get_data_after_reconnect
+    first_instance.run_forever.side_effect = first_run_forever
+    second_instance.run_forever.side_effect = second_run_forever
 
     feed._running = True
-
     feed._run()
 
     assert mock_market_feed.call_count == 2
     assert first_instance.run_forever.call_count == 1
     assert second_instance.run_forever.call_count == 1
-    assert callback.call_count == 1

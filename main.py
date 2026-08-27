@@ -8,8 +8,10 @@ from __future__ import annotations
 
 import logging
 import signal
-import sys
 import time
+from pathlib import Path
+
+from dotenv import load_dotenv
 
 from config.runtime_config_loader import RuntimeConfigLoader
 from runtime.application import Application
@@ -17,6 +19,13 @@ from runtime.shutdown import Shutdown
 from runtime.signal_handler import SignalHandler
 from runtime.startup import Startup
 from services.telegram_notifier import TelegramNotifier
+
+ROOT_DIR = Path(__file__).resolve().parent
+
+load_dotenv(
+    ROOT_DIR / ".env",
+    override=True,
+)
 
 LOGGER = logging.getLogger("tos")
 

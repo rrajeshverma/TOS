@@ -41,6 +41,7 @@ class LiveMarketFeed:
         self._running = False
         self._stop_event = threading.Event()
         self._callback: Callable[[BrokerTick], None] | None = None
+        self._payload_logged = False
 
         self._instruments: set[tuple[int, str, int]] = set()
 
@@ -66,17 +67,46 @@ class LiveMarketFeed:
         if not isinstance(data, dict):
             return
 
-        if data.get("type") != "Ticker Data":
+        if data.get("type") != "Quote Data":
             return
+
+        if not self._payload_logged:
+            LOGGER.info(
+                "Dhan first Quote Data payload: %s",
+                data,
+            )
+            self._payload_logged = True
+
+        LOGGER.info(
+            "Dhan Quote Data | keys=%s | LTP=%s | LTT=%s | LTQ=%s | volume=%s",
+            sorted(data.keys()),
+            data.get("LTP"),
+            data.get("LTT"),
+            data.get("LTQ"),
+            data.get("volume"),
+        )
 
         tick = self._tick_mapper.to_broker_tick(data)
 
         if self._callback is not None:
             self._callback(tick)
 
+    def _handle_sdk_tick(
+        self,
+        _feed: MarketFeed,
+        data: dict,
+    ) -> None:
+        if not isinstance(data, dict):
+            return
+
+        self._on_tick(
+            _feed,
+            data,
+        )
+
     def _run(self) -> None:
-        loop = asyncio.new_event_loop()
-        asyncio.set_event_loop(loop)
+        reconnect_delay = 5
+        max_reconnect_delay = 60
 
         LOGGER.info(
             "Dhan market feed thread started | instruments=%s",
@@ -86,12 +116,14 @@ class LiveMarketFeed:
         try:
             while self._running and not self._stop_event.is_set():
                 feed = None
+                received_data = False
 
                 try:
                     feed = MarketFeed(
                         dhan_context=self._context,
                         instruments=list(self._instruments),
                         version="v2",
+                        on_ticks=self._handle_sdk_tick,
                     )
 
                     self._feed = feed
@@ -105,15 +137,36 @@ class LiveMarketFeed:
                     while self._running and not self._stop_event.is_set():
                         data = feed.get_data()
 
-                        if data is not None:
-                            self._on_tick(feed, data)
+                        if not isinstance(data, dict):
+                            continue
 
-                except ConnectionClosed:
+                        received_data = True
+                        reconnect_delay = 5
+
+                        self._handle_sdk_tick(
+                            feed,
+                            data,
+                        )
+                except ConnectionClosed as exc:
                     if self._running and not self._stop_event.is_set():
                         LOGGER.warning(
-                            "Dhan market feed connection closed. Reconnecting in 5 seconds..."
+                            "Dhan market feed connection closed | "
+                            "exception_type=%s | code=%s | reason=%s | "
+                            "received_data=%s | reconnecting in %s seconds...",
+                            type(exc).__name__,
+                            getattr(exc, "code", None),
+                            getattr(exc, "reason", None),
+                            received_data,
+                            reconnect_delay,
                         )
-                        self._stop_event.wait(5)
+
+                        self._stop_event.wait(reconnect_delay)
+
+                        if not received_data:
+                            reconnect_delay = min(
+                                reconnect_delay * 2,
+                                max_reconnect_delay,
+                            )
 
                 except Exception:
                     if not self._running or self._stop_event.is_set():
@@ -121,8 +174,18 @@ class LiveMarketFeed:
 
                     LOGGER.exception("Dhan market feed connection failed.")
 
-                    LOGGER.info("Retrying Dhan market feed connection in 5 seconds...")
-                    self._stop_event.wait(5)
+                    LOGGER.info(
+                        "Retrying Dhan market feed connection in %s seconds...",
+                        reconnect_delay,
+                    )
+
+                    self._stop_event.wait(reconnect_delay)
+
+                    if not received_data:
+                        reconnect_delay = min(
+                            reconnect_delay * 2,
+                            max_reconnect_delay,
+                        )
 
                 finally:
                     self._feed = None
@@ -135,16 +198,11 @@ class LiveMarketFeed:
                                 )
                         except Exception:
                             pass
+
         finally:
             LOGGER.info("Dhan market feed thread stopping.")
 
             self._running = False
-
-            try:
-                if not loop.is_closed():
-                    loop.close()
-            except Exception:
-                pass
 
     def start(self) -> None:
         if self._running:

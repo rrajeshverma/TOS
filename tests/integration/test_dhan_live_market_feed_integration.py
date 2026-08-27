@@ -28,26 +28,29 @@ def create_feed():
 
 
 @patch("brokers.dhan.live_market_feed.MarketFeed")
-def test_live_market_feed_consumes_dhan_ticker(mock_market_feed):
+def test_live_market_feed_consumes_dhan_quote(mock_market_feed):
     feed = create_feed()
     callback = Mock()
 
     feed.register_tick_callback(callback)
-    feed.subscribe([(0, "13", 15)])
+    feed.subscribe([(0, "13", 17)])
 
     instance = mock_market_feed.return_value
 
-    def stop_after_packet():
-        feed._running = False
-        return {
-            "type": "Ticker Data",
-            "exchange_segment": 0,
-            "security_id": 13,
-            "LTP": "24340.50",
-            "LTT": "14:57:05",
-        }
+    packet = {
+        "type": "Quote Data",
+        "exchange_segment": 0,
+        "security_id": 13,
+        "LTP": "24340.50",
+        "LTT": "14:57:05",
+        "last_quantity": 250,
+    }
 
-    instance.get_data.side_effect = stop_after_packet
+    def run_forever():
+        feed._handle_sdk_tick(instance, packet)
+        feed._running = False
+
+    instance.run_forever.side_effect = run_forever
 
     feed._running = True
     feed._run()
@@ -58,6 +61,7 @@ def test_live_market_feed_consumes_dhan_ticker(mock_market_feed):
 
     assert tick.symbol == "NIFTY"
     assert tick.ltp == 24340.50
+    assert tick.volume == 250
     assert isinstance(tick.timestamp, datetime)
     assert tick.timestamp.hour == 14
     assert tick.timestamp.minute == 57
