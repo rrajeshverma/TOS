@@ -45,6 +45,40 @@ class LiveMarketFeed:
 
         self._instruments: set[tuple[int, str, int]] = set()
 
+    def _on_connect(
+        self,
+        feed: MarketFeed,
+    ) -> None:
+        LOGGER.info(
+            "Dhan market feed connected successfully | instruments=%s",
+            feed.instruments,
+        )
+
+    def _on_close(
+        self,
+        _feed: MarketFeed,
+        *args,
+        **kwargs,
+    ) -> None:
+        LOGGER.warning(
+            "Dhan SDK on_close | args=%s | kwargs=%s",
+            args,
+            kwargs,
+        )
+
+
+    def _on_error(
+        self,
+        _feed: MarketFeed,
+        *args,
+        **kwargs,
+    ) -> None:
+        LOGGER.error(
+            "Dhan SDK on_error | args=%s | kwargs=%s",
+            args,
+            kwargs,
+        )
+
     @property
     def is_running(self) -> bool:
         return self._running
@@ -123,30 +157,43 @@ class LiveMarketFeed:
                         dhan_context=self._context,
                         instruments=list(self._instruments),
                         version="v2",
-                        on_ticks=self._handle_sdk_tick,
+                        on_connect=self._on_connect,
+                        on_close=self._on_close,
+                        on_error=self._on_error,
                     )
 
                     self._feed = feed
 
                     LOGGER.info("Connecting to Dhan market feed...")
 
+                    # Connect once. Do NOT use feed.run(), because the
+                    # Dhan SDK internally retries every second.
                     feed.run_forever()
 
-                    LOGGER.info("Dhan market feed connected successfully.")
+                    LOGGER.info(
+                        "Dhan market feed receive loop started."
+                    )
 
-                    while self._running and not self._stop_event.is_set():
-                        data = feed.get_data()
+                    reconnect_delay = 5
+
+                    while (
+                        self._running
+                        and not self._stop_event.is_set()
+                    ):
+                        data = feed.loop.run_until_complete(
+                            feed.get_instrument_data(),
+                        )
 
                         if not isinstance(data, dict):
                             continue
 
                         received_data = True
-                        reconnect_delay = 5
 
                         self._handle_sdk_tick(
                             feed,
                             data,
                         )
+
                 except ConnectionClosed as exc:
                     if self._running and not self._stop_event.is_set():
                         LOGGER.warning(
@@ -162,17 +209,18 @@ class LiveMarketFeed:
 
                         self._stop_event.wait(reconnect_delay)
 
-                        if not received_data:
-                            reconnect_delay = min(
-                                reconnect_delay * 2,
-                                max_reconnect_delay,
-                            )
+                        reconnect_delay = min(
+                            reconnect_delay * 2,
+                            max_reconnect_delay,
+                        )
 
                 except Exception:
                     if not self._running or self._stop_event.is_set():
                         break
 
-                    LOGGER.exception("Dhan market feed connection failed.")
+                    LOGGER.exception(
+                        "Dhan market feed connection failed."
+                    )
 
                     LOGGER.info(
                         "Retrying Dhan market feed connection in %s seconds...",
@@ -181,11 +229,10 @@ class LiveMarketFeed:
 
                     self._stop_event.wait(reconnect_delay)
 
-                    if not received_data:
-                        reconnect_delay = min(
-                            reconnect_delay * 2,
-                            max_reconnect_delay,
-                        )
+                    reconnect_delay = min(
+                        reconnect_delay * 2,
+                        max_reconnect_delay,
+                    )
 
                 finally:
                     self._feed = None
@@ -201,7 +248,6 @@ class LiveMarketFeed:
 
         finally:
             LOGGER.info("Dhan market feed thread stopping.")
-
             self._running = False
 
     def start(self) -> None:
