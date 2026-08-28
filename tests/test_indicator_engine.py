@@ -45,7 +45,6 @@ def test_indicator_engine_returns_indicator_set():
     assert indicator.ema_low > 0
     assert indicator.vwap > 0
     assert indicator.rsi >= 0
-    assert indicator.volume_average > 0
 
 
 def test_indicator_engine_none_history():

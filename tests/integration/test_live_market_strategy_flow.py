@@ -21,7 +21,6 @@ def create_indicators():
         ema_low=22350,
         vwap=22450,
         rsi=60,
-        volume_average=90000,
     )
 
 

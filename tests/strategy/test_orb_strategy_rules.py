@@ -8,7 +8,6 @@ def indicators(rsi=50.0):
         ema_low=95.0,
         vwap=98.0,
         rsi=rsi,
-        volume_average=1000.0,
     )
 
 

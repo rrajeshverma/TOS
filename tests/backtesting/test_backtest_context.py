@@ -33,7 +33,6 @@ def create_risk(signal=Signal.BUY_CE):
             ema_low=99,
             vwap=100,
             rsi=60,
-            volume_average=1000,
         ),
         signal=signal,
         status=DecisionStatus.VALID,

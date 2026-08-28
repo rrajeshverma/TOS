@@ -7,7 +7,6 @@ def make_indicator_set(rsi=50.0):
         ema_low=95.0,
         vwap=98.0,
         rsi=rsi,
-        volume_average=1000.0,
     )
 
 
@@ -52,11 +51,9 @@ def test_indicator_values_are_preserved():
         ema_low=120.12,
         vwap=121.55,
         rsi=61.3,
-        volume_average=9876.5,
     )
 
     assert indicators.ema_high == 123.45
     assert indicators.ema_low == 120.12
     assert indicators.vwap == 121.55
     assert indicators.rsi == 61.3
-    assert indicators.volume_average == 9876.5

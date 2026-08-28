@@ -17,5 +17,4 @@ class IndicatorEngine:
             ema_low=0.0,
             vwap=0.0,
             rsi=50.0,
-            volume_average=0.0,
         )

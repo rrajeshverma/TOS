@@ -42,14 +42,12 @@ def make_indicator_set(
     ema_low=24850,
     vwap=24900,
     rsi=60,
-    volume_average=100000,
 ):
     return IndicatorSet(
         ema_high=ema_high,
         ema_low=ema_low,
         vwap=vwap,
         rsi=rsi,
-        volume_average=volume_average,
     )
 
 

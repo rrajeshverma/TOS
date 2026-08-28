@@ -10,7 +10,6 @@ def indicators():
         ema_low=95.0,
         vwap=98.0,
         rsi=50.0,
-        volume_average=1000.0,
     )
 
 

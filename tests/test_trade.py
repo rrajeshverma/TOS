@@ -28,7 +28,6 @@ indicator = IndicatorSet(
     ema_low=24134.7,
     vwap=24120.1,
     rsi=58.75,
-    volume_average=125000.0,
 )
 
 decision = Decision(

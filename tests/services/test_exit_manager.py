@@ -49,7 +49,6 @@ def create_position(
         ema_low=90,
         vwap=100,
         rsi=60,
-        volume_average=1000,
     )
 
     decision = Decision(

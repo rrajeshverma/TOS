@@ -144,12 +144,6 @@ def test_calculate_returns_float_rsi():
     assert isinstance(result.rsi, float)
 
 
-def test_calculate_returns_float_volume_average():
-    result = IndicatorEngine().calculate(MarketRuntime())
-
-    assert isinstance(result.volume_average, float)
-
-
 def test_calculate_returns_immutable_indicator_set():
     result = IndicatorEngine().calculate(MarketRuntime())
 

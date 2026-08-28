@@ -67,7 +67,6 @@ class FakeIndicatorEngine:
             ema_low=98.0,
             vwap=103.0,
             rsi=60.0,
-            volume_average=1000.0,
         )
 
 

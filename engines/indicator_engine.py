@@ -16,7 +16,6 @@ import pandas as pd
 from config.indicators import (
     EMA_PERIOD,
     RSI_PERIOD,
-    VOLUME_AVG_PERIOD,
 )
 from domain.indicator_set import IndicatorSet
 from domain.market import Market
@@ -38,7 +37,6 @@ class IndicatorEngine:
     MIN_CANDLES = max(
         EMA_PERIOD,
         RSI_PERIOD,
-        VOLUME_AVG_PERIOD,
     )
 
     def __init__(self) -> None:
@@ -60,14 +58,12 @@ class IndicatorEngine:
         ema_low = self._ema(df["low"])
         rsi = self._rsi(df["close"])
         vwap = self._vwap(df)
-        volume_avg = self._volume_average(df)
 
         indicator = IndicatorSet(
             ema_high=ema_high,
             ema_low=ema_low,
             vwap=vwap,
             rsi=rsi,
-            volume_average=volume_avg,
         )
 
         self._logger.info("IndicatorSet calculated successfully.")
@@ -164,13 +160,3 @@ class IndicatorEngine:
         vwap = cumulative_tp_volume / cumulative_volume
 
         return float(vwap.iloc[-1])
-
-    @staticmethod
-    def _volume_average(
-        df: pd.DataFrame,
-    ) -> float:
-        """
-        Calculate rolling volume average.
-        """
-
-        return float(df["volume"].rolling(window=VOLUME_AVG_PERIOD).mean().iloc[-1])

@@ -38,7 +38,6 @@ def create_closed_trade():
         ema_low=90,
         vwap=100,
         rsi=60,
-        volume_average=90000,
     )
 
     decision = Decision(

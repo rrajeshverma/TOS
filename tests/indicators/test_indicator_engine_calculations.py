@@ -20,7 +20,6 @@ def test_returns_float_indicators():
     assert isinstance(result.ema_low, float)
     assert isinstance(result.vwap, float)
     assert isinstance(result.rsi, float)
-    assert isinstance(result.volume_average, float)
 
 
 def test_rsi_between_zero_and_hundred():

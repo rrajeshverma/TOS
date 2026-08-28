@@ -73,7 +73,6 @@ def create_indicators():
         ema_low=24900,
         vwap=25000,
         rsi=60,
-        volume_average=50000,
     )
 
 

@@ -46,7 +46,6 @@ def create_risk(
         ema_low=99.0,
         vwap=100.0,
         rsi=60.0,
-        volume_average=1000.0,
     )
 
     decision = Decision(

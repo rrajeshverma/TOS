@@ -28,7 +28,6 @@ def create_indicator_set() -> IndicatorSet:
         ema_low=100.0,
         vwap=102.0,
         rsi=60.0,
-        volume_average=1000.0,
     )
 
 

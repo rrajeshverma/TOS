@@ -74,7 +74,6 @@ def create_market_and_indicators():
         ema_low=22480,
         vwap=22510,
         rsi=60,
-        volume_average=90000,
     )
 
     return market, indicators

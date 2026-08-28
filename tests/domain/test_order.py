@@ -37,7 +37,6 @@ def create_order():
         ema_low=24130,
         vwap=24120,
         rsi=55,
-        volume_average=90000,
     )
 
     decision = Decision(

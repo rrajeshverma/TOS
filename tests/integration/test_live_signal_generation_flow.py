@@ -123,7 +123,6 @@ def test_no_signal_is_valid_market_state():
         ema_low=24990,
         vwap=25000,
         rsi=50,
-        volume_average=1000,
     )
 
     decision = DecisionEngine().evaluate(

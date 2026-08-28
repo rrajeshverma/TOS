@@ -29,7 +29,6 @@ def create_trade():
         ema_low=24850,
         vwap=24900,
         rsi=60,
-        volume_average=100000,
     )
 
     decision = DecisionEngine().evaluate(

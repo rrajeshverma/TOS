@@ -26,7 +26,6 @@ def create_decision():
         ema_low=24850,
         vwap=24900,
         rsi=60,
-        volume_average=100000,
     )
 
     return DecisionEngine().evaluate(

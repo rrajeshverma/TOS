@@ -10,14 +10,12 @@ def indicator_set(
     ema_low=95.0,
     vwap=98.0,
     rsi=50.0,
-    volume_average=1000.0,
 ):
     return IndicatorSet(
         ema_high=ema_high,
         ema_low=ema_low,
         vwap=vwap,
         rsi=rsi,
-        volume_average=volume_average,
     )
 
 

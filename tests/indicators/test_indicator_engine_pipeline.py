@@ -20,7 +20,6 @@ def test_pipeline_returns_all_float_values():
     assert isinstance(result.ema_low, float)
     assert isinstance(result.vwap, float)
     assert isinstance(result.rsi, float)
-    assert isinstance(result.volume_average, float)
 
 
 def test_pipeline_rsi_in_valid_range():

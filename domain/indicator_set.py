@@ -23,7 +23,6 @@ class IndicatorSet:
     ema_low: float
     vwap: float
     rsi: float
-    volume_average: float
 
     @property
     def is_bullish(self) -> bool:
@@ -48,5 +47,4 @@ class IndicatorEngine:
             ema_low=0.0,
             vwap=0.0,
             rsi=50.0,
-            volume_average=0.0,
         )

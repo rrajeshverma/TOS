@@ -48,7 +48,6 @@ def test_decision_engine_generates_trade_signal():
         ema_low=Decimal(24900),
         vwap=Decimal(25000),
         rsi=60,
-        volume_average=50000,
     )
 
     decision = DecisionEngine().evaluate(
@@ -69,7 +68,6 @@ def test_risk_engine_accepts_trade_decision():
         ema_low=Decimal(24900),
         vwap=Decimal(25000),
         rsi=60,
-        volume_average=50000,
     )
 
     decision = DecisionEngine().evaluate(
@@ -116,7 +114,6 @@ def test_complete_paper_pipeline():
         ema_low=Decimal(24900),
         vwap=Decimal(25000),
         rsi=60,
-        volume_average=50000,
     )
 
     decision = DecisionEngine().evaluate(

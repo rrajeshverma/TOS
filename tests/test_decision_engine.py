@@ -30,7 +30,6 @@ def test_buy_ce_signal():
         ema_low=24850,
         vwap=24900,
         rsi=60,
-        volume_average=100000,
     )
 
     decision = engine.evaluate(market, indicators)
@@ -50,7 +49,6 @@ def test_buy_pe_signal():
         ema_low=24550,
         vwap=24600,
         rsi=40,
-        volume_average=100000,
     )
 
     decision = engine.evaluate(market, indicators)
@@ -70,7 +68,6 @@ def test_no_signal():
         ema_low=24900,
         vwap=25000,
         rsi=50,
-        volume_average=100000,
     )
 
     decision = engine.evaluate(market, indicators)
