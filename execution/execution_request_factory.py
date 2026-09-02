@@ -24,10 +24,24 @@ class ExecutionRequestFactory:
         decision = context.risk.decision
         market = decision.market
 
+        instrument = context.instrument
+
+        if instrument is not None:
+            symbol = instrument.symbol
+            security_id = instrument.security_id
+            exchange_segment = instrument.exchange_segment
+        else:
+            # Backward-compatible path for existing callers.
+            symbol = market.symbol
+            security_id = None
+            exchange_segment = None
+
         return ExecutionRequest(
-            symbol=market.symbol,
+            symbol=symbol,
             side=SignalMapper.to_order_side(
                 decision.signal,
             ).value,
             quantity=context.quantity,
+            security_id=security_id,
+            exchange_segment=exchange_segment,
         )

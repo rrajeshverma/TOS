@@ -30,6 +30,7 @@ class TradingPipeline:
         trade_management_engine,
         stop_loss_engine=None,
         trade_journal=None,
+        nifty_option_selector=None,
     ):
         self._indicator_engine = indicator_engine
         self._decision_engine = decision_engine
@@ -40,6 +41,7 @@ class TradingPipeline:
         self._trade_management_engine = trade_management_engine
         self._stop_loss_engine = stop_loss_engine or StopLossEngine()
         self._trade_journal = trade_journal or TradeJournal()
+        self._nifty_option_selector = nifty_option_selector
 
     def run(self, candles):
         """
@@ -150,13 +152,32 @@ class TradingPipeline:
         else:
             raise ValueError(f"Unsupported signal for trade planning: {decision.signal}")
 
-        trade_plan = self._trade_planning_engine.create_plan(
-            decision=decision,
-            position_size=position_size,
-            entry_price=entry_price,
-            stop_loss=stop_loss,
-            target_price=target_price,
-        )
+        selected_instrument = None
+
+        if self._nifty_option_selector is not None:
+            selected_instrument = self._nifty_option_selector.select(
+                underlying_price=entry_price,
+                signal=decision.signal,
+                as_of=market.timestamp,
+            )
+
+        if selected_instrument is None:
+            trade_plan = self._trade_planning_engine.create_plan(
+                decision=decision,
+                position_size=position_size,
+                entry_price=entry_price,
+                stop_loss=stop_loss,
+                target_price=target_price,
+            )
+        else:
+            trade_plan = self._trade_planning_engine.create_plan(
+                decision=decision,
+                position_size=position_size,
+                entry_price=entry_price,
+                stop_loss=stop_loss,
+                target_price=target_price,
+                instrument=selected_instrument,
+            )
 
         trade_management = self._trade_management_engine.evaluate(
             entry_price=entry_price,

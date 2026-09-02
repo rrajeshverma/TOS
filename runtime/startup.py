@@ -39,6 +39,7 @@ from runtime.safety_factory import SafetyFactory
 from runtime.trading_pipeline import TradingPipeline
 from runtime.trading_runtime import TradingRuntime
 from services.market_data_service import MarketDataService
+from services.nifty_option_selector import NiftyOptionSelector
 from services.order_execution_adapter import OrderExecutionAdapter
 from services.paper_position_lifecycle import PaperPositionLifecycle
 from services.paper_trade_runner import PaperTradeRunner
@@ -77,6 +78,10 @@ class Startup:
             instrument_repository.add(instrument)
 
         instrument_mapper = InstrumentMapper(
+            instrument_repository,
+        )
+
+        nifty_option_selector = NiftyOptionSelector(
             instrument_repository,
         )
 
@@ -203,6 +208,7 @@ class Startup:
             trade_management_engine=trade_management_engine,
             stop_loss_engine=stop_loss_engine,
             trade_journal=trade_journal,
+            nifty_option_selector=nifty_option_selector,
         )
 
         # ---------------- MARKET DATA ----------------

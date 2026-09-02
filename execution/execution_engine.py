@@ -119,6 +119,8 @@ class ExecutionEngine:
             quantity=request.quantity,
             order_type=OrderType.MARKET,
             product=ProductType.INTRADAY,
+            security_id=request.security_id,
+            exchange_segment=request.exchange_segment,
         )
 
     @staticmethod

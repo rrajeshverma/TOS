@@ -55,14 +55,21 @@ class DhanBroker(BaseBroker):
     def place_order(self, order):
         if not self.is_connected():
             raise RuntimeError("Dhan broker is not connected.")
-        instrument = self.instrument_mapper.get(order.symbol)
+        if order.security_id and order.exchange_segment:
+            security_id = order.security_id
+            exchange_segment = order.exchange_segment
+        else:
+            instrument = self.instrument_mapper.get(order.symbol)
 
-        if instrument is None:
-            raise ValueError(f"Instrument not found: {order.symbol}")
+            if instrument is None:
+                raise ValueError(f"Instrument not found: {order.symbol}")
+
+            security_id = instrument.security_id
+            exchange_segment = instrument.exchange_segment
 
         response = self.client.place_order(
-            security_id=instrument.security_id,
-            exchange_segment=instrument.exchange_segment,
+            security_id=security_id,
+            exchange_segment=exchange_segment,
             transaction_type=DhanMapper.transaction_type(order.side),
             quantity=order.quantity,
             order_type=DhanMapper.order_type(order.order_type),

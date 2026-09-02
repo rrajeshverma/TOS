@@ -6,13 +6,10 @@ Coordinates the execution pipeline.
 
 from __future__ import annotations
 
+from domain.instrument import Instrument
 from domain.risk import Risk
-from execution.execution_context_factory import (
-    ExecutionContextFactory,
-)
-from execution.execution_request_factory import (
-    ExecutionRequestFactory,
-)
+from execution.execution_context_factory import ExecutionContextFactory
+from execution.execution_request_factory import ExecutionRequestFactory
 
 
 class ExecutionManager:
@@ -33,6 +30,7 @@ class ExecutionManager:
         self,
         risk: Risk,
         quantity: int | None = None,
+        instrument: Instrument | None = None,
     ):
         if risk is None:
             raise ValueError("Risk cannot be None")
@@ -40,7 +38,9 @@ class ExecutionManager:
         if not risk.is_approved:
             return risk
 
-        if quantity is None:
+        # Preserve the original execution path exactly when
+        # no optional execution parameters are supplied.
+        if quantity is None and instrument is None:
             context = ExecutionContextFactory.create(
                 risk,
             )
@@ -48,6 +48,7 @@ class ExecutionManager:
             context = ExecutionContextFactory.create(
                 risk,
                 quantity=quantity,
+                instrument=instrument,
             )
 
         request = ExecutionRequestFactory.create(

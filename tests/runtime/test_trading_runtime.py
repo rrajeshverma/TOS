@@ -499,6 +499,13 @@ def test_run_cycle_executes_pipeline_risk_with_quantity():
     position_size = Mock()
     position_size.quantity = 65
 
+    trade_plan = Mock()
+    trade_plan.instrument = Mock(
+        symbol="NIFTY-08SEP2026-24000-CE",
+        security_id="10003",
+        exchange_segment="NSE_FNO",
+    )
+
     trading_pipeline.run.return_value = (
         "MARKET",
         "INDICATORS",
@@ -506,7 +513,7 @@ def test_run_cycle_executes_pipeline_risk_with_quantity():
         "QUALITY",
         risk,
         position_size,
-        "TRADE_PLAN",
+        trade_plan,
         "TRADE_MANAGEMENT",
     )
 
@@ -528,6 +535,7 @@ def test_run_cycle_executes_pipeline_risk_with_quantity():
     execution_manager.execute.assert_called_once_with(
         risk,
         quantity=65,
+        instrument=trade_plan.instrument,
     )
 
     assert result == "EXECUTION"

@@ -12,6 +12,7 @@ Description : Creates immutable trade execution plans.
 from decimal import Decimal
 
 from domain.decision import Decision
+from domain.instrument import Instrument
 from domain.position_size import PositionSize
 from domain.trade_plan import TradePlan
 from shared.enums import Signal
@@ -29,6 +30,7 @@ class TradePlanningEngine:
         entry_price: Decimal,
         stop_loss: Decimal,
         target_price: Decimal,
+        instrument: Instrument | None = None,
     ) -> TradePlan:
         """
         Create a fully validated trade plan.
@@ -54,4 +56,11 @@ class TradePlanningEngine:
             entry_price=entry_price,
             stop_loss=stop_loss,
             target_price=target_price,
+            symbol=instrument.symbol if instrument else None,
+            security_id=instrument.security_id if instrument else None,
+            exchange_segment=instrument.exchange_segment if instrument else None,
+            lot_size=instrument.lot_size if instrument else None,
+            expiry=instrument.expiry if instrument else None,
+            strike=instrument.strike if instrument else None,
+            option_type=instrument.option_type if instrument else None,
         )

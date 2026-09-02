@@ -106,3 +106,30 @@ def test_same_security_id_can_exist_across_exchange_segments():
 
     assert repo.get_by_security_id("13", "NSE_EQ") == abb
     assert repo.get_by_security_id("13", "IDX_I") == nifty
+
+
+def test_list_all_preserves_duplicate_symbols_with_different_security_ids():
+    repo = InstrumentRepository()
+
+    first = Instrument(
+        symbol="NIFTY-Sep2026-23900-CE",
+        security_id="42635",
+        exchange_segment="NSE_FNO",
+        lot_size=65,
+        tick_size=Decimal("0.05"),
+    )
+
+    second = Instrument(
+        symbol="NIFTY-Sep2026-23900-CE",
+        security_id="74056",
+        exchange_segment="NSE_FNO",
+        lot_size=65,
+        tick_size=Decimal("0.05"),
+    )
+
+    repo.add(first)
+    repo.add(second)
+
+    assert len(repo.list_all()) == 2
+    assert repo.get_by_security_id("42635", "NSE_FNO") == first
+    assert repo.get_by_security_id("74056", "NSE_FNO") == second

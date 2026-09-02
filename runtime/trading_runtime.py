@@ -220,6 +220,7 @@ class TradingRuntime:
             execution_result = self.execution_manager.execute(
                 risk,
                 quantity=position_size.quantity,
+                instrument=(trade_plan.instrument if trade_plan is not None else None),
             )
 
             if self.mode == RuntimeMode.PAPER:

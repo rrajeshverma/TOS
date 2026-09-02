@@ -1,5 +1,8 @@
+from __future__ import annotations
+
 from dataclasses import dataclass
 
+from domain.instrument import Instrument
 from domain.risk import Risk
 
 
@@ -7,3 +10,4 @@ from domain.risk import Risk
 class ExecutionContext:
     risk: Risk
     quantity: int
+    instrument: Instrument | None = None

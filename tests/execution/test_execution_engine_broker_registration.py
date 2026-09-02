@@ -91,9 +91,11 @@ def test_execution_request_is_converted_to_broker_order():
     engine = ExecutionEngine(service)
 
     request = ExecutionRequest(
-        symbol="NIFTY",
+        symbol="NIFTY-08SEP2026-24000-CE",
         side="BUY",
         quantity=65,
+        security_id="10003",
+        exchange_segment="NSE_FNO",
     )
 
     result = engine.execute(request)
@@ -104,10 +106,12 @@ def test_execution_request_is_converted_to_broker_order():
     assert service.submitted is request
 
     assert isinstance(service.placed, Order)
-    assert service.placed.symbol == "NIFTY"
+    assert service.placed.symbol == "NIFTY-08SEP2026-24000-CE"
     assert service.placed.side == OrderSide.BUY
     assert service.placed.quantity == 65
     assert service.placed.order_type == OrderType.MARKET
+    assert service.placed.security_id == "10003"
+    assert service.placed.exchange_segment == "NSE_FNO"
     assert service.placed.product == ProductType.INTRADAY
 
     assert service.registered == (

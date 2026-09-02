@@ -48,6 +48,11 @@ class Order:
     price: Decimal | None = None
     trigger_price: Decimal | None = None
 
+    # Optional broker instrument identity.
+    # Required for precise derivative execution when supplied.
+    security_id: str | None = None
+    exchange_segment: str | None = None
+
     broker_order_id: str | None = None
     status: OrderStatus = OrderStatus.PENDING
 

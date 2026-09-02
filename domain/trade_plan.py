@@ -21,6 +21,11 @@ from domain.position_size import PositionSize
 class TradePlan:
     """
     Immutable execution-ready trade plan.
+
+    The original underlying trade information is preserved.
+    Option contract details are optional so existing callers
+    remain backward compatible while NIFTY option execution
+    is introduced.
     """
 
     decision: Decision
@@ -29,3 +34,12 @@ class TradePlan:
     entry_price: Decimal
     stop_loss: Decimal
     target_price: Decimal
+
+    # Selected derivative contract, when applicable.
+    symbol: str | None = None
+    security_id: str | None = None
+    exchange_segment: str | None = None
+    lot_size: int | None = None
+    expiry: object | None = None
+    strike: Decimal | None = None
+    option_type: str | None = None

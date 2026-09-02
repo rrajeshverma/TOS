@@ -6,6 +6,7 @@ Creates execution contexts from approved Risk objects.
 
 from __future__ import annotations
 
+from domain.instrument import Instrument
 from domain.risk import Risk
 from execution.execution_context import ExecutionContext
 
@@ -20,6 +21,7 @@ class ExecutionContextFactory:
         cls,
         risk: Risk,
         quantity: int | None = None,
+        instrument: Instrument | None = None,
     ) -> ExecutionContext:
         if risk is None:
             raise ValueError("Risk cannot be None")
@@ -30,4 +32,5 @@ class ExecutionContextFactory:
         return ExecutionContext(
             risk=risk,
             quantity=cls.DEFAULT_QUANTITY if quantity is None else quantity,
+            instrument=instrument,
         )

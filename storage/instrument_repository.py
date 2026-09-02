@@ -5,10 +5,12 @@ class InstrumentRepository:
     def __init__(self):
         self._by_symbol = {}
         self._by_security_id = {}
+        self._all = []
 
     def add(self, instrument: Instrument) -> None:
         self._by_symbol[instrument.symbol] = instrument
         self._by_security_id[(instrument.exchange_segment, instrument.security_id)] = instrument
+        self._all.append(instrument)
 
     def get_by_symbol(self, symbol: str) -> Instrument:
         return self._by_symbol[symbol]
@@ -21,4 +23,4 @@ class InstrumentRepository:
         return self._by_security_id[(exchange_segment, security_id)]
 
     def list_all(self) -> list[Instrument]:
-        return list(self._by_symbol.values())
+        return list(self._all)
