@@ -6,6 +6,10 @@ from datetime import datetime, time
 from decimal import Decimal
 from unittest.mock import Mock
 
+import pytest
+
+from journal.trade_journal import TradeJournal
+
 from domain.decision import Decision
 from domain.indicator_set import IndicatorSet
 from domain.market import Market
@@ -29,6 +33,15 @@ from utils.id_generator import (
     generate_position_id,
     generate_trade_id,
 )
+
+
+@pytest.fixture
+def isolated_journal(tmp_path):
+    return TradeJournal(str(tmp_path / "trade_journal.csv"))
+
+
+def create_service(journal):
+    return ExitService(trade_journal=journal)
 
 
 def create_position():
@@ -100,8 +113,8 @@ def create_position():
     )
 
 
-def test_exit_service_closes_position_on_target():
-    service = ExitService()
+def test_exit_service_closes_position_on_target(isolated_journal):
+    service = create_service(isolated_journal)
 
     position = create_position()
 
@@ -116,8 +129,8 @@ def test_exit_service_closes_position_on_target():
     assert result["position"].is_closed
 
 
-def test_exit_service_closes_position_on_stop_loss():
-    service = ExitService()
+def test_exit_service_closes_position_on_stop_loss(isolated_journal):
+    service = create_service(isolated_journal)
 
     position = create_position()
 
@@ -132,8 +145,8 @@ def test_exit_service_closes_position_on_stop_loss():
     assert result["position"].is_closed
 
 
-def test_exit_service_closes_position_on_force_exit():
-    service = ExitService()
+def test_exit_service_closes_position_on_force_exit(isolated_journal):
+    service = create_service(isolated_journal)
 
     position = create_position()
 
@@ -148,8 +161,8 @@ def test_exit_service_closes_position_on_force_exit():
     assert result["position"].is_closed
 
 
-def test_exit_service_keeps_position_open_when_no_exit():
-    service = ExitService()
+def test_exit_service_keeps_position_open_when_no_exit(isolated_journal):
+    service = create_service(isolated_journal)
 
     position = create_position()
 
@@ -164,8 +177,8 @@ def test_exit_service_keeps_position_open_when_no_exit():
     assert result["position"].is_open
 
 
-def test_no_exit_does_not_return_trade():
-    service = ExitService()
+def test_no_exit_does_not_return_trade(isolated_journal):
+    service = create_service(isolated_journal)
 
     position = create_position()
 
@@ -178,8 +191,8 @@ def test_no_exit_does_not_return_trade():
     assert "trade" not in result
 
 
-def test_closed_trade_status_is_closed():
-    service = ExitService()
+def test_closed_trade_status_is_closed(isolated_journal):
+    service = create_service(isolated_journal)
 
     position = create_position()
 
@@ -192,8 +205,8 @@ def test_closed_trade_status_is_closed():
     assert result["trade"].status == TradeStatus.CLOSED
 
 
-def test_closed_trade_exit_price_set():
-    service = ExitService()
+def test_closed_trade_exit_price_set(isolated_journal):
+    service = create_service(isolated_journal)
 
     position = create_position()
 
@@ -206,8 +219,8 @@ def test_closed_trade_exit_price_set():
     assert result["trade"].exit_price == Decimal(121)
 
 
-def test_closed_trade_exit_reason_set():
-    service = ExitService()
+def test_closed_trade_exit_reason_set(isolated_journal):
+    service = create_service(isolated_journal)
 
     position = create_position()
 
@@ -220,8 +233,8 @@ def test_closed_trade_exit_reason_set():
     assert result["trade"].exit_reason == ExitReason.STOP_LOSS
 
 
-def test_profit_pnl_calculated():
-    service = ExitService()
+def test_profit_pnl_calculated(isolated_journal):
+    service = create_service(isolated_journal)
 
     position = create_position()
 
@@ -234,8 +247,8 @@ def test_profit_pnl_calculated():
     assert result["trade"].pnl == Decimal(1300)
 
 
-def test_loss_pnl_calculated():
-    service = ExitService()
+def test_loss_pnl_calculated(isolated_journal):
+    service = create_service(isolated_journal)
 
     position = create_position()
 
@@ -284,7 +297,7 @@ def test_trade_journal_not_called_when_no_exit():
     journal.record.assert_not_called()
 
 
-def test_position_manager_called_once():
+def test_position_manager_called_once(isolated_journal):
     manager = Mock()
 
     closed_position = create_position()
@@ -294,6 +307,7 @@ def test_position_manager_called_once():
 
     service = ExitService(
         position_manager=manager,
+        trade_journal=isolated_journal,
     )
 
     position = create_position()
@@ -314,13 +328,14 @@ def test_position_manager_called_once():
     )
 
 
-def test_position_manager_not_called_when_no_exit():
+def test_position_manager_not_called_when_no_exit(isolated_journal):
     manager = Mock()
 
     manager.update_stop_loss.side_effect = lambda position, new_stop_loss: position
 
     service = ExitService(
         position_manager=manager,
+        trade_journal=isolated_journal,
     )
 
     position = create_position()
@@ -339,7 +354,7 @@ def test_position_manager_not_called_when_no_exit():
     assert result["closed"] is False
 
 
-def test_exit_manager_called_once():
+def test_exit_manager_called_once(isolated_journal):
     exit_manager = Mock()
     exit_manager.check_exit.return_value = ExitReason.NONE
 
@@ -352,6 +367,7 @@ def test_exit_manager_called_once():
     service = ExitService(
         exit_manager=exit_manager,
         position_manager=position_manager,
+        trade_journal=isolated_journal,
     )
 
     service.evaluate(
@@ -371,8 +387,8 @@ def test_exit_manager_called_once():
     )
 
 
-def test_closed_result_contains_trade():
-    service = ExitService()
+def test_closed_result_contains_trade(isolated_journal):
+    service = create_service(isolated_journal)
 
     position = create_position()
 
@@ -385,8 +401,8 @@ def test_closed_result_contains_trade():
     assert "trade" in result
 
 
-def test_exit_service_moves_stop_loss_to_breakeven_at_one_r():
-    service = ExitService()
+def test_exit_service_moves_stop_loss_to_breakeven_at_one_r(isolated_journal):
+    service = create_service(isolated_journal)
 
     position = create_position()
 
@@ -400,7 +416,7 @@ def test_exit_service_moves_stop_loss_to_breakeven_at_one_r():
     assert result["position"].order.trade.stop_loss == Decimal(100)
 
 
-def test_exit_service_uses_moved_stop_loss_for_exit():
+def test_exit_service_uses_moved_stop_loss_for_exit(isolated_journal):
     position = create_position()
 
     management_engine = Mock()
@@ -415,6 +431,7 @@ def test_exit_service_uses_moved_stop_loss_for_exit():
 
     service = ExitService(
         trade_management_engine=management_engine,
+        trade_journal=isolated_journal,
     )
 
     result = service.evaluate(
