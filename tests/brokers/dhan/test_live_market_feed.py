@@ -1,7 +1,7 @@
 from datetime import datetime
 from unittest.mock import Mock, patch
 
-from websockets.exceptions import ConnectionClosedError
+from websockets.exceptions import ConnectionClosedError, InvalidStatus
 
 from brokers.dhan.live_market_feed import LiveMarketFeed
 from brokers.dhan.models import BrokerTick
@@ -226,3 +226,26 @@ def test_run_reconnects_after_connection_closed(
     assert mock_market_feed.call_count == 2
     assert first_instance.run_forever.call_count == 1
     assert second_instance.run_forever.call_count == 1
+
+
+@patch("brokers.dhan.live_market_feed.MarketFeed")
+def test_run_stops_after_http_429(mock_market_feed):
+    feed = create_feed()
+
+    feed.subscribe([(0, "13", 15)])
+
+    response = Mock()
+    response.status_code = 429
+
+    error = InvalidStatus(response)
+
+    instance = mock_market_feed.return_value
+    instance.run_forever.side_effect = error
+
+    feed._running = True
+    feed._run()
+
+    assert mock_market_feed.call_count == 1
+    assert instance.run_forever.call_count == 1
+    assert feed.is_running is False
+    assert feed._stop_event.is_set()

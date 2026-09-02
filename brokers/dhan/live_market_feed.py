@@ -10,7 +10,7 @@ import threading
 from collections.abc import Callable
 
 from dhanhq import DhanContext, MarketFeed
-from websockets.exceptions import ConnectionClosed
+from websockets.exceptions import ConnectionClosed, InvalidStatus
 
 from brokers.dhan.models import BrokerTick
 from brokers.dhan.tick_mapper import DhanTickMapper
@@ -192,6 +192,38 @@ class LiveMarketFeed:
                         self._handle_sdk_tick(
                             feed,
                             data,
+                        )
+
+                except InvalidStatus as exc:
+                    status_code = getattr(
+                        getattr(exc, "response", None),
+                        "status_code",
+                        None,
+                    )
+
+                    if status_code == 429:
+                        LOGGER.error(
+                            "Dhan market feed blocked by broker | "
+                            "HTTP 429 | client/IP blocked. "
+                            "Automatic reconnect stopped.",
+                        )
+                        self._running = False
+                        self._stop_event.set()
+                        break
+
+                    if self._running and not self._stop_event.is_set():
+                        LOGGER.warning(
+                            "Dhan market feed handshake rejected | "
+                            "HTTP status=%s | reconnecting in %s seconds...",
+                            status_code,
+                            reconnect_delay,
+                        )
+
+                        self._stop_event.wait(reconnect_delay)
+
+                        reconnect_delay = min(
+                            reconnect_delay * 2,
+                            max_reconnect_delay,
                         )
 
                 except ConnectionClosed as exc:
