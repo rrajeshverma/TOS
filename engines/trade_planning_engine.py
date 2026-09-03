@@ -56,6 +56,7 @@ class TradePlanningEngine:
             entry_price=entry_price,
             stop_loss=stop_loss,
             target_price=target_price,
+            instrument=instrument,
             symbol=instrument.symbol if instrument else None,
             security_id=instrument.security_id if instrument else None,
             exchange_segment=instrument.exchange_segment if instrument else None,

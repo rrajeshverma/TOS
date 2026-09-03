@@ -14,6 +14,7 @@ from dataclasses import dataclass
 from decimal import Decimal
 
 from domain.decision import Decision
+from domain.instrument import Instrument
 from domain.position_size import PositionSize
 
 
@@ -35,7 +36,10 @@ class TradePlan:
     stop_loss: Decimal
     target_price: Decimal
 
-    # Selected derivative contract, when applicable.
+    # Actual selected derivative contract, when applicable.
+    instrument: Instrument | None = None
+
+    # Selected derivative contract details, when applicable.
     symbol: str | None = None
     security_id: str | None = None
     exchange_segment: str | None = None
