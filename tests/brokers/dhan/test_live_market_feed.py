@@ -229,6 +229,55 @@ def test_run_reconnects_after_connection_closed(
 
 
 @patch("brokers.dhan.live_market_feed.MarketFeed")
+def test_run_preserves_reconnect_backoff_after_unhealthy_handshake(
+    mock_market_feed,
+):
+    feed = create_feed()
+
+    feed.subscribe([(0, "13", 15)])
+
+    first_instance = Mock()
+    second_instance = Mock()
+    third_instance = Mock()
+
+    mock_market_feed.side_effect = [
+        first_instance,
+        second_instance,
+        third_instance,
+    ]
+
+    first_instance.run_forever.return_value = None
+    second_instance.run_forever.return_value = None
+
+    first_instance.loop.run_until_complete.side_effect = [
+        ConnectionClosedError(None, None, None),
+    ]
+
+    second_instance.loop.run_until_complete.side_effect = [
+        ConnectionClosedError(None, None, None),
+    ]
+
+    def third_run_forever():
+        feed._running = False
+
+    third_instance.run_forever.side_effect = third_run_forever
+
+    with patch.object(
+        feed._stop_event,
+        "wait",
+        return_value=True,
+    ) as mock_wait:
+        feed._running = True
+        feed._run()
+
+    assert mock_market_feed.call_count == 3
+
+    assert mock_wait.call_count == 2
+    assert mock_wait.call_args_list[0].args == (5,)
+    assert mock_wait.call_args_list[1].args == (10,)
+
+
+@patch("brokers.dhan.live_market_feed.MarketFeed")
 def test_run_stops_after_http_429(mock_market_feed):
     feed = create_feed()
 

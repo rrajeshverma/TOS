@@ -174,8 +174,6 @@ class LiveMarketFeed:
                         "Dhan market feed receive loop started."
                     )
 
-                    reconnect_delay = 5
-
                     while (
                         self._running
                         and not self._stop_event.is_set()
